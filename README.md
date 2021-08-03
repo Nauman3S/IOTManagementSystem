@@ -5,7 +5,7 @@
 - [About](#about)
 - [Getting Started](#getting_started)
 - [Usage](#usage)
-- [WebApp Links](#webapp)
+- [Server Links](#srv)
 - [Demo Videos](#videos)
 
 ## About <a name = "about"></a>
@@ -43,7 +43,7 @@ Open the terminal and execute the following commands
 
 - 
 
-## Server Links <a name = "webapp"></a>
+## Server Links <a name = "srv"></a>
 
 - MQTT Broker Link:
 - Backend Link
