@@ -43,10 +43,17 @@ Open the terminal and execute the following commands
 
 - 
 
+## List of Packages installed on server
+
+- Mosquitto Broker
+- NodeJS, NPM, Node
+- PM2
+- ufw
+
 ## Server Links <a name = "srv"></a>
 
-- MQTT Broker Link:
-- Backend Link
+- MQTT Broker Link: 44.195.192.158:1883
+- Backend Link: 44.195.192.158:3000
 
 
 
