@@ -43,6 +43,11 @@ Open the terminal and execute the following commands
 
 - 
 
+### Monitoring
+
+- pm2 list
+- pm2 monit
+
 ## List of Packages installed on server
 
 - Mosquitto Broker
