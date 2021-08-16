@@ -36,7 +36,8 @@ const cashHandleRouter = express.Router();
 
 // })
 //const mqtt = require('mqtt')
-const client = mqtt.connect('mqtt://broker.hivemq.com')
+//const client = mqtt.connect('mqtt://broker.hivemq.com')
+const client = mqtt.connect('mqtt://44.195.192.158')
 
 var garageState = ''
 var connected = false
@@ -470,20 +471,36 @@ client.on('message', (topic, message) => {
   switch (topic) {
     case 'iotm-sys/device/add':
       //check if device already exists?
-      var mAdd = message.toString();
-      console.log(mAdd)
-      var q = SomeModel.find({ 'a_macAddress': mAdd });
+      var val = message.toString();
+      var DataG = val.split(';')//name;mac;updatedat;devID
+      console.log(DataG[1])
+      var q = SomeModel.find({ 'a_macAddress': DataG[1] });
       q.select('a_name _DeviceId a_macAddress');
       q.exec(function (err, res) {
         if (err) return handleError(err);
         console.log(res)
         console.log("res len: ")
         console.log(res.length)
-        if(res.length>=1){
+        if (res.length >= 1) {
           console.log("macAddress found")
+          client.publish('iotm-sys/device/logs', DataG[1] + " is Already in the DB")
         }
-        else{
+        else {
           console.log("macAddress not found, adding it to the db")
+          // Create an instance of model SomeModel
+          var awesome_instance = new SomeModel({ a_name: DataG[0] });
+          awesome_instance.a_macAddress = DataG[1];
+          awesome_instance.updated_at = DataG[2];
+          // Save the new model instance, passing a callback
+          awesome_instance.save(function (err) {
+            if (err) return handleError(err);
+            // saved!
+            console.log("saved")
+          });
+
+
+
+          client.publish('iotm-sys/device/logs', "Added to the DB")
         }
 
       })
