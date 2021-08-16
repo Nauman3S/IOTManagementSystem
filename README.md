@@ -51,9 +51,15 @@ Open the terminal and execute the following commands
 ## List of Packages installed on server
 
 - Mosquitto Broker
-- NodeJS, NPM, Node
+- NodeJS, NPM, Node, NVM
 - PM2
 - ufw
+- mongod
+- mongo-express
+### Version Details
+
+- Node v12.16.1
+- NPM v6.13.4
 
 ## Server Links <a name = "srv"></a>
 
