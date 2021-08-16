@@ -7,7 +7,7 @@
     "start": "node --experimental-modules --es-module-specifier-resolution=node ./src/bin/www",
     "prestart": "babel ./src --out-dir build",
     "startdev": "nodemon --exec babel-node ./src/bin/www",
-    "lint": "./node_modules/.bin/eslint ./src",
+    // "lint": "./node_modules/.bin/eslint ./src",
     "pretty": "prettier --write '**/*.{js,json}' '!node_modules/**'",
     "postpretty": "npm lint --fix"
   },

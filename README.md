@@ -66,7 +66,28 @@ Open the terminal and execute the following commands
 - MQTT Broker Link: 44.195.192.158:1883
 - Backend Link: 44.195.192.158:3000
 
+## MQTT Topic Details
+### Topics List
+#### Logs
+1.  iotm-sys/device/logs `(all log messages are published to this topic) READ-ONLY`
 
+#### Fimrware
+
+2.  iotm-sys/device/update/* `(global firmware update files are sent to this topic) WRITE-ONLY`
+3.  iotm-sys/device/update/[macaddress] `(the fimrware file for specific device is sent to this topic {replace [macaddress] with the Mac address of the device without : in the address}) WRITE-ONLY`
+4.  iotm-sys/device/firmware/all `(global firmware update files are received at this topic) READ-ONLY`
+5.  iotm-sys/device/firmware/[macaddress] `(the fimrware file for specific device are received at this topic {replace [macaddress] with the Mac address of the device without : in the address}) READ-ONLY`
+#### Device Management
+
+6.  iotm-sys/device/add `(for adding a new device message format 'deviceName;macAddress;updatedAt') WRTIE-ONLY`
+
+#### Device OS
+7.  iotm-sys/device/upgrade/* `(global device OS upgrade) WRITE-ONLY`
+8.  iotm-sys/device/upgrade/[macaddress] `(specific device OS upgrade, replace [macaddress] with device mac address without : chars ) WRITE-ONLY`
+9.  iotm-sys/device/upgrade/all `(global OS upgrade instructions are received at this topic) READ-ONLY`
+10. iotm-sys/device/upgrade/[macaddress] `(OS upgrade instructions for specific device are received at this topic {replace [macaddress] with the Mac address of the device without : in the address}) READ-ONLY`
+11. iotm-sys/device/info/[macaddress] `(device and os info of specific device can be requested from this topic) WRITE-ONLY`
+12. iotm-sys/device/info/response/[macaddress] `(device and os info request response is sent to this topic) READ-ONLY`
 
 
 
