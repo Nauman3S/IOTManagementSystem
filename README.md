@@ -69,7 +69,7 @@ Open the terminal and execute the following commands
 ## MQTT Topic Details
 ### Topics List
 #### Logs
-1.  ```diff + iotm-sys/device/logs</mark>``` `(all log messages are published to this topic) READ-ONLY`
+1.  <span style="color: green">iotm-sys/device/logs</span> `(all log messages are published to this topic) READ-ONLY`
 
 #### Fimrware
 
