@@ -636,8 +636,8 @@ client.on('message', (topic, message) => {
     if(topic.includes("iotm-sys/device/upgrade/")){
       if(topic=="iotm-sys/device/upgrade/*"){
         console.log("updating os of all devices");
-        client.publish('iotm-sys/device/upgrade/all', "fimrware file/string")//as mqtt can't publish to wildcards
-        client.publish('iotm-sys/device/logs', "Update pushed to all devices")
+        client.publish('iotm-sys/device/osug/all', "start update")//as mqtt can't publish to wildcards
+        client.publish('iotm-sys/device/logs', "Upgrade request pushed to all devices")
       }
       else{
         var devToBeUpdate=topic.split("/");
@@ -652,8 +652,8 @@ client.on('message', (topic, message) => {
               console.log("macAddress found")
               console.log("Device to be updated:")
               console.log(devToBeUpdate[3]);
-              client.publish('iotm-sys/device/firmware/'+devToBeUpdate[3], "fimrware file/string")
-              client.publish('iotm-sys/device/logs', "Update pushed to "+devToBeUpdate[3]);
+              client.publish('iotm-sys/device/osug/'+devToBeUpdate[3], "start upgrade")
+              client.publish('iotm-sys/device/logs', "Upgrade request pushed to "+devToBeUpdate[3]);
               
             }
             else {
@@ -665,6 +665,43 @@ client.on('message', (topic, message) => {
       })
       }
       }
+
+
+
+
+      if(topic.includes("iotm-sys/device/info/")){
+        if(topic=="iotm-sys/device/info/*"){
+          // console.log("updating os of all devices");
+          // client.publish('iotm-sys/device/osug/all', "start update")//as mqtt can't publish to wildcards
+          // client.publish('iotm-sys/device/logs', "Upgrade request pushed to all devices")
+        }
+        else{
+          var devToBeUpdate=topic.split("/");
+          var q = SomeModel.find({ 'a_macAddress': devToBeUpdate[3] });
+            q.select('a_name _DeviceId a_macAddress');
+            q.exec(function (err, res) {
+              if (err) return handleError(err);
+              console.log(res)
+              console.log("res len: ")
+              console.log(res.length)
+              if (res.length >= 1) {
+                console.log("macAddress found")
+                console.log("Device to be updated:")
+                console.log(devToBeUpdate[3]);
+                client.publish('iotm-sys/device/info/response/'+devToBeUpdate[3], "info request")
+                client.publish('iotm-sys/device/logs', "info requested from "+devToBeUpdate[3]);
+                
+              }
+              else {
+                console.log("macAddress not found,")
+              }
+      
+      
+          
+        })
+        }
+        }
+  
   
 })
 //import async from 'async';
