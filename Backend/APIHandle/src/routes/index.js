@@ -48,25 +48,11 @@ client.on('connect', () => {
   client.subscribe('iotm-sys/device/upgrade/#')
   client.subscribe('iotm-sys/device/info/#')
   
-  // client.subscribe('swm-device/Smar')
-  //client.subscribe('edc-monitor/createNew')
-  //client.subscribe('edc-monitor/updatePlayer')
-  //client.subscribe('edc-monitor/playerExists')
+
 })
 
 
-// var db = mysql.createConnection({
-//   host: 'localhost',
-//   port: 3306,
-//   user: 'root',
-//   password: 'swpm-mysqldb',
-//   database: 'smartwaterpressure',
-//   multipleStatements: true
-// })
-// db.connect(function (err) {
-//   if (err) throw err;
-//   console.log("Connected!");
-// });
+
 var mongoDB = 'mongodb://127.0.0.1/my_database';
 mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true });
 var db = mongoose.connection;
@@ -106,73 +92,6 @@ SomeModel.find({ 'a_name': 'awesome' }, 'a_name a_macAddress updated_at _DeviceI
 indexRouter.get('/', cors(), indexPage);
 indexRouter.get('/csh', cors(), tempHandlePage);
 
-indexRouter.post('/getLogs', cors(), function (req, res) {
-  let sql = `SELECT * FROM VLedger`;
-  db.query(sql, function (err, data, fields) {
-    if (err) throw err;
-    res.json({
-      status: 200,
-      data,
-      message: "Logs"
-    })
-  })
-});
-
-indexRouter.post('/verifyFingerPrint', cors(), function (req, res) {
-  let sql = `SELECT * FROM VLedger WHERE Fingerprint='` + req.body.Fingerprint + `'`;
-  db.query(sql, function (err, data, fields) {
-    if (err) throw err;
-    res.json({
-      status: 200,
-      data,
-      message: "Verification"
-    })
-  })
-});
-indexRouter.post('/newFingerPrint', cors(), function (req, res) {
-  let sql = `INSERT INTO VLedger(Fingerprint, LastVend, MachineNumber, TotalVends) VALUES (?)`;
-  let values = [
-    req.body.Fingerprint,
-    req.body.LastVend,
-    req.body.MachineNumber,
-    '0'
-
-
-  ];
-  db.query(sql, [values], function (err, data, fields) {
-    if (err) throw err;
-    res.json({
-      status: 200,
-      message: "New fingerprint added successfully"
-    })
-  })
-  client.publish('vend-machine/vend', values[2])
-});
-
-//UPDATE Users SET Credits=(CreditsRequest+Credits), CreditsRequest='0' WHERE Email='n@n.com'
-
-indexRouter.post('/vend', cors(), function (req, res) {
-  //console.log(req);
-  let values = [
-
-    req.body.Fingerprint,
-    req.body.LastVend,
-    req.body.MachineNumber
-
-
-
-  ];
-  let sql = `UPDATE VLedger SET LastVend='` + values[1] + `' ,MachineNumber='` + values[2] + `' , TotalVends=(TotalVends+1) WHERE Fingerprint='` + values[0] + `'`;
-
-  db.query(sql, [values], function (err, data, fields) {
-    if (err) throw err;
-    res.json({
-      status: 200,
-      message: "vending initiated"
-    })
-  })
-  client.publish('vend-machine/vend', values[2])
-});
 
 indexRouter.post('/credReq', cors(), function (req, res) {
   //console.log(req);
@@ -194,63 +113,7 @@ indexRouter.post('/credReq', cors(), function (req, res) {
   })
 });
 
-indexRouter.get('/rewardEqCredits', cors(), function (req, res) {
 
-  let sql = `SELECT RewardEqCredits FROM Admin`;
-  db.query(sql, function (err, data, fields) {
-    if (err) throw err;
-    res.json({
-      status: 200,
-      data,
-      message: "User lists retrieved successfully"
-    })
-  })
-});
-
-
-indexRouter.post('/rewardToCred', cors(), function (req, res) {
-  //console.log(req);
-  let values = [
-
-    req.body.RewardPoints,
-    req.body.Credits,
-    req.body.Email
-
-  ];
-  let sql = `UPDATE Users SET RewardPoints='` + values[0] + `' ,Credits='` + values[1] + `' WHERE Email='` + values[2] + `'`;
-
-  db.query(sql, [values], function (err, data, fields) {
-    if (err) throw err;
-    res.json({
-      status: 200,
-      message: "User Updated"
-    })
-  })
-});
-
-
-
-//On new jobs//
-indexRouter.post('/rewardCredsUpdate', cors(), function (req, res) {
-  //console.log(req);
-  let values = [
-
-    req.body.RewardPoints,
-    req.body.Credits,
-    req.body.Email,
-
-
-  ];
-  let sql = `UPDATE Users SET RewardPoints='` + values[0] + `' ,Credits='` + values[1] + `' WHERE Email='` + values[2] + `'`;
-
-  db.query(sql, [values], function (err, data, fields) {
-    if (err) throw err;
-    res.json({
-      status: 200,
-      message: "User Updated"
-    })
-  })
-});
 indexRouter.post('/getUserLedger', cors(), function (req, res) {
   let sql = `SELECT * FROM Ledger WHERE Email='` + req.body.email + `'`;
   db.query(sql, function (err, data, fields) {
@@ -264,13 +127,11 @@ indexRouter.post('/getUserLedger', cors(), function (req, res) {
 });
 
 indexRouter.post('/ledgerUpdate', cors(), function (req, res) {
-  let sql = `INSERT INTO Ledger( FileName, JobType, CreditsUsed, RewardPointsEarned, Email) VALUES (?)`;
+  let sql = `INSERT INTO Ledger( FileName, JobType, Email) VALUES (?)`;
   let values = [
 
     req.body.FileName,
     req.body.JobType,
-    req.body.CreditsUsed,
-    req.body.RewardPointsEarned,
     req.body.Email,
 
 
@@ -279,9 +140,9 @@ indexRouter.post('/ledgerUpdate', cors(), function (req, res) {
     if (err) throw err;
     res.json({
       status: 200,
-      message: "New player added successfully"
+      message: "added successfully"
     })
-    client.publish('bkc-device/printer', JSON.stringify(values));
+    client.publish('iotm-sys/printer', JSON.stringify(values));
   })
 });
 //////////////////////////ADMIN
@@ -308,6 +169,8 @@ indexRouter.post('/updateAdmin', cors(), function (req, res) {
 
 
   ];
+
+  //change to mongodb
   let sql = `UPDATE Admin SET FName='` + values[0] + `', LName='` + values[1] + `', Email='` + values[2] + `', Password='` + values[3] + `' WHERE Email='` + values[2] + `'`;
 
   db.query(sql, [values], function (err, data, fields) {
@@ -339,17 +202,6 @@ indexRouter.post('/updateAdminRewVal', cors(), function (req, res) {
   })
 });
 
-indexRouter.post('/allCredReqs', cors(), function (req, res) {
-  let sql = `SELECT * FROM Users WHERE CreditsRequest>0`;
-  db.query(sql, function (err, data, fields) {
-    if (err) throw err;
-    res.json({
-      status: 200,
-      data,
-      message: "User lists retrieved successfully"
-    })
-  })
-});
 
 indexRouter.post('/ledgerLog', cors(), function (req, res) {
   let sql = `SELECT * FROM Ledger `;
@@ -365,7 +217,7 @@ indexRouter.post('/ledgerLog', cors(), function (req, res) {
 
 indexRouter.post('/jobOperations', cors(), function (req, res) {
   if (req.body.operation == 'cancel') {
-    client.publish("bkc-device/allJobsOperation", "cancel")
+    client.publish("iotm-sys/allJobsOperation", "cancel")
     res.json({
       status: 200,
 
@@ -373,7 +225,7 @@ indexRouter.post('/jobOperations', cors(), function (req, res) {
     })
   }
   else if (req.body.operation == 'restore') {
-    client.publish("bkc-device/allJobsOperation", "restore")
+    client.publish("iotm-sys/allJobsOperation", "restore")
     res.json({
       status: 200,
 
@@ -383,26 +235,6 @@ indexRouter.post('/jobOperations', cors(), function (req, res) {
 
 
 });
-//UPDATE Users SET Credits=(CreditsRequest+Credits), CreditsRequest='0' WHERE Email='n@n.com'
-indexRouter.post('/approveCredReq', cors(), function (req, res) {
-  //console.log(req);
-  let values = [
-
-
-    req.body.Email
-
-  ];
-  let sql = `UPDATE Users SET Credits=(CreditsRequest+Credits), CreditsRequest='0' WHERE Email='` + values[0] + `'`
-
-  db.query(sql, [values], function (err, data, fields) {
-    if (err) throw err;
-    res.json({
-      status: 200,
-      message: "User Updated"
-    })
-  })
-});
-
 
 
 indexRouter.get('/listAll', cors(), function (req, res) {
@@ -442,31 +274,6 @@ indexRouter.get('/getUser', cors(), function (req, res) {
   })
 });
 
-
-
-indexRouter.post('/addPlayer', cors(), function (req, res) {
-  let sql = `INSERT INTO data(Timestamp, PlayerID, TMIN30, TMOUT30, TMIND, TMOUTD, ActiveStatus) VALUES (?)`;
-  let values = [
-    req.body.Timestamp,
-    req.body.PlayerID,
-    req.body.TMIN30,
-    req.body.TMOUT30,
-    req.body.TMIND,
-    req.body.TMOUTD,
-    req.body.ActiveStatus
-
-  ];
-  db.query(sql, [values], function (err, data, fields) {
-    if (err) throw err;
-    res.json({
-      status: 200,
-      message: "New player added successfully"
-    })
-  })
-});
-
-var pressureVal = "NA";
-var relayState = "NA";
 
 client.on('message', (topic, message) => {
   console.log(topic);
@@ -532,68 +339,6 @@ client.on('message', (topic, message) => {
 
       break;
 
-    // case 'edc-monitor/setActive':
-
-    // handleDeactivateAll()
-    //   .then(function(results){
-
-    //     handlesetActive(message.toString()).then(function(results1){var m=""}).catch(function(err){console.log(err)});  
-    //   })
-    //   .catch(function(err){
-    //     console.log("Promise rejection error: "+err);
-    //   })
-    //   break;
-    //   // client.publish('garage/close', 'Closing;'+message)
-    //   // return handleGarageState(message)
-    // case 'edc-monitor/playerExists':
-    //   doesPlayerExists(message.toString())
-    //   .then(function(results){
-    //     var strData=JSON.stringify(results[0])
-    //     /// var strData=JSON.stringify(results[0])
-    //     if(typeof strData == 'undefined'){
-    //       client.publish('edc-monitor/playerExistance', 'null')  
-    //     }
-    //     else{
-    //     client.publish('edc-monitor/playerExistance', strData)
-    //     }
-    //      // client.publish('edc-monitor/activePlayer', strData)
-    //      // handlesetActive(message).then(function(results){var m=""}).catch(function(err){console.log(err)});
-    //      //handlesetActive(message.toString()).then(function(results1){var m=""}).catch(function(err){console.log(err)});  
-    //    })
-    //    .catch(function(err){
-    //      console.log("Promise rejection error: "+err);
-    //    })
-    //    break;
-
-    // case 'edc-monitor/createNew':
-    //   var dataD=message.toString()
-    //   console.log(dataD)
-    //   var DataG=dataD.split(';')
-    //   handleCreateNew(DataG[0],DataG[1],DataG[2],DataG[3],DataG[4],DataG[5],DataG[6])
-    //   .then(function(results){
-    //     var strData=JSON.stringify(results[0])
-    //     //client.publish('edc-monitor/activePlayer', strData)
-
-    //   })
-    //   .catch(function(err){
-    //     console.log("Promise rejection error: "+err);
-    //   })
-    //   break;
-
-    // case 'edc-monitor/updatePlayer':
-    //   var dataD=message.toString()
-    //   console.log(dataD)
-    //   var DataG=dataD.split(';')
-    //   handleUpdatePlayer(DataG[0],DataG[1],DataG[2],DataG[3],DataG[4],DataG[5],DataG[6])
-    //   .then(function(results){
-    //     var strData=JSON.stringify(results[0])
-    //     //client.publish('edc-monitor/activePlayer', strData)
-
-    //   })
-    //   .catch(function(err){
-    //     console.log("Promise rejection error: "+err);
-    //   })
-    //   break;
   }
   
   if(topic.includes("iotm-sys/device/update/")){
@@ -722,10 +467,10 @@ function handlegetActive() {
 }
 
 
-function doesPlayerExists(PID) {
+function doesDevExists(PID) {
   return new Promise(function (resolve, reject) {
     db.query(
-      `SELECT * FROM data WHERE PlayerID='` + PID + `'`,
+      `SELECT * FROM data WHERE DevID='` + PID + `'`,
       function (err, rows) {
         if (rows === undefined) {
           reject(new Error("Error rows is undefined"));
@@ -754,26 +499,11 @@ function handleDeactivateAll() {
   }
   )
 }
-function handlesetActive(playerID) {
-  return new Promise(function (resolve, reject) {
-    db.query(
-      `UPDATE data SET ActiveStatus='0' ; UPDATE data SET ActiveStatus='1' WHERE PlayerID='` + playerID + `'`,
-      function (err, rows) {
-        resolve(rows);
-        // if(rows === undefined){
-        //     reject(new Error("Error rows is undefined"));
-        // }else{
-        //     resolve(rows);
-        // }
-      }
-    )
-  }
-  )
-}
 
-function handleCreateNew(EventTime, PressureValue, RelayState) {
+
+function handleCreateNew(EventTime, DevNAME, ID) {
   return new Promise(function (resolve, reject) {
-    let sql = `INSERT INTO VLedger(EventTime, PressureValue, RelayState) VALUES (?)`;
+    let sql = `INSERT INTO VLedger(EventTime, NAME, ID) VALUES (?)`;
     let values = [
       EventTime,
       PressureValue,
@@ -782,23 +512,6 @@ function handleCreateNew(EventTime, PressureValue, RelayState) {
 
     ];
     db.query(sql, [values],
-      function (err, rows) {
-        if (rows === undefined) {
-          reject(new Error("Error rows is undefined"));
-        } else {
-          resolve(rows);
-        }
-      }
-    )
-  }
-  )
-}
-
-function handleUpdatePlayer(playerID, Timestamp, TMIN30, TMOUT30, TMIND, TMOUTD, ActiveStatus) {
-  return new Promise(function (resolve, reject) {
-
-    db.query(
-      `UPDATE data SET Timestamp='` + Timestamp + `', TMIN30='` + TMIN30 + `', TMOUT30='` + TMOUT30 + `', TMIND='` + TMIND + `', TMOUTD='` + TMOUTD + `', ActiveStatus='` + ActiveStatus + `' WHERE PlayerID='` + playerID + `'`,
       function (err, rows) {
         if (rows === undefined) {
           reject(new Error("Error rows is undefined"));
@@ -834,4 +547,3 @@ indexRouter.post('/liveValues', cors(), function (req, res) {
 });
 
 export default indexRouter;
-//export default cashHandleRouter;
