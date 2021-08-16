@@ -42,7 +42,7 @@ var garageState = ''
 var connected = false
 
 client.on('connect', () => {
-  client.subscribe('swm-device/SmartWaterMonitor/pressure')
+  client.subscribe('iotm-sys/device/add')
   client.subscribe('swm-device/SmartWaterMonitor/eventPressureLimitChanged')
   client.subscribe('swm-device/SmartWaterMonitor/relayState')
 
@@ -82,14 +82,14 @@ var SomeModelSchema = new Schema({
 // Compile model from schema
 var SomeModel = mongoose.model('SomeModel', SomeModelSchema);
 // Create an instance of model SomeModel
-var awesome_instance = new SomeModel({ a_name: 'awesome' });
-awesome_instance.a_macAddress="TEST:TEST"
-// Save the new model instance, passing a callback
-awesome_instance.save(function (err) {
-  if (err) return handleError(err);
-  // saved!
-  console.log("saved")
-});
+// var awesome_instance = new SomeModel({ a_name: 'awesome' });
+// awesome_instance.a_macAddress="TEST:TEST"
+// // Save the new model instance, passing a callback
+// awesome_instance.save(function (err) {
+//   if (err) return handleError(err);
+//   // saved!
+//   console.log("saved")
+// });
 
 
 //FIND
@@ -468,9 +468,26 @@ var relayState = "NA";
 
 client.on('message', (topic, message) => {
   switch (topic) {
-    case 'swm-device/SmartWaterMonitor/pressure':
-      pressureVal = message.toString();
-      console.log(pressureVal)
+    case 'iotm-sys/device/add':
+      //check if device already exists?
+      var mAdd = message.toString();
+      console.log(mAdd)
+      var q = SomeModel.find({ 'a_macAddress': mAdd });
+      q.select('a_name _DeviceId a_macAddress');
+      q.exec(function (err, res) {
+        if (err) return handleError(err);
+        console.log(res)
+        console.log("res len: ")
+        console.log(res.length)
+        if(res.length>=1){
+          console.log("macAddress found")
+        }
+        else{
+          console.log("macAddress not found, adding it to the db")
+        }
+
+      })
+
 
 
       break;
