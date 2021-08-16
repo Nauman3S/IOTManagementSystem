@@ -66,6 +66,9 @@ Open the terminal and execute the following commands
 - MQTT Broker Link: 44.195.192.158:1883
 - Backend Link: 44.195.192.158:3000
 
+## Backend
+
+- Backend is based on NodeJS and it is being managed by PM2. It starts automatically on server start.
 ## MQTT Topic Details
 ### Topics List
 #### Logs
