@@ -90,7 +90,7 @@ SomeModel.find({ 'a_name': 'awesome' }, 'a_name a_macAddress updated_at _DeviceI
 })
 
 indexRouter.get('/', cors(), indexPage);
-indexRouter.get('/csh', cors(), tempHandlePage);
+indexRouter.get('/temp', cors(), tempHandlePage);
 
 
 indexRouter.post('/credReq', cors(), function (req, res) {
@@ -215,14 +215,18 @@ indexRouter.post('/ledgerLog', cors(), function (req, res) {
   })
 });
 
-indexRouter.post('/jobOperations', cors(), function (req, res) {
-  if (req.body.operation == 'cancel') {
-    client.publish("iotm-sys/allJobsOperation", "cancel")
-    res.json({
-      status: 200,
-
-      message: "Jobs canceled successfully"
-    })
+indexRouter.post('/upgrade', cors(), function (req, res) {//upgrade device os
+  if (req.body.operation == 'upgrade') {
+    if(req.body.devices=='all'){
+      client.publish('iotm-sys/device/osug/all', "start update")//as mqtt can't publish to wildcards
+      client.publish('iotm-sys/device/logs', "Upgrade request pushed to all devices")
+      res.json({
+        status: 200,
+  
+        message: "Upgrade pushed to all devices."
+      })
+    }
+   
   }
   else if (req.body.operation == 'restore') {
     client.publish("iotm-sys/allJobsOperation", "restore")

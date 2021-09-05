@@ -69,6 +69,7 @@ Open the terminal and execute the following commands
 ## Backend
 
 - Backend is based on NodeJS and it is being managed by PM2. It starts automatically on server start.
+- 
 ## MQTT Topic Details
 ### Topics List
 #### Logs
@@ -92,8 +93,49 @@ Open the terminal and execute the following commands
 11. iotm-sys/device/info/[macaddress] `(device and os info of specific device can be requested from this topic) WRITE-ONLY`
 12. iotm-sys/device/info/response/[macaddress] `(device and os info request response is sent to this topic) READ-ONLY`
 
+## API Details
+
+### Upgrade
+
+```http
+GET /api/campaigns/?api_key=12345678901234567890123456789012
+```
+
+| Parameter | Type | Body |
+| :--- | :--- | :--- |
+| `upgrade` | `POST` | **Required**. ```javascript
+{
+  "status"  : int,
+  "message" : string
+}
+``` |
+
+## Responses
+
+Many API endpoints return the JSON representation of the resources created or edited. However, if an invalid request is submitted, or some other error occurs, Gophish returns a JSON response in the following format:
+
+```javascript
+{
+  "status"  : int,
+  "message" : string
+}
+```
+The `message` attribute contains a message commonly used to indicate errors or, in the case of deleting a resource, success that the resource was properly deleted.
+
+The `success` attribute describes if the transaction was successful or not.
 
 
+## Status Codes
+
+IoTManagementSystem Backend returns the following status codes in its API:
+
+| Status Code | Description |
+| :--- | :--- |
+| 200 | `OK` |
+| 201 | `CREATED` |
+| 400 | `BAD REQUEST` |
+| 404 | `NOT FOUND` |
+| 500 | `INTERNAL SERVER ERROR` |
 
 ## Demo Videos <a name = "videos"></a>
 
