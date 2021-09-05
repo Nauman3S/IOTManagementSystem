@@ -11,7 +11,7 @@ echo "IOT Management System Client Installer"
 installLogLoc=/etc/pihole/install.log
 
 
-echo `Welcome user $USER`
+echo `Welcome user `echo $USER``
 
 show_ascii_berry() {
   echo -e "
