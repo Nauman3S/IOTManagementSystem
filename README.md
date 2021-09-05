@@ -95,7 +95,7 @@ Open the terminal and execute the following commands
 
 ## API Details
 
-### Upgrade
+### Upgrade OS
 
 ```http
 POST http://44.195.192.158:3000/v1/upgrade
@@ -104,6 +104,18 @@ POST http://44.195.192.158:3000/v1/upgrade
 | Parameter | Type | Description | 
 | :--- | :--- | :--- |
 | `operation` | `string` | **Required**. *value of operation should be 'upgrade'*  |
+| `devices` | `string` | **Required**.  *value of devices param could be 'all' or 'device MAC Address'*|
+
+
+### Update Firmware
+
+```http
+POST http://44.195.192.158:3000/v1/update
+```
+
+| Parameter | Type | Description | 
+| :--- | :--- | :--- |
+| `operation` | `string` | **Required**. *value of operation should be 'update'*  |
 | `devices` | `string` | **Required**.  *value of devices param could be 'all' or 'device MAC Address'*|
 
 ## Responses

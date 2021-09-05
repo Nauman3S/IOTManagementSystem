@@ -1,4 +1,6 @@
 import express from 'express';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
 import { indexPage } from '../controllers';
 import { tempHandlePage } from '../controllers';
 //import mysql from 'mysql'
@@ -10,7 +12,8 @@ import mongoose from 'mongoose'
 import mqtt from 'mqtt';
 import cors from 'cors';
 //import axios from 'axios';
-
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 // const app=express();
 // app.use(helmet())
 // app.use(helmet.permittedCrossDomainPolicies({
@@ -245,7 +248,104 @@ indexRouter.post('/upgrade', cors(), function (req, res) {//upgrade device os
             console.log("macAddress found")
             console.log("Device to be updated:")
             console.log(req.body.devices);
-            client.publish('iotm-sys/device/firmware/' + req.body.devices, "start upgrade")
+            client.publish('iotm-sys/device/osug/' + req.body.devices, "start upgrade")
+            client.publish('iotm-sys/device/logs', "Upgrade request pushed to " + req.body.devices);
+            statusN = 200;
+            msgN = "Upgrade pushed to " + req.body.devices + "."
+            res.json({
+              status: statusN,
+
+              message: msgN
+            })
+
+          }
+          else {
+            console.log("macAddress not found,")
+            statusN = 404;
+            msgN = "MAC Address: " + req.body.devices + " not found."
+            res.json({
+              status: statusN,
+
+              message: msgN
+            })
+          }
+
+
+
+        })
+
+
+      }
+    }
+
+
+
+  }
+
+
+
+});
+
+//upload template
+indexRouter.post('/upload', function (req, res) {
+  let programFile;
+  let uploadPath;
+  console.log(req.files);
+  console.log(req.body.domain);
+  // console.log(req.files.sampleFile);
+  // console.log(req.sampleFile);
+
+  if (!req.files || Object.keys(req.files).length === 0) {
+    return res.status(400).send('No files were uploaded.');
+  }
+
+  // The name of the input field (i.e. "sampleFile") is used to retrieve the uploaded file
+  programFile = req.files.programFile;
+  console.log(__dirname)
+  let dir=__dirname.replace("/src/routes", "");
+  console.log(dir)
+  uploadPath = dir + '/cdn/' + programFile.name;
+
+  // Use the mv() method to place the file somewhere on your server
+  programFile.mv(uploadPath, function (err) {
+    if (err)
+      return res.status(500).send(err);
+
+    res.send('File uploaded!');
+  });
+});
+
+indexRouter.post('/update', cors(), function (req, res) {//update device fw
+  let statusN = 0;
+  let msgN = "";
+
+  if (req.body.operation == 'update') {
+    if (req.body.devices == 'all') {
+      client.publish('iotm-sys/device/firmware/all', "fimrware file/string")//as mqtt can't publish to wildcards
+      client.publish('iotm-sys/device/logs', "Update pushed to all devices")
+      statusN = 200;
+      msgN = "Update pushed to all devices."
+      res.json({
+        status: statusN,
+
+        message: msgN
+      })
+    }
+    else {
+      if (req.body.devices.length > 5) {
+
+        var q = SomeModel.find({ 'a_macAddress': req.body.devices });
+        q.select('a_name _DeviceId a_macAddress');
+        q.exec(function (err, resV) {
+          if (err) return handleError(err);
+          console.log(resV)
+          console.log("res len: ")
+          console.log(res.length)
+          if (resV.length >= 1) {
+            console.log("macAddress found")
+            console.log("Device to be updated:")
+            console.log(req.body.devices);
+            client.publish('iotm-sys/device/firmware/' + req.body.devices, "fimrware file/string")
             client.publish('iotm-sys/device/logs', "Update pushed to " + req.body.devices);
             statusN = 200;
             msgN = "Upgrade pushed to " + req.body.devices + "."

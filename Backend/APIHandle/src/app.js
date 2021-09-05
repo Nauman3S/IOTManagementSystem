@@ -1,5 +1,6 @@
 import logger from 'morgan';
 import express from 'express';
+import fileUpload from 'express-fileupload';
 //const cors = require('cors');
 import cors from 'cors'
 import bodyParser from 'body-parser'
@@ -13,6 +14,7 @@ import indexRouter from './routes/index';
 
 //import cashHandleRouter from './routes/index';
 const app = express();
+app.use(fileUpload());
 //app.use(logger('dev'));//uncomment to enable GET POST LOGS
 //app.use(cors());
 app.use(cors({credentials:true , origin:true}))
