@@ -421,8 +421,8 @@ indexRouter.get('/listAll', cors(), function (req, res) {
   const collection = db.collection('somemodels');
   collection.find({}).toArray((err, vals) => {
     if (err) throw err;
-    console.log("Found the following records");
-    console.log(vals)
+    //console.log("Found the following records");
+    //console.log(vals)
     //callback(vals);
     res.json({
       status: vals,
@@ -598,7 +598,7 @@ client.on('message', (topic, message) => {
 
 
 
-  if (topic.includes("iotm-sys/device/info/")) {
+  if (topic.includes("iotm-sys/device/info/")) {//change to api
     if (topic == "iotm-sys/device/info/*") {
       // console.log("updating os of all devices");
       // client.publish('iotm-sys/device/osug/all', "start update")//as mqtt can't publish to wildcards
