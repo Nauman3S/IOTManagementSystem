@@ -98,17 +98,12 @@ Open the terminal and execute the following commands
 ### Upgrade
 
 ```http
-GET /api/campaigns/?api_key=12345678901234567890123456789012
+POST http://44.195.192.158:3000/v1/[Parameter]
 ```
 
-| Parameter | Type | Body |
-| :--- | :--- | :--- |
-| `upgrade` | `POST` | **Required**. ```javascript
-{
-  "status"  : int,
-  "message" : string
-}
-``` |
+| Parameter | Type | Body | Description |
+| :--- | :--- | :--- | :--- |
+| `upgrade` | `POST` | **Required**. ```javascript{"operation"  : string,"device" : string}``` | *value of devices param could be 'all' or 'device MAC Address'* |
 
 ## Responses
 
@@ -120,9 +115,9 @@ Many API endpoints return the JSON representation of the resources created or ed
   "message" : string
 }
 ```
-The `message` attribute contains a message commonly used to indicate errors or, in the case of deleting a resource, success that the resource was properly deleted.
+The `message` attribute contains a message commonly used to indicate errors or to return the logged status/
 
-The `success` attribute describes if the transaction was successful or not.
+The `status` attribute describes if the transaction was successful or not.
 
 
 ## Status Codes
