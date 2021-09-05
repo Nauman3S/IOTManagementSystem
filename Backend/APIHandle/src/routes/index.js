@@ -47,7 +47,7 @@ client.on('connect', () => {
   client.subscribe('iotm-sys/device/update/#')
   client.subscribe('iotm-sys/device/upgrade/#')
   client.subscribe('iotm-sys/device/info/#')
-  
+
 
 })
 
@@ -216,26 +216,69 @@ indexRouter.post('/ledgerLog', cors(), function (req, res) {
 });
 
 indexRouter.post('/upgrade', cors(), function (req, res) {//upgrade device os
+  let statusN = 0;
+  let msgN = "";
+
   if (req.body.operation == 'upgrade') {
-    if(req.body.devices=='all'){
-      client.publish('iotm-sys/device/osug/all', "start update")//as mqtt can't publish to wildcards
+    if (req.body.devices == 'all') {
+      client.publish('iotm-sys/device/osug/all', "start upgrade")//as mqtt can't publish to wildcards
       client.publish('iotm-sys/device/logs', "Upgrade request pushed to all devices")
+      statusN = 200;
+      msgN = "Upgrade pushed to all devices."
       res.json({
-        status: 200,
-  
-        message: "Upgrade pushed to all devices."
+        status: statusN,
+
+        message: msgN
       })
     }
-   
-  }
-  else if (req.body.operation == 'restore') {
-    client.publish("iotm-sys/allJobsOperation", "restore")
-    res.json({
-      status: 200,
+    else {
+      if (req.body.devices.length > 5) {
 
-      message: "Jobs restored successfully"
-    })
+        var q = SomeModel.find({ 'a_macAddress': req.body.devices });
+        q.select('a_name _DeviceId a_macAddress');
+        q.exec(function (err, resV) {
+          if (err) return handleError(err);
+          console.log(resV)
+          console.log("res len: ")
+          console.log(res.length)
+          if (resV.length >= 1) {
+            console.log("macAddress found")
+            console.log("Device to be updated:")
+            console.log(req.body.devices);
+            client.publish('iotm-sys/device/firmware/' + req.body.devices, "start upgrade")
+            client.publish('iotm-sys/device/logs', "Update pushed to " + req.body.devices);
+            statusN = 200;
+            msgN = "Upgrade pushed to " + req.body.devices + "."
+            res.json({
+              status: statusN,
+
+              message: msgN
+            })
+
+          }
+          else {
+            console.log("macAddress not found,")
+            statusN = 404;
+            msgN = "MAC Address: " + req.body.devices + " not found."
+            res.json({
+              status: statusN,
+
+              message: msgN
+            })
+          }
+
+
+
+        })
+
+
+      }
+    }
+
+
+
   }
+
 
 
 });
@@ -281,7 +324,7 @@ indexRouter.get('/getUser', cors(), function (req, res) {
 
 client.on('message', (topic, message) => {
   console.log(topic);
- 
+
   switch (topic) {
     case 'iotm-sys/device/add':
       //check if device already exists?
@@ -322,7 +365,7 @@ client.on('message', (topic, message) => {
 
 
       break;
-    
+
     case 'swm-device/SmartWaterMonitor/eventPressureLimitChanged':
 
       var dataD = message.toString()
@@ -344,114 +387,114 @@ client.on('message', (topic, message) => {
       break;
 
   }
-  
-  if(topic.includes("iotm-sys/device/update/")){
-    if(topic=="iotm-sys/device/update/*"){
+
+  if (topic.includes("iotm-sys/device/update/")) {
+    if (topic == "iotm-sys/device/update/*") {
       console.log("updating all devices");
       client.publish('iotm-sys/device/firmware/all', "fimrware file/string")//as mqtt can't publish to wildcards
       client.publish('iotm-sys/device/logs', "Update pushed to all devices")
     }
-    else{
-      var devToBeUpdate=topic.split("/");
+    else {
+      var devToBeUpdate = topic.split("/");
       var q = SomeModel.find({ 'a_macAddress': devToBeUpdate[3] });
-        q.select('a_name _DeviceId a_macAddress');
-        q.exec(function (err, res) {
-          if (err) return handleError(err);
-          console.log(res)
-          console.log("res len: ")
-          console.log(res.length)
-          if (res.length >= 1) {
-            console.log("macAddress found")
-            console.log("Device to be updated:")
-            console.log(devToBeUpdate[3]);
-            client.publish('iotm-sys/device/firmware/'+devToBeUpdate[3], "fimrware file/string")
-            client.publish('iotm-sys/device/logs', "Update pushed to "+devToBeUpdate[3]);
-            
-          }
-          else {
-            console.log("macAddress not found,")
-          }
-  
-  
-      
-    })
-    }
-    }
+      q.select('a_name _DeviceId a_macAddress');
+      q.exec(function (err, res) {
+        if (err) return handleError(err);
+        console.log(res)
+        console.log("res len: ")
+        console.log(res.length)
+        if (res.length >= 1) {
+          console.log("macAddress found")
+          console.log("Device to be updated:")
+          console.log(devToBeUpdate[3]);
+          client.publish('iotm-sys/device/firmware/' + devToBeUpdate[3], "fimrware file/string")
+          client.publish('iotm-sys/device/logs', "Update pushed to " + devToBeUpdate[3]);
+
+        }
+        else {
+          console.log("macAddress not found,")
+        }
 
 
 
-
-
-    if(topic.includes("iotm-sys/device/upgrade/")){
-      if(topic=="iotm-sys/device/upgrade/*"){
-        console.log("updating os of all devices");
-        client.publish('iotm-sys/device/osug/all', "start update")//as mqtt can't publish to wildcards
-        client.publish('iotm-sys/device/logs', "Upgrade request pushed to all devices")
-      }
-      else{
-        var devToBeUpdate=topic.split("/");
-        var q = SomeModel.find({ 'a_macAddress': devToBeUpdate[3] });
-          q.select('a_name _DeviceId a_macAddress');
-          q.exec(function (err, res) {
-            if (err) return handleError(err);
-            console.log(res)
-            console.log("res len: ")
-            console.log(res.length)
-            if (res.length >= 1) {
-              console.log("macAddress found")
-              console.log("Device to be updated:")
-              console.log(devToBeUpdate[3]);
-              client.publish('iotm-sys/device/osug/'+devToBeUpdate[3], "start upgrade")
-              client.publish('iotm-sys/device/logs', "Upgrade request pushed to "+devToBeUpdate[3]);
-              
-            }
-            else {
-              console.log("macAddress not found,")
-            }
-    
-    
-        
       })
-      }
-      }
+    }
+  }
 
 
 
 
-      if(topic.includes("iotm-sys/device/info/")){
-        if(topic=="iotm-sys/device/info/*"){
-          // console.log("updating os of all devices");
-          // client.publish('iotm-sys/device/osug/all', "start update")//as mqtt can't publish to wildcards
-          // client.publish('iotm-sys/device/logs', "Upgrade request pushed to all devices")
+
+  if (topic.includes("iotm-sys/device/upgrade/")) {
+    if (topic == "iotm-sys/device/upgrade/*") {
+      console.log("updating os of all devices");
+      client.publish('iotm-sys/device/osug/all', "start update")//as mqtt can't publish to wildcards
+      client.publish('iotm-sys/device/logs', "Upgrade request pushed to all devices")
+    }
+    else {
+      var devToBeUpdate = topic.split("/");
+      var q = SomeModel.find({ 'a_macAddress': devToBeUpdate[3] });
+      q.select('a_name _DeviceId a_macAddress');
+      q.exec(function (err, res) {
+        if (err) return handleError(err);
+        console.log(res)
+        console.log("res len: ")
+        console.log(res.length)
+        if (res.length >= 1) {
+          console.log("macAddress found")
+          console.log("Device to be updated:")
+          console.log(devToBeUpdate[3]);
+          client.publish('iotm-sys/device/osug/' + devToBeUpdate[3], "start upgrade")
+          client.publish('iotm-sys/device/logs', "Upgrade request pushed to " + devToBeUpdate[3]);
+
         }
-        else{
-          var devToBeUpdate=topic.split("/");
-          var q = SomeModel.find({ 'a_macAddress': devToBeUpdate[3] });
-            q.select('a_name _DeviceId a_macAddress');
-            q.exec(function (err, res) {
-              if (err) return handleError(err);
-              console.log(res)
-              console.log("res len: ")
-              console.log(res.length)
-              if (res.length >= 1) {
-                console.log("macAddress found")
-                console.log("Device to be updated:")
-                console.log(devToBeUpdate[3]);
-                client.publish('iotm-sys/device/info/response/'+devToBeUpdate[3], "info request")
-                client.publish('iotm-sys/device/logs', "info requested from "+devToBeUpdate[3]);
-                
-              }
-              else {
-                console.log("macAddress not found,")
-              }
-      
-      
-          
-        })
+        else {
+          console.log("macAddress not found,")
         }
+
+
+
+      })
+    }
+  }
+
+
+
+
+  if (topic.includes("iotm-sys/device/info/")) {
+    if (topic == "iotm-sys/device/info/*") {
+      // console.log("updating os of all devices");
+      // client.publish('iotm-sys/device/osug/all', "start update")//as mqtt can't publish to wildcards
+      // client.publish('iotm-sys/device/logs', "Upgrade request pushed to all devices")
+    }
+    else {
+      var devToBeUpdate = topic.split("/");
+      var q = SomeModel.find({ 'a_macAddress': devToBeUpdate[3] });
+      q.select('a_name _DeviceId a_macAddress');
+      q.exec(function (err, res) {
+        if (err) return handleError(err);
+        console.log(res)
+        console.log("res len: ")
+        console.log(res.length)
+        if (res.length >= 1) {
+          console.log("macAddress found")
+          console.log("Device to be updated:")
+          console.log(devToBeUpdate[3]);
+          client.publish('iotm-sys/device/info/response/' + devToBeUpdate[3], "info request")
+          client.publish('iotm-sys/device/logs', "info requested from " + devToBeUpdate[3]);
+
         }
-  
-  
+        else {
+          console.log("macAddress not found,")
+        }
+
+
+
+      })
+    }
+  }
+
+
 })
 //import async from 'async';
 function handlegetActive() {

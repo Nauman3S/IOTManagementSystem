@@ -44,33 +44,20 @@ var cashHandleRouter = _express["default"].Router(); //indexRouter.locals.axios=
 //     res.header("Access-Control-Allow-Headers",'Origin, X-Requested-With, Content-Type, Accept');
 // })
 //const mqtt = require('mqtt')
+//const client = mqtt.connect('mqtt://broker.hivemq.com')
 
 
-var client = _mqtt["default"].connect('mqtt://broker.hivemq.com');
+var client = _mqtt["default"].connect('mqtt://44.195.192.158');
 
 var garageState = '';
 var connected = false;
 client.on('connect', function () {
-  client.subscribe('swm-device/SmartWaterMonitor/pressure');
-  client.subscribe('swm-device/SmartWaterMonitor/eventPressureLimitChanged');
-  client.subscribe('swm-device/SmartWaterMonitor/relayState'); // client.subscribe('swm-device/Smar')
-  //client.subscribe('edc-monitor/createNew')
-  //client.subscribe('edc-monitor/updatePlayer')
-  //client.subscribe('edc-monitor/playerExists')
-}); // var db = mysql.createConnection({
-//   host: 'localhost',
-//   port: 3306,
-//   user: 'root',
-//   password: 'swpm-mysqldb',
-//   database: 'smartwaterpressure',
-//   multipleStatements: true
-// })
-// db.connect(function (err) {
-//   if (err) throw err;
-//   console.log("Connected!");
-// });
-
-var mongoDB = 'mongodb://44.195.192.158/my_database';
+  client.subscribe('iotm-sys/device/add');
+  client.subscribe('iotm-sys/device/update/#');
+  client.subscribe('iotm-sys/device/upgrade/#');
+  client.subscribe('iotm-sys/device/info/#');
+});
+var mongoDB = 'mongodb://127.0.0.1/my_database';
 
 _mongoose["default"].connect(mongoDB, {
   useNewUrlParser: true,
@@ -78,97 +65,42 @@ _mongoose["default"].connect(mongoDB, {
 });
 
 var db = _mongoose["default"].connection;
-db.on('error', console.error.bind(console, 'MongoDB connection error:'));
-indexRouter.get('/', (0, _cors["default"])(), _controllers.indexPage);
-indexRouter.get('/csh', (0, _cors["default"])(), _controllers.tempHandlePage);
-indexRouter.post('/getLogs', (0, _cors["default"])(), function (req, res) {
-  var sql = "SELECT * FROM VLedger";
-  db.query(sql, function (err, data, fields) {
-    if (err) throw err;
-    res.json({
-      status: 200,
-      data: data,
-      message: "Logs"
-    });
-  });
-});
-indexRouter.post('/verifyFingerPrint', (0, _cors["default"])(), function (req, res) {
-  var sql = "SELECT * FROM VLedger WHERE Fingerprint='" + req.body.Fingerprint + "'";
-  db.query(sql, function (err, data, fields) {
-    if (err) throw err;
-    res.json({
-      status: 200,
-      data: data,
-      message: "Verification"
-    });
-  });
-});
-indexRouter.post('/newFingerPrint', (0, _cors["default"])(), function (req, res) {
-  var sql = "INSERT INTO VLedger(Fingerprint, LastVend, MachineNumber, TotalVends) VALUES (?)";
-  var values = [req.body.Fingerprint, req.body.LastVend, req.body.MachineNumber, '0'];
-  db.query(sql, [values], function (err, data, fields) {
-    if (err) throw err;
-    res.json({
-      status: 200,
-      message: "New fingerprint added successfully"
-    });
-  });
-  client.publish('vend-machine/vend', values[2]);
-}); //UPDATE Users SET Credits=(CreditsRequest+Credits), CreditsRequest='0' WHERE Email='n@n.com'
+db.on('error', console.error.bind(console, 'MongoDB connection error:')); // Define schema
 
-indexRouter.post('/vend', (0, _cors["default"])(), function (req, res) {
-  //console.log(req);
-  var values = [req.body.Fingerprint, req.body.LastVend, req.body.MachineNumber];
-  var sql = "UPDATE VLedger SET LastVend='" + values[1] + "' ,MachineNumber='" + values[2] + "' , TotalVends=(TotalVends+1) WHERE Fingerprint='" + values[0] + "'";
-  db.query(sql, [values], function (err, data, fields) {
-    if (err) throw err;
-    res.json({
-      status: 200,
-      message: "vending initiated"
-    });
-  });
-  client.publish('vend-machine/vend', values[2]);
+var Schema = _mongoose["default"].Schema;
+var SomeModelSchema = new Schema({
+  a_name: String,
+  a_macAddress: String,
+  updated_at: String,
+  _DeviceId: Schema.Types.ObjectId
+}); // Compile model from schema
+
+var SomeModel = _mongoose["default"].model('SomeModel', SomeModelSchema); // Create an instance of model SomeModel
+// var awesome_instance = new SomeModel({ a_name: 'awesome' });
+// awesome_instance.a_macAddress="TEST:TEST"
+// // Save the new model instance, passing a callback
+// awesome_instance.save(function (err) {
+//   if (err) return handleError(err);
+//   // saved!
+//   console.log("saved")
+// });
+//FIND
+// find all athletes who play tennis, selecting the 'name' and 'age' fields
+
+
+SomeModel.find({
+  'a_name': 'awesome'
+}, 'a_name a_macAddress updated_at _DeviceId', function (err, athletes) {
+  if (err) return handleError(err); // 'athletes' contains the list of athletes that match the criteria.
+
+  console.log(athletes);
 });
+indexRouter.get('/', (0, _cors["default"])(), _controllers.indexPage);
+indexRouter.get('/temp', (0, _cors["default"])(), _controllers.tempHandlePage);
 indexRouter.post('/credReq', (0, _cors["default"])(), function (req, res) {
   //console.log(req);
   var values = [req.body.CreditsRequest, req.body.Email];
   var sql = "UPDATE Users SET CreditsRequest='" + values[0] + "' WHERE Email='" + values[1] + "'";
-  db.query(sql, [values], function (err, data, fields) {
-    if (err) throw err;
-    res.json({
-      status: 200,
-      message: "User Updated"
-    });
-  });
-});
-indexRouter.get('/rewardEqCredits', (0, _cors["default"])(), function (req, res) {
-  var sql = "SELECT RewardEqCredits FROM Admin";
-  db.query(sql, function (err, data, fields) {
-    if (err) throw err;
-    res.json({
-      status: 200,
-      data: data,
-      message: "User lists retrieved successfully"
-    });
-  });
-});
-indexRouter.post('/rewardToCred', (0, _cors["default"])(), function (req, res) {
-  //console.log(req);
-  var values = [req.body.RewardPoints, req.body.Credits, req.body.Email];
-  var sql = "UPDATE Users SET RewardPoints='" + values[0] + "' ,Credits='" + values[1] + "' WHERE Email='" + values[2] + "'";
-  db.query(sql, [values], function (err, data, fields) {
-    if (err) throw err;
-    res.json({
-      status: 200,
-      message: "User Updated"
-    });
-  });
-}); //On new jobs//
-
-indexRouter.post('/rewardCredsUpdate', (0, _cors["default"])(), function (req, res) {
-  //console.log(req);
-  var values = [req.body.RewardPoints, req.body.Credits, req.body.Email];
-  var sql = "UPDATE Users SET RewardPoints='" + values[0] + "' ,Credits='" + values[1] + "' WHERE Email='" + values[2] + "'";
   db.query(sql, [values], function (err, data, fields) {
     if (err) throw err;
     res.json({
@@ -189,15 +121,15 @@ indexRouter.post('/getUserLedger', (0, _cors["default"])(), function (req, res) 
   });
 });
 indexRouter.post('/ledgerUpdate', (0, _cors["default"])(), function (req, res) {
-  var sql = "INSERT INTO Ledger( FileName, JobType, CreditsUsed, RewardPointsEarned, Email) VALUES (?)";
-  var values = [req.body.FileName, req.body.JobType, req.body.CreditsUsed, req.body.RewardPointsEarned, req.body.Email];
+  var sql = "INSERT INTO Ledger( FileName, JobType, Email) VALUES (?)";
+  var values = [req.body.FileName, req.body.JobType, req.body.Email];
   db.query(sql, [values], function (err, data, fields) {
     if (err) throw err;
     res.json({
       status: 200,
-      message: "New player added successfully"
+      message: "added successfully"
     });
-    client.publish('bkc-device/printer', JSON.stringify(values));
+    client.publish('iotm-sys/printer', JSON.stringify(values));
   });
 }); //////////////////////////ADMIN
 
@@ -214,7 +146,8 @@ indexRouter.post('/loginAdmin', (0, _cors["default"])(), function (req, res) {
 });
 indexRouter.post('/updateAdmin', (0, _cors["default"])(), function (req, res) {
   //console.log(req);
-  var values = [req.body.FName, req.body.LName, req.body.Email, req.body.Password];
+  var values = [req.body.FName, req.body.LName, req.body.Email, req.body.Password]; //change to mongodb
+
   var sql = "UPDATE Admin SET FName='" + values[0] + "', LName='" + values[1] + "', Email='" + values[2] + "', Password='" + values[3] + "' WHERE Email='" + values[2] + "'";
   db.query(sql, [values], function (err, data, fields) {
     if (err) throw err;
@@ -236,17 +169,6 @@ indexRouter.post('/updateAdminRewVal', (0, _cors["default"])(), function (req, r
     });
   });
 });
-indexRouter.post('/allCredReqs', (0, _cors["default"])(), function (req, res) {
-  var sql = "SELECT * FROM Users WHERE CreditsRequest>0";
-  db.query(sql, function (err, data, fields) {
-    if (err) throw err;
-    res.json({
-      status: 200,
-      data: data,
-      message: "User lists retrieved successfully"
-    });
-  });
-});
 indexRouter.post('/ledgerLog', (0, _cors["default"])(), function (req, res) {
   var sql = "SELECT * FROM Ledger ";
   db.query(sql, function (err, data, fields) {
@@ -258,33 +180,42 @@ indexRouter.post('/ledgerLog', (0, _cors["default"])(), function (req, res) {
     });
   });
 });
-indexRouter.post('/jobOperations', (0, _cors["default"])(), function (req, res) {
-  if (req.body.operation == 'cancel') {
-    client.publish("bkc-device/allJobsOperation", "cancel");
-    res.json({
-      status: 200,
-      message: "Jobs canceled successfully"
-    });
-  } else if (req.body.operation == 'restore') {
-    client.publish("bkc-device/allJobsOperation", "restore");
-    res.json({
-      status: 200,
-      message: "Jobs restored successfully"
-    });
-  }
-}); //UPDATE Users SET Credits=(CreditsRequest+Credits), CreditsRequest='0' WHERE Email='n@n.com'
+indexRouter.post('/upgrade', (0, _cors["default"])(), function (req, res) {
+  //upgrade device os
+  if (req.body.operation == 'upgrade') {
+    if (req.body.devices == 'all') {
+      client.publish('iotm-sys/device/osug/all', "start update"); //as mqtt can't publish to wildcards
 
-indexRouter.post('/approveCredReq', (0, _cors["default"])(), function (req, res) {
-  //console.log(req);
-  var values = [req.body.Email];
-  var sql = "UPDATE Users SET Credits=(CreditsRequest+Credits), CreditsRequest='0' WHERE Email='" + values[0] + "'";
-  db.query(sql, [values], function (err, data, fields) {
-    if (err) throw err;
-    res.json({
-      status: 200,
-      message: "User Updated"
-    });
-  });
+      client.publish('iotm-sys/device/logs', "Upgrade request pushed to all devices");
+      res.json({
+        status: 200,
+        message: "Upgrade pushed to all devices."
+      });
+    } else {
+      if (req.body.devices.length > 5) {
+        var q = SomeModel.find({
+          'a_macAddress': req.body.devices
+        });
+        q.select('a_name _DeviceId a_macAddress');
+        q.exec(function (err, res) {
+          if (err) return handleError(err);
+          console.log(res);
+          console.log("res len: ");
+          console.log(res.length);
+
+          if (res.length >= 1) {
+            console.log("macAddress found");
+            console.log("Device to be updated:");
+            console.log(devToBeUpdate[3]);
+            client.publish('iotm-sys/device/firmware/' + req.body.devices, "fimrware file/string");
+            client.publish('iotm-sys/device/logs', "Update pushed to " + req.body.devices);
+          } else {
+            console.log("macAddress not found,");
+          }
+        });
+      }
+    }
+  }
 });
 indexRouter.get('/listAll', (0, _cors["default"])(), function (req, res) {
   var sql = "SELECT * FROM data";
@@ -319,29 +250,46 @@ indexRouter.get('/getUser', (0, _cors["default"])(), function (req, res) {
     });
   });
 });
-indexRouter.post('/addPlayer', (0, _cors["default"])(), function (req, res) {
-  var sql = "INSERT INTO data(Timestamp, PlayerID, TMIN30, TMOUT30, TMIND, TMOUTD, ActiveStatus) VALUES (?)";
-  var values = [req.body.Timestamp, req.body.PlayerID, req.body.TMIN30, req.body.TMOUT30, req.body.TMIND, req.body.TMOUTD, req.body.ActiveStatus];
-  db.query(sql, [values], function (err, data, fields) {
-    if (err) throw err;
-    res.json({
-      status: 200,
-      message: "New player added successfully"
-    });
-  });
-});
-var pressureVal = "NA";
-var relayState = "NA";
 client.on('message', function (topic, message) {
-  switch (topic) {
-    case 'swm-device/SmartWaterMonitor/pressure':
-      pressureVal = message.toString();
-      console.log(pressureVal);
-      break;
+  console.log(topic);
 
-    case 'swm-device/SmartWaterMonitor/relayState':
-      relayState = message.toString();
-      console.log(relayState);
+  switch (topic) {
+    case 'iotm-sys/device/add':
+      //check if device already exists?
+      var val = message.toString();
+      var DataG = val.split(';'); //name;mac;updatedat;devID
+
+      console.log(DataG[1]);
+      var q = SomeModel.find({
+        'a_macAddress': DataG[1]
+      });
+      q.select('a_name _DeviceId a_macAddress');
+      q.exec(function (err, res) {
+        if (err) return handleError(err);
+        console.log(res);
+        console.log("res len: ");
+        console.log(res.length);
+
+        if (res.length >= 1) {
+          console.log("macAddress found");
+          client.publish('iotm-sys/device/logs', DataG[1] + " is Already in the DB");
+        } else {
+          console.log("macAddress not found, adding it to the db"); // Create an instance of model SomeModel
+
+          var awesome_instance = new SomeModel({
+            a_name: DataG[0]
+          });
+          awesome_instance.a_macAddress = DataG[1];
+          awesome_instance.updated_at = DataG[2]; // Save the new model instance, passing a callback
+
+          awesome_instance.save(function (err) {
+            if (err) return handleError(err); // saved!
+
+            console.log("saved");
+          });
+          client.publish('iotm-sys/device/logs', "Added to the DB");
+        }
+      });
       break;
 
     case 'swm-device/SmartWaterMonitor/eventPressureLimitChanged':
@@ -356,64 +304,98 @@ client.on('message', function (topic, message) {
         console.log("Promise rejection error: " + err);
       });
       break;
-    // case 'edc-monitor/setActive':
-    // handleDeactivateAll()
-    //   .then(function(results){
-    //     handlesetActive(message.toString()).then(function(results1){var m=""}).catch(function(err){console.log(err)});  
-    //   })
-    //   .catch(function(err){
-    //     console.log("Promise rejection error: "+err);
-    //   })
-    //   break;
-    //   // client.publish('garage/close', 'Closing;'+message)
-    //   // return handleGarageState(message)
-    // case 'edc-monitor/playerExists':
-    //   doesPlayerExists(message.toString())
-    //   .then(function(results){
-    //     var strData=JSON.stringify(results[0])
-    //     /// var strData=JSON.stringify(results[0])
-    //     if(typeof strData == 'undefined'){
-    //       client.publish('edc-monitor/playerExistance', 'null')  
-    //     }
-    //     else{
-    //     client.publish('edc-monitor/playerExistance', strData)
-    //     }
-    //      // client.publish('edc-monitor/activePlayer', strData)
-    //      // handlesetActive(message).then(function(results){var m=""}).catch(function(err){console.log(err)});
-    //      //handlesetActive(message.toString()).then(function(results1){var m=""}).catch(function(err){console.log(err)});  
-    //    })
-    //    .catch(function(err){
-    //      console.log("Promise rejection error: "+err);
-    //    })
-    //    break;
-    // case 'edc-monitor/createNew':
-    //   var dataD=message.toString()
-    //   console.log(dataD)
-    //   var DataG=dataD.split(';')
-    //   handleCreateNew(DataG[0],DataG[1],DataG[2],DataG[3],DataG[4],DataG[5],DataG[6])
-    //   .then(function(results){
-    //     var strData=JSON.stringify(results[0])
-    //     //client.publish('edc-monitor/activePlayer', strData)
-    //   })
-    //   .catch(function(err){
-    //     console.log("Promise rejection error: "+err);
-    //   })
-    //   break;
-    // case 'edc-monitor/updatePlayer':
-    //   var dataD=message.toString()
-    //   console.log(dataD)
-    //   var DataG=dataD.split(';')
-    //   handleUpdatePlayer(DataG[0],DataG[1],DataG[2],DataG[3],DataG[4],DataG[5],DataG[6])
-    //   .then(function(results){
-    //     var strData=JSON.stringify(results[0])
-    //     //client.publish('edc-monitor/activePlayer', strData)
-    //   })
-    //   .catch(function(err){
-    //     console.log("Promise rejection error: "+err);
-    //   })
-    //   break;
-  } //console.log('No handler for topic %s', topic)
+  }
 
+  if (topic.includes("iotm-sys/device/update/")) {
+    if (topic == "iotm-sys/device/update/*") {
+      console.log("updating all devices");
+      client.publish('iotm-sys/device/firmware/all', "fimrware file/string"); //as mqtt can't publish to wildcards
+
+      client.publish('iotm-sys/device/logs', "Update pushed to all devices");
+    } else {
+      var devToBeUpdate = topic.split("/");
+      var q = SomeModel.find({
+        'a_macAddress': devToBeUpdate[3]
+      });
+      q.select('a_name _DeviceId a_macAddress');
+      q.exec(function (err, res) {
+        if (err) return handleError(err);
+        console.log(res);
+        console.log("res len: ");
+        console.log(res.length);
+
+        if (res.length >= 1) {
+          console.log("macAddress found");
+          console.log("Device to be updated:");
+          console.log(devToBeUpdate[3]);
+          client.publish('iotm-sys/device/firmware/' + devToBeUpdate[3], "fimrware file/string");
+          client.publish('iotm-sys/device/logs', "Update pushed to " + devToBeUpdate[3]);
+        } else {
+          console.log("macAddress not found,");
+        }
+      });
+    }
+  }
+
+  if (topic.includes("iotm-sys/device/upgrade/")) {
+    if (topic == "iotm-sys/device/upgrade/*") {
+      console.log("updating os of all devices");
+      client.publish('iotm-sys/device/osug/all', "start update"); //as mqtt can't publish to wildcards
+
+      client.publish('iotm-sys/device/logs', "Upgrade request pushed to all devices");
+    } else {
+      var devToBeUpdate = topic.split("/");
+      var q = SomeModel.find({
+        'a_macAddress': devToBeUpdate[3]
+      });
+      q.select('a_name _DeviceId a_macAddress');
+      q.exec(function (err, res) {
+        if (err) return handleError(err);
+        console.log(res);
+        console.log("res len: ");
+        console.log(res.length);
+
+        if (res.length >= 1) {
+          console.log("macAddress found");
+          console.log("Device to be updated:");
+          console.log(devToBeUpdate[3]);
+          client.publish('iotm-sys/device/osug/' + devToBeUpdate[3], "start upgrade");
+          client.publish('iotm-sys/device/logs', "Upgrade request pushed to " + devToBeUpdate[3]);
+        } else {
+          console.log("macAddress not found,");
+        }
+      });
+    }
+  }
+
+  if (topic.includes("iotm-sys/device/info/")) {
+    if (topic == "iotm-sys/device/info/*") {// console.log("updating os of all devices");
+      // client.publish('iotm-sys/device/osug/all', "start update")//as mqtt can't publish to wildcards
+      // client.publish('iotm-sys/device/logs', "Upgrade request pushed to all devices")
+    } else {
+      var devToBeUpdate = topic.split("/");
+      var q = SomeModel.find({
+        'a_macAddress': devToBeUpdate[3]
+      });
+      q.select('a_name _DeviceId a_macAddress');
+      q.exec(function (err, res) {
+        if (err) return handleError(err);
+        console.log(res);
+        console.log("res len: ");
+        console.log(res.length);
+
+        if (res.length >= 1) {
+          console.log("macAddress found");
+          console.log("Device to be updated:");
+          console.log(devToBeUpdate[3]);
+          client.publish('iotm-sys/device/info/response/' + devToBeUpdate[3], "info request");
+          client.publish('iotm-sys/device/logs', "info requested from " + devToBeUpdate[3]);
+        } else {
+          console.log("macAddress not found,");
+        }
+      });
+    }
+  }
 }); //import async from 'async';
 
 function handlegetActive() {
@@ -428,9 +410,9 @@ function handlegetActive() {
   });
 }
 
-function doesPlayerExists(PID) {
+function doesDevExists(PID) {
   return new Promise(function (resolve, reject) {
-    db.query("SELECT * FROM data WHERE PlayerID='" + PID + "'", function (err, rows) {
+    db.query("SELECT * FROM data WHERE DevID='" + PID + "'", function (err, rows) {
       if (rows === undefined) {
         reject(new Error("Error rows is undefined"));
       } else {
@@ -452,35 +434,11 @@ function handleDeactivateAll() {
   });
 }
 
-function handlesetActive(playerID) {
+function handleCreateNew(EventTime, DevNAME, ID) {
   return new Promise(function (resolve, reject) {
-    db.query("UPDATE data SET ActiveStatus='0' ; UPDATE data SET ActiveStatus='1' WHERE PlayerID='" + playerID + "'", function (err, rows) {
-      resolve(rows); // if(rows === undefined){
-      //     reject(new Error("Error rows is undefined"));
-      // }else{
-      //     resolve(rows);
-      // }
-    });
-  });
-}
-
-function handleCreateNew(EventTime, PressureValue, RelayState) {
-  return new Promise(function (resolve, reject) {
-    var sql = "INSERT INTO VLedger(EventTime, PressureValue, RelayState) VALUES (?)";
+    var sql = "INSERT INTO VLedger(EventTime, NAME, ID) VALUES (?)";
     var values = [EventTime, PressureValue, RelayState];
     db.query(sql, [values], function (err, rows) {
-      if (rows === undefined) {
-        reject(new Error("Error rows is undefined"));
-      } else {
-        resolve(rows);
-      }
-    });
-  });
-}
-
-function handleUpdatePlayer(playerID, Timestamp, TMIN30, TMOUT30, TMIND, TMOUTD, ActiveStatus) {
-  return new Promise(function (resolve, reject) {
-    db.query("UPDATE data SET Timestamp='" + Timestamp + "', TMIN30='" + TMIN30 + "', TMOUT30='" + TMOUT30 + "', TMIND='" + TMIND + "', TMOUTD='" + TMOUTD + "', ActiveStatus='" + ActiveStatus + "' WHERE PlayerID='" + playerID + "'", function (err, rows) {
       if (rows === undefined) {
         reject(new Error("Error rows is undefined"));
       } else {
@@ -506,6 +464,5 @@ indexRouter.post('/liveValues', (0, _cors["default"])(), function (req, res) {
   //   })
   // })
 });
-var _default = indexRouter; //export default cashHandleRouter;
-
+var _default = indexRouter;
 exports["default"] = _default;
