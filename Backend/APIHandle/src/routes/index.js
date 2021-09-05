@@ -324,9 +324,9 @@ indexRouter.post('/update', cors(), function (req, res) {//update device fw
     return res.status(400).send('No files were uploaded.');
   }
   programFile = req.files.programFile;
-  console.log(__dirname)
+  //console.log(__dirname)
   let dir = __dirname.replace("/src/routes", "");
-  console.log(dir)
+  //console.log(dir)
   uploadPath = dir + '/cdn/' + programFile.name;
 
   // Use the mv() method to place the file somewhere on your server
@@ -342,7 +342,7 @@ indexRouter.post('/update', cors(), function (req, res) {//update device fw
       console.error(err)
       return
     }
-    console.log(data)//file here
+    //console.log(data)//file here
 
     if (req.body.operation == 'update') {
       if (req.body.devices == 'all') {
@@ -363,9 +363,9 @@ indexRouter.post('/update', cors(), function (req, res) {//update device fw
           q.select('a_name _DeviceId a_macAddress');
           q.exec(function (err, resV) {
             if (err) return handleError(err);
-            console.log(resV)
-            console.log("res len: ")
-            console.log(res.length)
+            //console.log(resV)
+            //console.log("res len: ")
+            //console.log(res.length)
             if (resV.length >= 1) {
               console.log("macAddress found")
               console.log("Device to be updated:")
@@ -416,15 +416,22 @@ indexRouter.post('/update', cors(), function (req, res) {//update device fw
 
 indexRouter.get('/listAll', cors(), function (req, res) {
 
-  let sql = `SELECT * FROM data`;
-  db.query(sql, function (err, data, fields) {
+  const collections = Object.keys(mongoose.connection.collections); 
+  console.log(collections)
+  const collection = db.collection('somemodels');
+  collection.find({}).toArray((err, vals) => {
     if (err) throw err;
+    console.log("Found the following records");
+    console.log(vals)
+    //callback(vals);
     res.json({
-      status: 200,
-      data,
-      message: "User lists retrieved successfully"
+      status: vals,
+
+      message: 200
     })
-  })
+  });
+
+
 });
 
 indexRouter.get('/getActive', cors(), function (req, res) {

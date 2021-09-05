@@ -119,6 +119,16 @@ POST http://44.195.192.158:3000/v1/update
 | `devices` | `string` | **Required**.  *value of devices param could be 'all' or 'device MAC Address'*|
 | `programFile` | `multipart/form-data` | **Required**.  *a Firmware file to be sent to repective device(s)*|
 
+### List Devices
+
+```http
+GET http://44.195.192.158:3000/v1/listAll
+```
+
+| Parameter | Type | Description | 
+| :--- | :--- | :--- |
+```nothing```
+
 ## Responses
 
 Many API endpoints return the JSON representation of the resources created or edited. However, if an invalid request is submitted, or some other error occurs, Gophish returns a JSON response in the following format:
