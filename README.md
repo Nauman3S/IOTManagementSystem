@@ -98,12 +98,13 @@ Open the terminal and execute the following commands
 ### Upgrade
 
 ```http
-POST http://44.195.192.158:3000/v1/[Parameter]
+POST http://44.195.192.158:3000/v1/upgrade
 ```
 
-| Parameter | Type | Body | Description |
-| :--- | :--- | :--- | :--- |
-| `upgrade` | `POST` | **Required**. ```javascript{"operation"  : string,"device" : string}``` | *value of devices param could be 'all' or 'device MAC Address'* |
+| Parameter | Type | Description | 
+| :--- | :--- | :--- |
+| `operation` | `string` | **Required**. *value of operation should be 'upgrade'*  |
+| `devices` | `string` | **Required**.  *value of devices param could be 'all' or 'device MAC Address'*|
 
 ## Responses
 
