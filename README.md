@@ -117,6 +117,7 @@ POST http://44.195.192.158:3000/v1/update
 | :--- | :--- | :--- |
 | `operation` | `string` | **Required**. *value of operation should be 'update'*  |
 | `devices` | `string` | **Required**.  *value of devices param could be 'all' or 'device MAC Address'*|
+| `programFile` | `multipart/form-data` | **Required**.  *a Firmware file to be sent to repective device(s)*|
 
 ## Responses
 
