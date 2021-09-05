@@ -1,0 +1,1 @@
+echo "IOT Management System Client Installer"

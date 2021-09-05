@@ -38,6 +38,7 @@ Open the terminal and execute the following commands
 - python3 main.py
 ```
 
+## Auto Installer
 
 ## Usage <a name = "usage"></a>
 
