@@ -39,6 +39,9 @@ Open the terminal and execute the following commands
 ```
 
 ## Auto Installer
+To install and Run RPi Client Automatically use the following command
+
+- ```curl -sSL  https://raw.githubusercontent.com/Nauman3S/IOTManagementSystem/main/installer.sh  | bash```
 
 ## Usage <a name = "usage"></a>
 
