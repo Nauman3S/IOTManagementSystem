@@ -30,3 +30,35 @@ ___) (__| (___) |  | |     | )   ( |  /\____) |  | |  /\____) |
 "
 }
 show_ascii_berry
+
+sudo pip3 install setuptools;
+sudo pip3 install vcgencmd;
+sudo apt install neofetch;
+if [ -d "$HOME/RPiClient" ] 
+then
+    echo "Directory RPiClient exists." 
+else
+    echo "Error: Directory RPiClient does not exists."
+    mkdir ~/RPiClient
+fi
+if [ -d "$HOME/RPiClient/logs" ] 
+then
+    echo "Directory RPiClient/logs exists." 
+else
+    echo "Error: Directory RPiClient does not exists."
+    mkdir ~/RPiClient/logs
+fi
+
+File="/etc/rc.local"
+
+if [[ $(grep "(sleep 10; sh /home/pi/RPiClient/starter.sh)&" $File) ]] ; then
+   echo "Found startup script. Doing nothing."
+else
+   echo "Not Found. Adding startup script"
+   sed -i -e '$i \(sleep 10; sh /home/pi/RPiClient/starter.sh)&\n' /etc/rc.local
+fi
+
+MAC=`ip link show wlan0 | grep link/ether | awk '{print $2}' | sed 's/://g'`
+
+
+echo "Installtion Completed. Add a new device to IOTMSys with Mac Address $MAC and restart your Raspberry Pi"

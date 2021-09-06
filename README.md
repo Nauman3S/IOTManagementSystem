@@ -95,7 +95,6 @@ To install and Run RPi Client Automatically use the following command
 9.  iotm-sys/device/osug/all `(global OS upgrade instructions are received at this topic) READ-ONLY`
 10. iotm-sys/device/osug/[macaddress] `(OS upgrade instructions for specific device are received at this topic {replace [macaddress] with the Mac address of the device without : in the address}) READ-ONLY`
 11. iotm-sys/device/info/[macaddress] `(device and os info of specific device can be requested from this topic) WRITE-ONLY`
-12. iotm-sys/device/info/response/[macaddress] `(device and os info request response is sent to this topic) READ-ONLY`
 
 ## API Details
 

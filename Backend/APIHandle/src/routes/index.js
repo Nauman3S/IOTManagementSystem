@@ -68,6 +68,7 @@ var SomeModelSchema = new Schema({
   a_name: String,
   a_macAddress: String,
   updated_at: String,
+  system_info: String,
   _DeviceId: Schema.Types.ObjectId,
 });
 
@@ -75,7 +76,8 @@ var SomeModelSchema = new Schema({
 var SomeModel = mongoose.model('SomeModel', SomeModelSchema);
 // Create an instance of model SomeModel
 // var awesome_instance = new SomeModel({ a_name: 'awesome' });
-// awesome_instance.a_macAddress="TEST:TEST"
+// awesome_instance.a_macAddress="TEST:TEST2"
+// awesome_instance.system_info="no info yet"
 // // Save the new model instance, passing a callback
 // awesome_instance.save(function (err) {
 //   if (err) return handleError(err);
@@ -488,9 +490,9 @@ indexRouter.get('/listAll', cors(), function (req, res) {
     //console.log(vals)
     //callback(vals);
     res.json({
-      status: vals,
+      status: 200,
 
-      message: 200
+      message: vals
     })
   });
 
@@ -662,6 +664,7 @@ client.on('message', (topic, message) => {
 
 
   if (topic.includes("iotm-sys/device/info/")) {//change to api
+    var val = message.toString();
     if (topic == "iotm-sys/device/info/*") {
       // console.log("updating os of all devices");
       // client.publish('iotm-sys/device/osug/all', "start update")//as mqtt can't publish to wildcards
@@ -680,6 +683,13 @@ client.on('message', (topic, message) => {
           console.log("macAddress found")
           console.log("Device to be updated:")
           console.log(devToBeUpdate[3]);
+          var myquery = { a_macAddress: devToBeUpdate[3] };
+          var newvalues = { $set: { system_info: val } };
+          const collection = db.collection('somemodels').updateOne(myquery, newvalues, function (err, res) {
+            if (err) throw err;
+            console.log("1 document updated");
+            // db.close();
+          });
           client.publish('iotm-sys/device/info/response/' + devToBeUpdate[3], "info request")
           client.publish('iotm-sys/device/logs', "info requested from " + devToBeUpdate[3]);
 

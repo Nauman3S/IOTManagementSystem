@@ -4,15 +4,50 @@ import datetime
 import time
 from config import *
 import re
+import os
+import subprocess
+import py_compile
 import uuid
+import threading
+from systemData import *
 ############
 
 
 import random
 import string
+
+
+def upgradeDeviceOS():
+    cwd = os.getcwd()
+    print(cwd)
+    result = subprocess.run(['sh', './upgradeOS.sh', '&'],
+                            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+
 def checkFirmwareSyntax():
-    print("checking FW for potential breaking errors")
-    #python -m py_compile fw.py
+    print("checking FW for potential breaking syntax errors")
+    # python -m py_compile fw.py
+
+   # cwd = os.getcwd()
+   # print(cwd)
+    #result=subprocess.run(['python3', '-m','py_compile', cwd+'/fw.py'], stdout=subprocess.PIPE)
+    # g=result.stdoutdecode('utf-8')
+
+    g = ""
+    try:
+        g = py_compile.compile('fw.py')
+    except Exception as e:
+        print(e)
+
+        return e
+    print('------------')
+    print(g)
+    print('------------')
+    if(g == None):
+        return "error while compiling"
+    else:
+        return "no error"
+    # return errV
 
 
 def getMACAddress():
@@ -21,11 +56,23 @@ def getMACAddress():
     mac = ''.join(re.findall('..', '%012x' % uuid.getnode()))
     return mac
 
+
 print(getMACAddress())
+
+
 def get_random_string():
     letters = string.ascii_lowercase
     result_str = ''.join(random.choice(letters) for i in range(16))
     print("Random string of length", 16, "is:", result_str)
+
+
+def storeUpdateFile(content):
+    g = open('fw.py', 'w')
+    g.write(content)
+    g.close()
+    # print(checkFirmwareSyntax())
+    if(checkFirmwareSyntax() == 'no error'):
+        print('compiled with no errors')
 
 
 def on_message(client, userdata, message):
@@ -34,12 +81,18 @@ def on_message(client, userdata, message):
     print('details:::::'+topic+";;;"+msg)
     if("iotm-sys/device/firmware/all" in topic):
         print(msg)
+        print('storing the fw')
+        storeUpdateFile(msg)
     if("iotm-sys/device/firmware/"+getMACAddress() in topic):
         print(msg)
-    elif("iotm-sys/device/firmware/"+getMACAddress() in topic):
+        print('storing the fw')
+        storeUpdateFile(msg)
+    elif("iotm-sys/device/osug/"+getMACAddress() in topic):
         print(msg)
-    elif("iotm-sys/device/firmware/all" in topic):
+        upgradeDeviceOS()
+    elif("iotm-sys/device/osug/all" in topic):
         print(msg)
+        upgradeDeviceOS()
 
     print("message received ", str(message.payload.decode("utf-8")))
     print("message topic=", message.topic)
@@ -58,18 +111,30 @@ client.loop_start()  # start the loop
 print("Subscribing to the topics")
 client.subscribe("iotm-sys/device/firmware/all")
 client.subscribe("iotm-sys/device/firmware/"+getMACAddress())
-client.subscribe("iotm-sys/device/device/osug/all")
-client.subscribe("iotm-sys/device/device/osug/"+getMACAddress())
+client.subscribe("iotm-sys/device/osug/all")
+client.subscribe("iotm-sys/device/osug/"+getMACAddress())
 
 
 client.loop_start()  # start mqtt thread
 
 
+def publishDeviceInfo(name):
+    global client
+    while 1:
+        try:
+            client.publish("iotm-sys/device/info/"+getMACAddress(),
+                    parsedSystemData())
+        except Exception as e:
+            print(e)
+        time.sleep(10)
+
+x = threading.Thread(target=publishDeviceInfo, args=(1,),daemon=True)
+x.start()
 def loopFunc():
     global client
-
-    client.publish("iotm-sys/device/info/response/" +
-                   getMACAddress(), 'info here')
+    d = 0
+    # client.publish("iotm-sys/device/info/response/" +
+    #                getMACAddress(), 'info here')
 
 
 while 1:
