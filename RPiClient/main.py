@@ -20,7 +20,7 @@ import string
 def upgradeDeviceOS():
     cwd = os.getcwd()
     print(cwd)
-    result = subprocess.run(['sh', './upgradeOS.sh', '&'],
+    result = subprocess.run(['sh', './home/pi/RPiClient/upgradeOS.sh', '&'],
                             stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 
@@ -67,7 +67,7 @@ def get_random_string():
 
 
 def storeUpdateFile(content):
-    g = open('fw.py', 'w')
+    g = open('/home/pi/RPiClient/fw.py', 'w')
     g.write(content)
     g.close()
     # print(checkFirmwareSyntax())
@@ -100,14 +100,22 @@ def on_message(client, userdata, message):
     print("message retain flag=", message.retain)
 ########################################
 
+def on_connect(client, userdata, flags, rc):
+    print("Connected flags" + str(flags) + "result code " + str(rc))
+    print("Subscribing to the topics")
+    client.subscribe("iotm-sys/device/firmware/all")
+    client.subscribe("iotm-sys/device/firmware/"+getMACAddress())
+    client.subscribe("iotm-sys/device/osug/all")
+    client.subscribe("iotm-sys/device/osug/"+getMACAddress())
 
 broker_address = "44.195.192.158"  # private mqtt broker
 print("creating new instance")
 client = mqtt.Client(get_random_string())  # create new instance
 client.on_message = on_message  # attach function to callback
+client.on_connect = on_connect  # attach function to callback
 print("connecting to broker")
 client.connect(broker_address)  # connect to broker
-client.loop_start()  # start the loop
+# client.loop_start()  # start the loop
 print("Subscribing to the topics")
 client.subscribe("iotm-sys/device/firmware/all")
 client.subscribe("iotm-sys/device/firmware/"+getMACAddress())
@@ -132,6 +140,7 @@ x = threading.Thread(target=publishDeviceInfo, args=(1,),daemon=True)
 x.start()
 def loopFunc():
     global client
+    # client.loop()
     d = 0
     # client.publish("iotm-sys/device/info/response/" +
     #                getMACAddress(), 'info here')

@@ -8,7 +8,7 @@ echo "IOT Management System Client Installer"
 ######## VARIABLES #########
 
 # Location for final installation log storage
-installLogLoc=/etc/pihole/install.log
+#installLogLoc=/etc/pihole/install.log
 
 
 echo "Welcome user"
@@ -33,6 +33,7 @@ show_ascii_berry
 
 sudo pip3 install setuptools;
 sudo pip3 install vcgencmd;
+sudo pip3 install paho-mqtt;
 sudo apt install neofetch;
 if [ -d "$HOME/RPiClient" ] 
 then
