@@ -7,8 +7,12 @@ import re
 import uuid
 ############
 
+
 import random
 import string
+def checkFirmwareSyntax():
+    print("checking FW for potential breaking errors")
+    #python -m py_compile fw.py
 
 
 def getMACAddress():
@@ -17,7 +21,7 @@ def getMACAddress():
     mac = ''.join(re.findall('..', '%012x' % uuid.getnode()))
     return mac
 
-
+print(getMACAddress())
 def get_random_string():
     letters = string.ascii_lowercase
     result_str = ''.join(random.choice(letters) for i in range(16))

@@ -413,10 +413,73 @@ indexRouter.post('/update', cors(), function (req, res) {//update device fw
 
 });
 
+indexRouter.post('/addDevice', cors(), function (req, res) {//upgrade device os
+  let statusN = 0;
+  let msgN = "";
+  let name = req.body.name;
+  let macAddress = req.body.macAddress;
+  let updatedAt = req.body.updatedAt;
+  if (req.body.operation == 'add') {
+
+    //var DataG = val.split(';')//name;mac;updatedat;devID
+    //console.log(DataG[1])
+    var q = SomeModel.find({ 'a_macAddress': macAddress });
+    q.select('a_name _DeviceId a_macAddress');
+    q.exec(function (err, resV) {
+      if (err) return handleError(err);
+      console.log(resV)
+      console.log("res len: ")
+      console.log(resV.length)
+      if (resV.length >= 1) {
+        console.log("macAddress found")
+        client.publish('iotm-sys/device/logs', macAddress + " is Already in the DB")
+        statusN = 404;
+        msgN = macAddress + " is already in the DB";
+        res.json({
+          status: statusN,
+
+          message: msgN
+        })
+      }
+      else {
+        console.log("macAddress not found, adding it to the db")
+        // Create an instance of model SomeModel
+        var awesome_instance = new SomeModel({ a_name: name });
+        awesome_instance.a_macAddress = macAddress;
+        awesome_instance.updated_at = updatedAt;
+        // Save the new model instance, passing a callback
+        awesome_instance.save(function (err) {
+          if (err) return handleError(err);
+          // saved!
+          console.log("saved")
+          statusN = 201;
+          msgN = macAddress + " added to the DB";
+          res.json({
+            status: statusN,
+
+            message: msgN
+          })
+        });
+
+
+
+        client.publish('iotm-sys/device/logs', "Added to the DB")
+      }
+
+    })
+
+
+  }
+
+
+
+
+});
+
 
 indexRouter.get('/listAll', cors(), function (req, res) {
 
-  const collections = Object.keys(mongoose.connection.collections); 
+  const collections = Object.keys(mongoose.connection.collections);
   console.log(collections)
   const collection = db.collection('somemodels');
   collection.find({}).toArray((err, vals) => {

@@ -99,6 +99,21 @@ To install and Run RPi Client Automatically use the following command
 
 ## API Details
 
+
+### Add Device
+
+```http
+POST http://44.195.192.158:3000/v1/addDevice
+```
+
+| Parameter | Type | Description | 
+| :--- | :--- | :--- |
+| `operation` | `string` | **Required**. *value of operation should be 'add'*  |
+| `name` | `string` | **Required**.  *value of param could be a name*|
+| `macAddress` | `string` | **Required**.  *value of param should be a MAC Address of your RPi Device being displayed by RPiClient Installer*|
+| `updatedAt` | `string` | **Required**.  *value of param should be the current timestamp*|
+
+
 ### Upgrade OS
 
 ```http
