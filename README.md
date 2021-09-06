@@ -100,7 +100,7 @@ After the installer completes the process, note down the MAC Address on the term
 
 - Backend is based on NodeJS and it is being managed by PM2. It starts automatically on server start.
 
-## MQTT Topic Details <a name = "mqtt"></a
+## MQTT Topic Details <a name = "mqtt"></a>
 ### Topics List
 #### Logs
 1.  <span style="color: green">iotm-sys/device/logs</span> `(all log messages are published to this topic) READ-ONLY`
