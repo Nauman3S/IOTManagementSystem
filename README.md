@@ -71,7 +71,7 @@ After the installer completes the process, note down the MAC Address on the term
 
 
 
-## Server Details <a name = "server"></a
+## Server Details <a name = "server"></a>
 
 ### Monitoring
 
