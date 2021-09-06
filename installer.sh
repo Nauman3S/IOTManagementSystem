@@ -15,19 +15,19 @@ echo "Welcome user"
 echo $USER
 
 show_ascii_berry() {
-  echo -e "
+    echo -e "
 
-_________________________   _______    _______         _______ 
+_________________________   _______    _______         _______
 \__   __(  ___  \__   __/  (       )  (  ____ |\     /(  ____ \
    ) (  | (   ) |  ) (     | () () |  | (    \( \   / | (    \/
-   | |  | |   | |  | |     | || || |  | (_____ \ (_) /| (_____ 
+   | |  | |   | |  | |     | || || |  | (_____ \ (_) /| (_____
    | |  | |   | |  | |     | |(_)| |  (_____  ) \   / (_____  )
    | |  | |   | |  | |     | |   | |        ) |  ) (        ) |
 ___) (__| (___) |  | |     | )   ( |  /\____) |  | |  /\____) |
 \_______(_______)  )_(     |/     \|  \_______)  \_/  \_______)
 
 
-"
+    "
 }
 show_ascii_berry
 
@@ -35,16 +35,28 @@ sudo pip3 install setuptools;
 sudo pip3 install vcgencmd;
 sudo pip3 install paho-mqtt;
 sudo apt install neofetch;
-if [ -d "$HOME/RPiClient" ] 
+if [ -d "$HOME/RPiClient" ]
 then
-    echo "Directory RPiClient exists." 
+    echo "Directory RPiClient exists."
 else
     echo "Error: Directory RPiClient does not exists."
-    mkdir ~/RPiClient
+    cd $HOME
+    # mkdir ~/RPiClient
+    git clone \
+    --depth 1  \
+    --filter=blob:none  \
+    --sparse \
+    https://github.com/Nauman3S/IOTManagementSystem;
+    cd IOTManagementSystem
+    git sparse-checkout set RPiClient
+    mv RPiClient ../
+    cd ..
+    rm -rf IOTManagementSystem
+    
 fi
-if [ -d "$HOME/RPiClient/logs" ] 
+if [ -d "$HOME/RPiClient/logs" ]
 then
-    echo "Directory RPiClient/logs exists." 
+    echo "Directory RPiClient/logs exists."
 else
     echo "Error: Directory RPiClient does not exists."
     mkdir ~/RPiClient/logs
@@ -53,10 +65,10 @@ fi
 File="/etc/rc.local"
 
 if [[ $(grep "(sleep 10; sh /home/pi/RPiClient/starter.sh)&" $File) ]] ; then
-   echo "Found startup script. Doing nothing."
+    echo "Found startup script. Doing nothing."
 else
-   echo "Not Found. Adding startup script"
-   sed -i -e '$i \(sleep 10; sh /home/pi/RPiClient/starter.sh)&\n' /etc/rc.local
+    echo "Not Found. Adding startup script"
+    sed -i -e '$i \(sleep 10; sh /home/pi/RPiClient/starter.sh)&\n' /etc/rc.local
 fi
 
 MAC=`ip link show wlan0 | grep link/ether | awk '{print $2}' | sed 's/://g'`

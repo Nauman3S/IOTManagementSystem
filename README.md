@@ -26,19 +26,10 @@ Turn on your Raspberry Pi and execute the following commands
 - sudo pip3 install paho-mqtt
 ```
 
-### Installing
+## Installing
 
-Installing the Firmware to your Raspberry Pi
-- Copy FimrwareIOTM to the Desktop of Raspberry Pi
 
-Open the terminal and execute the following commands 
-
-```
-- cd ~/Desktop/FirmwareIOTM
-- python3 main.py
-```
-
-## Auto Installer
+### Auto Installer
 To install and Run RPi Client Automatically use the following command
 
 - ```curl -sSL  https://raw.githubusercontent.com/Nauman3S/IOTManagementSystem/main/installer.sh  | bash```
