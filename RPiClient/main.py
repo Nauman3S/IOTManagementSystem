@@ -2,6 +2,7 @@
 import paho.mqtt.client as mqtt  # import the client
 import datetime
 import time
+import os.path
 from config import *
 import re
 import os
@@ -16,6 +17,7 @@ from systemData import *
 import random
 import string
 
+macAddressGlobal=""
 
 def upgradeDeviceOS():
     cwd = os.getcwd()
@@ -49,13 +51,26 @@ def checkFirmwareSyntax():
         return "no error"
     # return errV
 
+def genMACAddress():
+    mac = ''.join(re.findall('..', '%012x' % uuid.getnode()))
+    g=open('mac.address','w')
+    g.write(mac)
+    g.close()
+
 
 def getMACAddress():
+    global macAddressGlobal
+    return macAddressGlobal
 
-    # gives mac address without ':'
-    mac = ''.join(re.findall('..', '%012x' % uuid.getnode()))
-    return mac
-
+if(os.path.exists('mac.address')):
+    m=open("mac.address",'r')
+    macAddressGlobal=m
+    m.close()
+else:
+    genMACAddress()
+    m=open("mac.address",'r')
+    macAddressGlobal=m
+    m.close()
 
 print(getMACAddress())
 

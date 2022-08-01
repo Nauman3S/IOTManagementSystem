@@ -34,7 +34,8 @@ show_ascii_berry
 sudo pip3 install setuptools;
 sudo pip3 install vcgencmd;
 sudo pip3 install paho-mqtt;
-sudo apt install neofetch -y;
+sudo apt install neofetch -y --force-yes;
+
 if [ -d "$HOME/RPiClient" ]
 then
     echo "Directory RPiClient exists."
@@ -52,6 +53,11 @@ else
     mv RPiClient ../
     cd ..
     rm -rf IOTManagementSystem
+    cd RPiClient
+    sudo chmod a+rx starter.sh
+    sudo chmod a+rx upgradeOS.sh
+    sudo chmod a+rx main.py
+    sudo chmod a+rx fw.py
     
 fi
 if [ -d "$HOME/RPiClient/logs" ]
