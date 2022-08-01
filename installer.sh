@@ -70,11 +70,11 @@ fi
 
 File="/etc/rc.local"
 
-if [[ $(grep "(sleep 10; sh /home/pi/RPiClient/starter.sh)&" $File) ]] ; then
+if [[ $(grep "(sleep 5; sh /home/pi/RPiClient/starter.sh)&" $File) ]] ; then
     echo "Found startup script. Doing nothing."
 else
     echo "Not Found. Adding startup script"
-    sed -i -e '$i \(sleep 10; sh /home/pi/RPiClient/starter.sh)&\n' /etc/rc.local
+    sed -i -e '$i \(sleep 5; sh /home/pi/RPiClient/starter.sh)&\n' /etc/rc.local
 fi
 
 MAC=`ip link show wlan0 | grep link/ether | awk '{print $2}' | sed 's/://g'`

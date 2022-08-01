@@ -64,12 +64,12 @@ def getMACAddress():
 
 if(os.path.exists('mac.address')):
     m=open("mac.address",'r')
-    macAddressGlobal=m
+    macAddressGlobal=m.read()
     m.close()
 else:
     genMACAddress()
     m=open("mac.address",'r')
-    macAddressGlobal=m
+    macAddressGlobal=m.read()
     m.close()
 
 print(getMACAddress())
@@ -145,6 +145,7 @@ def publishDeviceInfo(name):
     global client
     while 1:
         try:
+            client.publish("iotm-sys/device/hb/"+getMACAddress(),'hb')
             client.publish("iotm-sys/device/info/"+getMACAddress(),
                     parsedSystemData())
         except Exception as e:
