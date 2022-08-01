@@ -34,7 +34,7 @@ show_ascii_berry
 sudo pip3 install setuptools;
 sudo pip3 install vcgencmd;
 sudo pip3 install paho-mqtt;
-sudo apt install neofetch;
+sudo apt install neofetch -y;
 if [ -d "$HOME/RPiClient" ]
 then
     echo "Directory RPiClient exists."
