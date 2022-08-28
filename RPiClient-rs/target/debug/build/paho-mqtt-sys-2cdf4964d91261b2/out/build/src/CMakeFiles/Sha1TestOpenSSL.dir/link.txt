@@ -1,0 +1,1 @@
+/usr/bin/cc  -ffunction-sections -fdata-sections -fPIC -m64 -g -rdynamic CMakeFiles/Sha1TestOpenSSL.dir/SHA1.c.o -o Sha1TestOpenSSL  /usr/lib/x86_64-linux-gnu/libssl.so /usr/lib/x86_64-linux-gnu/libcrypto.so 

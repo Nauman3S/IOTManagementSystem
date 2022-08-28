@@ -1,0 +1,1 @@
+/usr/bin/cc  -ffunction-sections -fdata-sections -fPIC -m64 -g -rdynamic CMakeFiles/Base64Test.dir/Base64.c.o -o Base64Test 

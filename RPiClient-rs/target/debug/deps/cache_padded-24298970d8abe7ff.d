@@ -1,0 +1,7 @@
+/mnt/c/Users/nauma/Documents/data/W2/Windows/Per/IOTP56_cont_IOTP55/IOTMSys/RPiClient-rs/target/debug/deps/cache_padded-24298970d8abe7ff.rmeta: /home/ubuntu/.cargo/registry/src/github.com-1ecc6299db9ec823/cache-padded-1.2.0/src/lib.rs
+
+/mnt/c/Users/nauma/Documents/data/W2/Windows/Per/IOTP56_cont_IOTP55/IOTMSys/RPiClient-rs/target/debug/deps/libcache_padded-24298970d8abe7ff.rlib: /home/ubuntu/.cargo/registry/src/github.com-1ecc6299db9ec823/cache-padded-1.2.0/src/lib.rs
+
+/mnt/c/Users/nauma/Documents/data/W2/Windows/Per/IOTP56_cont_IOTP55/IOTMSys/RPiClient-rs/target/debug/deps/cache_padded-24298970d8abe7ff.d: /home/ubuntu/.cargo/registry/src/github.com-1ecc6299db9ec823/cache-padded-1.2.0/src/lib.rs
+
+/home/ubuntu/.cargo/registry/src/github.com-1ecc6299db9ec823/cache-padded-1.2.0/src/lib.rs:
