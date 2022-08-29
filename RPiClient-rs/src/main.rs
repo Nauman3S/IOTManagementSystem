@@ -15,37 +15,55 @@
 //!     subscriptions and messages through reconnects.
 //!   - Last will and testament
 //!
+#![allow(unused)]
 
-use futures::{executor::block_on, stream::StreamExt, channel::mpsc::Receiver};
-use mqtt::{Message, AsyncClient};
+use futures::{channel::mpsc::Receiver, executor::block_on, stream::StreamExt};
+use mqtt::{AsyncClient, Message, QOS_1};
 use paho_mqtt as mqtt;
-use std::{env, process, time::Duration};
+use std::{env, fmt::format, process, time::Duration};
 // use std::time::Duration;
 use tokio::{task, time}; // 1.3.0
                          // use tokio::prelude::*;
 
+extern crate mac_address;
+
+use mac_address::get_mac_address;
+
 // The topics to which we subscribe.
 const TOPICS: &[&str] = &["iotm/test", "iotm/hello"];
 const QOS: &[i32] = &[1, 1];
-async fn work1(cli:AsyncClient) {
-    
-    loop {
-        
 
-    std::thread::sleep(Duration::from_secs(5));
-    println!("HI1");
-    println!("Publishing a message on the topic 'test'");
+fn get_MAC() -> String {
+    match get_mac_address() {
+        Ok(Some(ma)) => {
+            // println!("MAC addr = {}", ma.to_string().replace(":", ""));
+            ma.to_string().replace(":", "")
+        }
+        Ok(None) => return "None".to_string(),
+        Err(e) => return "None".to_string(),
+    }
+}
+async fn work1(cli: AsyncClient) {
+    loop {
+        std::thread::sleep(Duration::from_secs(5));
+        println!("HI1");
+        println!("Publishing a message on the topic 'test'");
         let msg = mqtt::Message::new("iotm/data", "Hello Rust MQTT world!", mqtt::QOS_1);
         cli.publish(msg);
     }
 }
-async fn work2() {
-    loop{
-    std::thread::sleep(Duration::from_secs(5));
-    println!("HI2");
+async fn heartbeat(cli: AsyncClient) {
+    loop {
+        std::thread::sleep(Duration::from_secs(5));
+        println!("HI2 {}", get_MAC());
+        let msg = mqtt::Message::new(
+            format!("{}{}", "iotm-sys/device/heartbeat/", get_MAC()),
+            get_MAC(),
+            mqtt::QOS_1,
+        );
+        cli.publish(msg);
     }
 }
-
 
 /////////////////////////////////////////////////////////////////////////////
 #[tokio::main]
@@ -88,9 +106,27 @@ async fn main() {
         println!("Connecting to the MQTT server...");
         cli.connect(conn_opts).await?;
 
-        println!("Subscribing to topics: {:?}", TOPICS);
-        cli.subscribe_many(TOPICS, QOS).await?;
+        println!("Subscribing to the Device OS topics");
+        cli.subscribe("iotm-sys/device/upgrade/*", QOS_1).await;
+        cli.subscribe("iotm-sys/device/osug/all", QOS_1).await;
+        cli.subscribe(
+            format!("{}{}", "iotm-sys/device/upgrade/", get_MAC()),
+            QOS_1,
+        )
+        .await;
+        cli.subscribe(format!("{}{}", "iotm-sys/device/osug/", get_MAC()), QOS_1)
+            .await;
+        cli.subscribe(format!("{}{}", "iotm-sys/device/info/", get_MAC()), QOS_1)
+            .await;
 
+        println!("Subscribing to the Firmware topics");
+        cli.subscribe("iotm-sys/device/update/*", QOS_1).await;
+        cli.subscribe("iotm-sys/device/firmware/all", QOS_1).await;
+        cli.subscribe(format!("{}{}", "iotm-sys/device/update/", get_MAC()), QOS_1);
+        cli.subscribe(
+            format!("{}{}", "iotm-sys/device/firmware/", get_MAC()),
+            QOS_1,
+        );
         // Just loop on incoming messages.
         println!("Waiting for messages...");
 
@@ -99,22 +135,34 @@ async fn main() {
         // whatever) the server will get an unexpected drop and then
         // should emit the LWT message.
         let cli_pub = cli.clone();
+        let cli_heartbeat = cli.clone();
         let tasks = vec![
             tokio::spawn(async move { work1(cli_pub).await }),
-            tokio::spawn(async move { work2().await }),
-            tokio::spawn(async move { 
-
+            tokio::spawn(async move { heartbeat(cli_heartbeat).await }),
+            tokio::spawn(async move {
                 loop {
-            
-
                     if let Some(msg_opt) = strm.next().await {
                         if let Some(msg) = msg_opt {
                             println!("MSG={}", msg.to_string());
-                            if msg.to_string().contains("iotm/test") {
-                                println!("topic1");
-                            } else if msg.to_string().contains("iotm/hello") {
-                                println!("topic2");
+                            //Device OS Related Topics
+                            if msg.to_string().contains("iotm-sys/device/upgrade/*") {
+                                println!("upgrade all devices OS");
+                            } else if msg.to_string().contains("iotm-sys/device/osug/all") {
+                                println!("Global upgrade instructions");
+                            } else if msg.to_string().contains("iotm-sys/device/upgrade/")
+                                && msg.to_string().contains(&get_MAC())
+                            {
+                                println!(" upgrade devices with MAC");
+                            } else if msg.to_string().contains("iotm-sys/device/osug/")
+                                && msg.to_string().contains(&get_MAC())
+                            {
+                                println!("Global upgrade instructions with MAC");
+                            } else if msg.to_string().contains("iotm-sys/device/info/")
+                                && msg.to_string().contains(&get_MAC())
+                            {
+                                println!("device and os info of specific device with MAC");
                             }
+                            //Device OS Related Topics/////////////////////////
                         } else {
                             // A "None" means we were disconnected. Try to reconnect...
                             println!("Lost connection. Attempting reconnect.");
@@ -127,11 +175,9 @@ async fn main() {
                     }
                 }
             }),
-            
         ];
 
         futures::future::join_all(tasks).await;
-     
 
         // Explicit return type for the async block
         Ok::<(), mqtt::Error>(())

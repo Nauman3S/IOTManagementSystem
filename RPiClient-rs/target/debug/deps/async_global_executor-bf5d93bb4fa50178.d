@@ -1,0 +1,10 @@
+/mnt/c/Users/nauma/Documents/data/W2/Windows/Per/IOTP56_cont_IOTP55/IOTMSys/RPiClient-rs/target/debug/deps/async_global_executor-bf5d93bb4fa50178.rmeta: /home/ubuntu/.cargo/registry/src/github.com-1ecc6299db9ec823/async-global-executor-2.2.0/src/lib.rs /home/ubuntu/.cargo/registry/src/github.com-1ecc6299db9ec823/async-global-executor-2.2.0/src/config.rs /home/ubuntu/.cargo/registry/src/github.com-1ecc6299db9ec823/async-global-executor-2.2.0/src/executor.rs /home/ubuntu/.cargo/registry/src/github.com-1ecc6299db9ec823/async-global-executor-2.2.0/src/init.rs /home/ubuntu/.cargo/registry/src/github.com-1ecc6299db9ec823/async-global-executor-2.2.0/src/reactor.rs /home/ubuntu/.cargo/registry/src/github.com-1ecc6299db9ec823/async-global-executor-2.2.0/src/threading.rs
+
+/mnt/c/Users/nauma/Documents/data/W2/Windows/Per/IOTP56_cont_IOTP55/IOTMSys/RPiClient-rs/target/debug/deps/async_global_executor-bf5d93bb4fa50178.d: /home/ubuntu/.cargo/registry/src/github.com-1ecc6299db9ec823/async-global-executor-2.2.0/src/lib.rs /home/ubuntu/.cargo/registry/src/github.com-1ecc6299db9ec823/async-global-executor-2.2.0/src/config.rs /home/ubuntu/.cargo/registry/src/github.com-1ecc6299db9ec823/async-global-executor-2.2.0/src/executor.rs /home/ubuntu/.cargo/registry/src/github.com-1ecc6299db9ec823/async-global-executor-2.2.0/src/init.rs /home/ubuntu/.cargo/registry/src/github.com-1ecc6299db9ec823/async-global-executor-2.2.0/src/reactor.rs /home/ubuntu/.cargo/registry/src/github.com-1ecc6299db9ec823/async-global-executor-2.2.0/src/threading.rs
+
+/home/ubuntu/.cargo/registry/src/github.com-1ecc6299db9ec823/async-global-executor-2.2.0/src/lib.rs:
+/home/ubuntu/.cargo/registry/src/github.com-1ecc6299db9ec823/async-global-executor-2.2.0/src/config.rs:
+/home/ubuntu/.cargo/registry/src/github.com-1ecc6299db9ec823/async-global-executor-2.2.0/src/executor.rs:
+/home/ubuntu/.cargo/registry/src/github.com-1ecc6299db9ec823/async-global-executor-2.2.0/src/init.rs:
+/home/ubuntu/.cargo/registry/src/github.com-1ecc6299db9ec823/async-global-executor-2.2.0/src/reactor.rs:
+/home/ubuntu/.cargo/registry/src/github.com-1ecc6299db9ec823/async-global-executor-2.2.0/src/threading.rs:
