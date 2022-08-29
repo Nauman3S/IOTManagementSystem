@@ -16,17 +16,19 @@
 //!   - Last will and testament
 //!
 #![allow(unused)]
-use std::io::prelude::*;
 use futures::{channel::mpsc::Receiver, executor::block_on, stream::StreamExt};
 use mqtt::{AsyncClient, Message, QOS_1};
 use paho_mqtt as mqtt;
+use rand::distributions::{Alphanumeric, DistString};
 use reqwest::Request;
-use std::{env, fmt::format, process, time::Duration};
+use std::fs;
+use std::fs::File;
 use std::io;
 use std::io::copy;
+use std::io::prelude::*;
 use std::path::Path;
-use std::fs::File;
-use std::fs;
+use std::process::Command;
+use std::{env, fmt::format, process, time::Duration};
 // use std::time::Duration;
 use tokio::{task, time}; // 1.3.0
                          // use tokio::prelude::*;
@@ -35,10 +37,9 @@ extern crate mac_address;
 extern crate reqwest;
 use reqwest::Client;
 
-
 use mac_address::get_mac_address;
 
-async fn download_file(url: &str, fl:&str ) -> Result<(),reqwest::Error> {
+async fn download_file(url: &str, fl: &str) -> Result<(), reqwest::Error> {
     // "https://github.com/twbs/bootstrap/archive/v4.0.0.zip"
     let target = url;
     let response = reqwest::get(target).await?;
@@ -49,12 +50,10 @@ async fn download_file(url: &str, fl:&str ) -> Result<(),reqwest::Error> {
         Err(why) => panic!("couldn't create {}", why),
         Ok(file) => file,
     };
-    let content =  response.bytes().await?;
+    let content = response.bytes().await?;
     file.write_all(&content);
-    
 
     Ok(())
-  
 }
 fn get_MAC() -> String {
     match get_mac_address() {
@@ -93,7 +92,11 @@ async fn heartbeat(cli: AsyncClient) {
 async fn main() {
     // Initialize the logger from the environment
     env_logger::init();
-    download_file(&"https://sh.rustup.rs".to_string(),&"rustup.rs".to_string()).await;
+    download_file(
+        &"https://sh.rustup.rs".to_string(),
+        &"rustup.rs".to_string(),
+    )
+    .await;
 
     let host = env::args()
         .nth(1)
@@ -103,7 +106,7 @@ async fn main() {
     // A real system should try harder to use a unique ID.
     let create_opts = mqtt::CreateOptionsBuilder::new()
         .server_uri(host)
-        .client_id("rust_async_subscribe")
+        .client_id(Alphanumeric.sample_string(&mut rand::thread_rng(), 30))
         .finalize();
 
     // Create the client connection
@@ -131,22 +134,12 @@ async fn main() {
         cli.connect(conn_opts).await?;
 
         println!("Subscribing to the Device OS topics");
-        cli.subscribe("iotm-sys/device/upgrade/*", QOS_1).await;
         cli.subscribe("iotm-sys/device/osug/all", QOS_1).await;
-        cli.subscribe(
-            format!("{}{}", "iotm-sys/device/upgrade/", get_MAC()),
-            QOS_1,
-        )
-        .await;
         cli.subscribe(format!("{}{}", "iotm-sys/device/osug/", get_MAC()), QOS_1)
-            .await;
-        cli.subscribe(format!("{}{}", "iotm-sys/device/info/", get_MAC()), QOS_1)
             .await;
 
         println!("Subscribing to the Firmware topics");
-        cli.subscribe("iotm-sys/device/update/*", QOS_1).await;
         cli.subscribe("iotm-sys/device/firmware/all", QOS_1).await;
-        cli.subscribe(format!("{}{}", "iotm-sys/device/update/", get_MAC()), QOS_1);
         cli.subscribe(
             format!("{}{}", "iotm-sys/device/firmware/", get_MAC()),
             QOS_1,
@@ -169,24 +162,38 @@ async fn main() {
                         if let Some(msg) = msg_opt {
                             println!("MSG={}", msg.to_string());
                             //Device OS Related Topics
-                            if msg.to_string().contains("iotm-sys/device/upgrade/*") {
-                                println!("upgrade all devices OS");
-                            } else if msg.to_string().contains("iotm-sys/device/osug/all") {
+                            if msg.to_string().contains("iotm-sys/device/osug/all") {
                                 println!("Global upgrade instructions");
-                            } else if msg.to_string().contains("iotm-sys/device/upgrade/")
-                                && msg.to_string().contains(&get_MAC())
-                            {
-                                println!(" upgrade devices with MAC");
+                                let mut os_upgrade = Command::new("./upgradeOS.sh");
+                                os_upgrade.arg("&");
+                                os_upgrade.status().expect("process failed to execute");
                             } else if msg.to_string().contains("iotm-sys/device/osug/")
                                 && msg.to_string().contains(&get_MAC())
                             {
                                 println!("Global upgrade instructions with MAC");
-                            } else if msg.to_string().contains("iotm-sys/device/info/")
-                                && msg.to_string().contains(&get_MAC())
-                            {
-                                println!("device and os info of specific device with MAC");
+                                let mut os_upgrade = Command::new("./upgradeOS.sh");
+                                os_upgrade.arg("&");
+                                os_upgrade.status().expect("process failed to execute");
                             }
                             //Device OS Related Topics/////////////////////////
+                            ////Device Firmware Related Topics
+                            else if msg.to_string().contains("iotm-sys/device/firmware/")
+                                && msg.to_string().contains(&get_MAC())
+                            {
+                                println!("device firmware with MAC");
+                                let data=msg.to_str().split(":").collect();
+                                let url=data[1];
+                                // let url=data[1].split(";")[0];
+                                // let fw_version=data[1].split(";")[1];
+                                // println!("url: {} fw_version: {}",url,fw_version);
+                            }
+
+                            else if msg.to_string().contains("iotm-sys/device/firmware/all")
+                            {
+                                println!("device firmware all");
+                            }
+
+                            ////Device Firmware Related Topics
                         } else {
                             // A "None" means we were disconnected. Try to reconnect...
                             println!("Lost connection. Attempting reconnect.");
