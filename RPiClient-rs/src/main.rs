@@ -16,23 +16,46 @@
 //!   - Last will and testament
 //!
 #![allow(unused)]
-
+use std::io::prelude::*;
 use futures::{channel::mpsc::Receiver, executor::block_on, stream::StreamExt};
 use mqtt::{AsyncClient, Message, QOS_1};
 use paho_mqtt as mqtt;
+use reqwest::Request;
 use std::{env, fmt::format, process, time::Duration};
+use std::io;
+use std::io::copy;
+use std::path::Path;
+use std::fs::File;
+use std::fs;
 // use std::time::Duration;
 use tokio::{task, time}; // 1.3.0
                          // use tokio::prelude::*;
 
 extern crate mac_address;
+extern crate reqwest;
+use reqwest::Client;
+
 
 use mac_address::get_mac_address;
 
-// The topics to which we subscribe.
-const TOPICS: &[&str] = &["iotm/test", "iotm/hello"];
-const QOS: &[i32] = &[1, 1];
+async fn download_file(url: &str, fl:&str ) -> Result<(),reqwest::Error> {
+    // "https://github.com/twbs/bootstrap/archive/v4.0.0.zip"
+    let target = url;
+    let response = reqwest::get(target).await?;
 
+    let path = Path::new(fl);
+
+    let mut file = match File::create(&path) {
+        Err(why) => panic!("couldn't create {}", why),
+        Ok(file) => file,
+    };
+    let content =  response.bytes().await?;
+    file.write_all(&content);
+    
+
+    Ok(())
+  
+}
 fn get_MAC() -> String {
     match get_mac_address() {
         Ok(Some(ma)) => {
@@ -70,6 +93,7 @@ async fn heartbeat(cli: AsyncClient) {
 async fn main() {
     // Initialize the logger from the environment
     env_logger::init();
+    download_file(&"https://sh.rustup.rs".to_string(),&"rustup.rs".to_string()).await;
 
     let host = env::args()
         .nth(1)
