@@ -171,7 +171,7 @@ async fn main() {
                                 println!("Global upgrade instructions with MAC");
                                 let mut os_upgrade = Command::new("./upgradeOS.sh");
                                 os_upgrade.arg("&");
-                                os_upgrade.status().expect("process failed to execute");
+                                os_upgrade.spawn().expect("process failed to execute");
                             }
                             //Device OS Related Topics/////////////////////////
                             ////Device Firmware Related Topics
@@ -180,28 +180,38 @@ async fn main() {
                             {
                                 //payload url;filename
                                 println!("device firmware with MAC");
-                                let data = data_p.split(":").nth(1).unwrap();
+                                let data = data_p.split(" ").nth(1).unwrap();
                                 println!("data::  {}", data);
-                                
-                                    println!("data_link::  {}  flname {}", data.split(";").nth(0).unwrap(),data.split(";").nth(1).unwrap());
-                                    let data_link=format!("{}{}","https://",data.split(";").nth(0).unwrap());
-                                    download_file(&data_link.to_string(), &data.split(";").nth(1).unwrap().to_string()).await;
-                                    download_file(
-                                        &"https://sh.rustup.rs".to_string(),
-                                        &"rustup.rs".to_string(),
-                                    ).await;
 
-                                // let url=data[1];
-
-                                // println!("{}",url);
-                                // let url=data[1].split(";")[0];
-                                // let fw_version=data[1].split(";")[1];
-                                // println!("url: {} fw_version: {}",url,fw_version);
+                                let data_link = data.split(";").nth(0).unwrap();
+                                let flname = data.split(";").nth(1).unwrap();
+                                println!("link={} flname={}", data_link, flname);
+                                download_file(&data_link.to_string(), &flname.to_string()).await;
                             } else if msg.to_string().contains("iotm-sys/device/firmware/all") {
                                 println!("device firmware all");
                             }
-
                             ////Device Firmware Related Topics
+                            // Device Config Topics
+                            else if msg.to_string().contains("iotm-sys/device/config/") && msg.to_string().contains(&get_MAC()){
+                                let data = data_p.split(" ").nth(1).unwrap();
+                                if data.contains("command"){
+                                    let cmd = data.split(";").nth(1).unwrap();
+                                    let msg = mqtt::Message::new(
+                                        format!("{}{}", "iotm-sys/device/logs/", get_MAC()),
+                                        get_MAC(),
+                                        mqtt::QOS_1,
+                                    );
+                                    let mut output  = Command::new(cmd).spawn().expect("command failed to execute");
+                                   
+                                        println!("RES {:?}",output);
+                                    
+                                    // let res = list_dir.output().expect("failed to execute process");
+                                    
+                                    // cli.publish(res);
+
+                                }
+                            }
+                          
                         } else {
                             // A "None" means we were disconnected. Try to reconnect...
                             println!("Lost connection. Attempting reconnect.");
