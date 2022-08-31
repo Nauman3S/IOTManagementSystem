@@ -33,11 +33,22 @@ use std::{env, fmt::format, process, time::Duration};
 use tokio::{task, time}; // 1.3.0
                          // use tokio::prelude::*;
 
-extern crate mac_address;
+// use async_std::fs::File;
+// use async_std::prelude::*;
 extern crate reqwest;
 use reqwest::Client;
-
+extern crate mac_address;
 use mac_address::get_mac_address;
+pub fn get_MAC() -> String {
+    match get_mac_address() {
+        Ok(Some(ma)) => {
+            // println!("MAC addr = {}", ma.to_string().replace(":", ""));
+            ma.to_string().replace(":", "")
+        }
+        Ok(None) => return "None".to_string(),
+        Err(e) => return "None".to_string(),
+    }
+}
 
 async fn download_file(url: &str, fl: &str) -> Result<(), reqwest::Error> {
     // "https://github.com/twbs/bootstrap/archive/v4.0.0.zip"
@@ -55,16 +66,7 @@ async fn download_file(url: &str, fl: &str) -> Result<(), reqwest::Error> {
 
     Ok(())
 }
-fn get_MAC() -> String {
-    match get_mac_address() {
-        Ok(Some(ma)) => {
-            // println!("MAC addr = {}", ma.to_string().replace(":", ""));
-            ma.to_string().replace(":", "")
-        }
-        Ok(None) => return "None".to_string(),
-        Err(e) => return "None".to_string(),
-    }
-}
+
 async fn work1(cli: AsyncClient) {
     loop {
         std::thread::sleep(Duration::from_secs(5));
@@ -92,11 +94,6 @@ async fn heartbeat(cli: AsyncClient) {
 async fn main() {
     // Initialize the logger from the environment
     env_logger::init();
-    download_file(
-        &"https://sh.rustup.rs".to_string(),
-        &"rustup.rs".to_string(),
-    )
-    .await;
 
     let host = env::args()
         .nth(1)
@@ -106,7 +103,7 @@ async fn main() {
     // A real system should try harder to use a unique ID.
     let create_opts = mqtt::CreateOptionsBuilder::new()
         .server_uri(host)
-        .client_id(Alphanumeric.sample_string(&mut rand::thread_rng(), 30))
+        .client_id(format!("{}{}", "rpiclient-", get_MAC().to_lowercase()))
         .finalize();
 
     // Create the client connection
@@ -161,6 +158,7 @@ async fn main() {
                     if let Some(msg_opt) = strm.next().await {
                         if let Some(msg) = msg_opt {
                             println!("MSG={}", msg.to_string());
+                            let data_p = msg.to_string();
                             //Device OS Related Topics
                             if msg.to_string().contains("iotm-sys/device/osug/all") {
                                 println!("Global upgrade instructions");
@@ -180,16 +178,26 @@ async fn main() {
                             else if msg.to_string().contains("iotm-sys/device/firmware/")
                                 && msg.to_string().contains(&get_MAC())
                             {
+                                //payload url;filename
                                 println!("device firmware with MAC");
-                                let data=msg.to_str().split(":").collect();
-                                let url=data[1];
+                                let data = data_p.split(":").nth(1).unwrap();
+                                println!("data::  {}", data);
+                                
+                                    println!("data_link::  {}  flname {}", data.split(";").nth(0).unwrap(),data.split(";").nth(1).unwrap());
+                                    let data_link=format!("{}{}","https://",data.split(";").nth(0).unwrap());
+                                    download_file(&data_link.to_string(), &data.split(";").nth(1).unwrap().to_string()).await;
+                                    download_file(
+                                        &"https://sh.rustup.rs".to_string(),
+                                        &"rustup.rs".to_string(),
+                                    ).await;
+
+                                // let url=data[1];
+
+                                // println!("{}",url);
                                 // let url=data[1].split(";")[0];
                                 // let fw_version=data[1].split(";")[1];
                                 // println!("url: {} fw_version: {}",url,fw_version);
-                            }
-
-                            else if msg.to_string().contains("iotm-sys/device/firmware/all")
-                            {
+                            } else if msg.to_string().contains("iotm-sys/device/firmware/all") {
                                 println!("device firmware all");
                             }
 
