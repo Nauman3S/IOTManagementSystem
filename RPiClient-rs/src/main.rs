@@ -141,6 +141,7 @@ async fn main() {
             format!("{}{}", "iotm-sys/device/firmware/", get_MAC()),
             QOS_1,
         );
+        cli.subscribe(format!("{}{}", "iotm-sys/device/config/", get_MAC()), QOS_1);
         // Just loop on incoming messages.
         println!("Waiting for messages...");
 
@@ -192,26 +193,28 @@ async fn main() {
                             }
                             ////Device Firmware Related Topics
                             // Device Config Topics
-                            else if msg.to_string().contains("iotm-sys/device/config/") && msg.to_string().contains(&get_MAC()){
+                            else if msg.to_string().contains("iotm-sys/device/config/")
+                                && msg.to_string().contains(&get_MAC())
+                            {
                                 let data = data_p.split(" ").nth(1).unwrap();
-                                if data.contains("command"){
+                                if data.contains("command") {
                                     let cmd = data.split(";").nth(1).unwrap();
+
+                                    let mut output = Command::new(cmd)
+                                        .output()
+                                        .expect("command failed to execute");
+
+                                    println!("RES {}", String::from_utf8_lossy(&output.stdout));
+
+                                    // let op=String::from_utf8_lossy(&output.stdout);
                                     let msg = mqtt::Message::new(
                                         format!("{}{}", "iotm-sys/device/logs/", get_MAC()),
-                                        get_MAC(),
+                                        op.to_string(),
                                         mqtt::QOS_1,
                                     );
-                                    let mut output  = Command::new(cmd).spawn().expect("command failed to execute");
-                                   
-                                        println!("RES {:?}",output);
-                                    
-                                    // let res = list_dir.output().expect("failed to execute process");
-                                    
-                                    // cli.publish(res);
-
+                                    cli.publish(msg);
                                 }
                             }
-                          
                         } else {
                             // A "None" means we were disconnected. Try to reconnect...
                             println!("Lost connection. Attempting reconnect.");
