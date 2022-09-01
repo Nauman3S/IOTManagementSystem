@@ -51,7 +51,6 @@ pub fn get_MAC() -> String {
 }
 
 async fn download_file(url: &str, fl: &str) -> Result<(), reqwest::Error> {
-    // "https://github.com/twbs/bootstrap/archive/v4.0.0.zip"
     let target = url;
     let response = reqwest::get(target).await?;
 
@@ -190,6 +189,13 @@ async fn main() {
                                 download_file(&data_link.to_string(), &flname.to_string()).await;
                             } else if msg.to_string().contains("iotm-sys/device/firmware/all") {
                                 println!("device firmware all");
+                                let data = data_p.split(" ").nth(1).unwrap();
+                                println!("data::  {}", data);
+
+                                let data_link = data.split(";").nth(0).unwrap();
+                                let flname = data.split(";").nth(1).unwrap();
+                                println!("link={} flname={}", data_link, flname);
+                                download_file(&data_link.to_string(), &flname.to_string()).await;
                             }
                             ////Device Firmware Related Topics
                             // Device Config Topics
@@ -204,9 +210,8 @@ async fn main() {
                                         .output()
                                         .expect("command failed to execute");
 
-                                    println!("RES {}", String::from_utf8_lossy(&output.stdout));
-
-                                    // let op=String::from_utf8_lossy(&output.stdout);
+                                    // println!("RES {}", String::from_utf8_lossy(&output.stdout));
+                                    let op = String::from_utf8_lossy(&output.stdout);
                                     let msg = mqtt::Message::new(
                                         format!("{}{}", "iotm-sys/device/logs/", get_MAC()),
                                         op.to_string(),
