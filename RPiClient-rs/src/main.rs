@@ -69,8 +69,8 @@ async fn download_file(url: &str, fl: &str) -> Result<(), reqwest::Error> {
 async fn work1(cli: AsyncClient) {
     loop {
         std::thread::sleep(Duration::from_secs(5));
-        println!("HI1");
-        println!("Publishing a message on the topic 'test'");
+        // println!("HI1");
+        // println!("Publishing a message on the topic 'test'");
         let msg = mqtt::Message::new("iotm/data", "Hello Rust MQTT world!", mqtt::QOS_1);
         cli.publish(msg);
     }
@@ -78,7 +78,7 @@ async fn work1(cli: AsyncClient) {
 async fn heartbeat(cli: AsyncClient) {
     loop {
         std::thread::sleep(Duration::from_secs(5));
-        println!("HI2 {}", get_MAC());
+        println!("ONLINE=(DEVICE_MAC: {})", get_MAC());
         let msg = mqtt::Message::new(
             format!("{}{}", "iotm-sys/device/heartbeat/", get_MAC()),
             get_MAC(),
@@ -96,7 +96,7 @@ async fn main() {
 
     let host = env::args()
         .nth(1)
-        .unwrap_or_else(|| "tcp://broker.hivemq.com:1883".to_string());
+        .unwrap_or_else(|| "tcp://44.195.192.158:1883".to_string());
 
     // Create the client. Use an ID for a persistent session.
     // A real system should try harder to use a unique ID.
