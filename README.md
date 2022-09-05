@@ -73,7 +73,7 @@ Turn on your Raspberry Pi and execute the following commands
       sudo systemctl status RPiClient-rs.service
       ```
 
-![Logs](logs.png)
+![Logs](artwork/logs.png)
 
 ## Server Details <a name = "server"></a>
 
@@ -215,7 +215,7 @@ IoTManagementSystem Backend returns the following status codes in its API:
       sudo systemctl status RPiClient-rs.service
       ```
 
-![logs](logs.png)
+![logs](artwork/logs.png)
 
 3.  Add the device with the MAC Address collected in the previous step to the database using addDevice API endpoint mentioned above
 4.  Interact with the device with using MAC Address, or interact with all the devices in the system by using `all` in devices parameter of the API.
@@ -241,7 +241,7 @@ Install and Open MQTT Explorer
       sudo systemctl status RPiClient-rs.service
       ```
 
-![Logs](logs.png)
+![Logs](artwork/logs.png)
 
 4.  Then you can publish to various topics and see the response on the same screen. You can get the topics list from the [MQTT Topic Details](#mqtt) section above.
 
