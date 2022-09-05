@@ -28,8 +28,9 @@
 - [MQTT Topic Details](#mqtt)
 - [API Details](#api)
 - [Usage](#usage)
+- [Test](#test)
 - [Built Using](#built_using)
-- [Built Using](#demo)
+- [Demo Video](#demo)
 - [Authors](#authors)
 
 
@@ -62,14 +63,17 @@ Turn on your Raspberry Pi and execute the following commands
 ## RPiClient Installation <a name = "Installation"></a>
 
 
-### Auto Installer
-To install and Run RPi Client Automatically just run the following command on your Raspberry Pi terminal
+### Pre-configured Image
 
-- ```curl -sSL  https://raw.githubusercontent.com/Nauman3S/IOTManagementSystem/main/installer.sh  | bash```
+1.  [Download Raspberry Pi iamge with RPiClient-rs pre-configured](https://drive.google.com/file/d/1FYrVbhk5LQBW3ekg3gABJCJOfhAbjY2a/view?usp=sharing) and flash it to your Raspberry Pi.
 
-After the installer completes the process, note down the MAC Address on the terminal with success message.
+2.  ssh into the Raspberry Pi and execute the following command to get the MAC Address:
 
+      ```bash
+      sudo systemctl status RPiClient-rs.service
+      ```
 
+![Logs](logs.png)
 
 ## Server Details <a name = "server"></a>
 
@@ -111,6 +115,8 @@ After the installer completes the process, note down the MAC Address on the term
 3.  iotm-sys/device/update/[macaddress] `(the fimrware file for specific device is sent to this topic {replace [macaddress] with the Mac address of the device without : in the address}) WRITE-ONLY`
 4.  iotm-sys/device/firmware/all `(global firmware update files are received at this topic) READ-ONLY`
 5.  iotm-sys/device/firmware/[macaddress] `(the fimrware file for specific device are received at this topic {replace [macaddress] with the Mac address of the device without : in the address}) READ-ONLY`
+6.  iotm-sys/device/heartbeat/[macaddress] `(MAC Address of the online device is sent to this topic {replace [macaddress] with the Mac address of the device without : in the address}) READ-ONLY`
+
 #### Device Management
 
 6.  iotm-sys/device/add `(for adding a new device message format 'deviceName;macAddress;updatedAt') WRTIE-ONLY`
@@ -202,17 +208,52 @@ IoTManagementSystem Backend returns the following status codes in its API:
 
 ## Usage <a name = "usage"></a>
 
-1.  Run installer script on your Raspberry Pi.
-2.  Note down the MAC Address given by the installer script at the end.
+1.  [Download Raspberry Pi iamge with RPiClient-rs pre-configured](https://drive.google.com/file/d/1FYrVbhk5LQBW3ekg3gABJCJOfhAbjY2a/view?usp=sharing) and flash it to your Raspberry Pi.
+2.  ssh into the Raspberry Pi and execute the following command to get the MAC Address:
+
+      ```bash
+      sudo systemctl status RPiClient-rs.service
+      ```
+
+![logs](logs.png)
+
 3.  Add the device with the MAC Address collected in the previous step to the database using addDevice API endpoint mentioned above
 4.  Interact with the device with using MAC Address, or interact with all the devices in the system by using `all` in devices parameter of the API.
+
+
+## Test <a name = "test"></a>
+
+Use [MQTT Explorer](http://mqtt-explorer.com/) to test the remote communication over the internet. You can run MQTT Explorer or any computer placed anywhere on the internet.
+
+Install and Open MQTT Explorer
+
+1.  Add a new connection with following details
+
+![sc1](artwork/br0.png)
+
+2.  Then add follwoing advaced options
+
+![sc2](artwork/br1.png)
+
+3.  ssh into the Raspberry Pi and execute the following command to get the MAC Address:
+
+      ```bash
+      sudo systemctl status RPiClient-rs.service
+      ```
+
+![Logs](logs.png)
+
+4.  Then you can publish to various topics and see the response on the same screen. You can get the topics list from the [MQTT Topic Details](#mqtt) section above.
+
+![sc3](artwork/br2.png)
+
 
 ## ⛏️ Built Using <a name = "built_using"></a>
 
 - [NodeJS](https://nodejs.org/en/) - JS Framework for Backend Programming
 - [Eclipse Paho MQTT](https://www.eclipse.org/paho/index.php?page=clients/python/index.php) - MQTT Client for Backend and RPiClient Software
 - [MongoDB](https://www.mongodb.com/) - Database for Managing devices
-- [Python](https://www.python.org/) - For programming RPi Client
+- [Rust](https://www.rust-lang.org/) - Systems Programming Language. For programming RPi Client
   
 ## Demo Videos <a name = "demo"></a>
 
@@ -220,6 +261,8 @@ IoTManagementSystem Backend returns the following status codes in its API:
 - - This is a part 1 of complete demo of IoT Management System, showing how to install the Client on Raspberry Pi and run it.
 - Complete Demo Part 2: https://youtu.be/kUgdPix0l-g
 - - Part 2 of complete demo showing how to interact with all the devices or specific devices in the system using API.
+- Demo of Rust-based RPiClient: https://www.youtube.com/watch?v=OvejznGeAbU
+
 
 ## ✍️ Authors <a name = "authors"></a>
 
