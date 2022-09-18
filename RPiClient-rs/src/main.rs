@@ -218,6 +218,41 @@ async fn main() {
                                         mqtt::QOS_1,
                                     );
                                     cli.publish(msg);
+                                } else if data.contains("logs=stdout") {
+                                    let data =
+                                        fs::read_to_string("/home/pi/RPiClient-rs/logs/stdout.log")
+                                            .expect("Unable to read file");
+                                            println!("STDOUT HERE");
+                                            println!("{}",data);
+                                    let msg = mqtt::Message::new(
+                                        format!("{}{}", "iotm-sys/device/logs/", get_MAC()),
+                                        data.to_string(),
+                                        mqtt::QOS_1,
+                                    );
+                                    cli.publish(msg);
+                                } else if data.contains("logs=stderr") {
+                                    let data =
+                                        fs::read_to_string("/home/pi/RPiClient-rs/logs/stderr.log")
+                                            .expect("Unable to read file");
+                                    println!("{}",data);
+                                    let msg = mqtt::Message::new(
+                                        format!("{}{}", "iotm-sys/device/logs/", get_MAC()),
+                                        data.to_string(),
+                                        mqtt::QOS_1,
+                                    );
+                                    cli.publish(msg);
+                                } else if data.contains("logs=update-status") {
+                                    println!("UPDATE STATUS");
+                                    let data =
+                                        fs::read_to_string("/home/pi/RPiClient-rs/logs/upgradeOP.txt")
+                                            .expect("Unable to read file");
+                                            println!("{}",data);
+                                    let msg = mqtt::Message::new(
+                                        format!("{}{}", "iotm-sys/device/logs/", get_MAC()),
+                                        data.to_string(),
+                                        mqtt::QOS_1,
+                                    );
+                                    cli.publish(msg);
                                 }
                             }
                         } else {
