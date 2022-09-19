@@ -76,9 +76,10 @@ async fn work1(cli: AsyncClient) {
     }
 }
 async fn heartbeat(cli: AsyncClient) {
+    println!("ONLINE=(DEVICE_MAC: {})", get_MAC());
     loop {
         std::thread::sleep(Duration::from_secs(5));
-        println!("ONLINE=(DEVICE_MAC: {})", get_MAC());
+
         let msg = mqtt::Message::new(
             format!("{}{}", "iotm-sys/device/heartbeat/", get_MAC()),
             get_MAC(),
@@ -135,9 +136,16 @@ async fn main() {
             .await;
 
         println!("Subscribing to the Firmware topics");
-        cli.subscribe("iotm-sys/device/firmware/all", QOS_1).await;
+        cli.subscribe("iotm-sys/device/firmware/file/all", QOS_1)
+            .await;
         cli.subscribe(
-            format!("{}{}", "iotm-sys/device/firmware/", get_MAC()),
+            format!("{}{}", "iotm-sys/device/firmware/file/", get_MAC()),
+            QOS_1,
+        );
+        cli.subscribe("iotm-sys/device/firmware/url/all", QOS_1)
+            .await;
+        cli.subscribe(
+            format!("{}{}", "iotm-sys/device/firmware/url/", get_MAC()),
             QOS_1,
         );
         cli.subscribe(format!("{}{}", "iotm-sys/device/config/", get_MAC()), QOS_1);
@@ -160,13 +168,13 @@ async fn main() {
                             println!("MSG={}", msg.to_string());
                             let data_p = msg.to_string();
                             //Device OS Related Topics
-                            if msg.to_string().contains("iotm-sys/device/osug/all") {
+                            if msg.topic().contains("iotm-sys/device/osug/all") {
                                 println!("Global upgrade instructions");
                                 let mut os_upgrade = Command::new("./upgradeOS.sh");
                                 os_upgrade.arg("&");
                                 os_upgrade.status().expect("process failed to execute");
-                            } else if msg.to_string().contains("iotm-sys/device/osug/")
-                                && msg.to_string().contains(&get_MAC())
+                            } else if msg.topic().contains("iotm-sys/device/osug/")
+                                && msg.topic().contains(&get_MAC())
                             {
                                 println!("Global upgrade instructions with MAC");
                                 let mut os_upgrade = Command::new("./upgradeOS.sh");
@@ -175,21 +183,36 @@ async fn main() {
                             }
                             //Device OS Related Topics/////////////////////////
                             ////Device Firmware Related Topics
-                            else if msg.to_string().contains("iotm-sys/device/firmware/")
-                                && msg.to_string().contains(&get_MAC())
+                            else if msg.topic().contains("iotm-sys/device/firmware/url")
+                                && msg.topic().contains(&get_MAC())
                             {
                                 //payload url;filename
                                 println!("device firmware with MAC");
-                                let data = data_p.split(" ").nth(1).unwrap();
+                                let data = msg.payload_str();
                                 println!("data::  {}", data);
 
                                 let data_link = data.split(";").nth(0).unwrap();
                                 let flname = data.split(";").nth(1).unwrap();
                                 println!("link={} flname={}", data_link, flname);
                                 download_file(&data_link.to_string(), &flname.to_string()).await;
-                            } else if msg.to_string().contains("iotm-sys/device/firmware/all") {
+                            } else if msg.topic().contains("iotm-sys/device/firmware/file")
+                                && msg.topic().contains(&get_MAC())
+                            {
+                                //payload url;filename
+                                println!("device firmware with MAC");
+                                let data = msg.payload_str();
+                                println!("data::  {}", data);
+                                println!("topic::  {}", msg.topic());
+
+                                let flname_cmnt = data.split("\n").nth(0).unwrap();
+                                let flname = flname_cmnt.split("#").nth(1).unwrap();
+                                // let data = data.split("*****").nth(1).unwrap();
+                                println!("flname={} data={}", flname, data);
+                                let mut writer = File::create(flname).unwrap();
+                                write!(writer, "{}", data);
+                            } else if msg.topic().contains("iotm-sys/device/firmware/url/all") {
                                 println!("device firmware all");
-                                let data = data_p.split(" ").nth(1).unwrap();
+                                let data = msg.payload_str();
                                 println!("data::  {}", data);
 
                                 let data_link = data.split(";").nth(0).unwrap();
@@ -199,10 +222,10 @@ async fn main() {
                             }
                             ////Device Firmware Related Topics
                             // Device Config Topics
-                            else if msg.to_string().contains("iotm-sys/device/config/")
-                                && msg.to_string().contains(&get_MAC())
+                            else if msg.topic().contains("iotm-sys/device/config/")
+                                && msg.topic().contains(&get_MAC())
                             {
-                                let data = data_p.split(" ").nth(1).unwrap();
+                                let data = msg.payload_str();
                                 if data.contains("command") {
                                     let cmd = data.split(";").nth(1).unwrap();
 
@@ -222,8 +245,21 @@ async fn main() {
                                     let data =
                                         fs::read_to_string("/home/pi/RPiClient-rs/logs/stdout.log")
                                             .expect("Unable to read file");
-                                            println!("STDOUT HERE");
-                                            println!("{}",data);
+                                    println!("STDOUT HERE");
+                                    println!("{}", data);
+                                    let msg = mqtt::Message::new(
+                                        format!("{}{}", "iotm-sys/device/logs/", get_MAC()),
+                                        data.to_string(),
+                                        mqtt::QOS_1,
+                                    );
+                                    cli.publish(msg);
+                                } else if data.contains("logs=stdout-user-script") {
+                                    let data = fs::read_to_string(
+                                        "/home/pi/RPiClient-rs/logs/stdout-uscript.log",
+                                    )
+                                    .expect("Unable to read file");
+                                    println!("STDOUT HERE");
+                                    println!("{}", data);
                                     let msg = mqtt::Message::new(
                                         format!("{}{}", "iotm-sys/device/logs/", get_MAC()),
                                         data.to_string(),
@@ -234,7 +270,19 @@ async fn main() {
                                     let data =
                                         fs::read_to_string("/home/pi/RPiClient-rs/logs/stderr.log")
                                             .expect("Unable to read file");
-                                    println!("{}",data);
+                                    println!("{}", data);
+                                    let msg = mqtt::Message::new(
+                                        format!("{}{}", "iotm-sys/device/logs/", get_MAC()),
+                                        data.to_string(),
+                                        mqtt::QOS_1,
+                                    );
+                                    cli.publish(msg);
+                                } else if data.contains("logs=stderr-user-script") {
+                                    let data = fs::read_to_string(
+                                        "/home/pi/RPiClient-rs/logs/stderr-uscript.log",
+                                    )
+                                    .expect("Unable to read file");
+                                    println!("{}", data);
                                     let msg = mqtt::Message::new(
                                         format!("{}{}", "iotm-sys/device/logs/", get_MAC()),
                                         data.to_string(),
@@ -243,10 +291,11 @@ async fn main() {
                                     cli.publish(msg);
                                 } else if data.contains("logs=update-status") {
                                     println!("UPDATE STATUS");
-                                    let data =
-                                        fs::read_to_string("/home/pi/RPiClient-rs/logs/upgradeOP.txt")
-                                            .expect("Unable to read file");
-                                            println!("{}",data);
+                                    let data = fs::read_to_string(
+                                        "/home/pi/RPiClient-rs/logs/upgradeOP.txt",
+                                    )
+                                    .expect("Unable to read file");
+                                    println!("{}", data);
                                     let msg = mqtt::Message::new(
                                         format!("{}{}", "iotm-sys/device/logs/", get_MAC()),
                                         data.to_string(),

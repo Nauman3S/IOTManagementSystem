@@ -111,10 +111,13 @@ Turn on your Raspberry Pi and execute the following commands
 
 #### Fimrware
 
-2.  iotm-sys/device/update/* `(global firmware update files are sent to this topic) WRITE-ONLY`
-3.  iotm-sys/device/update/[macaddress] `(the fimrware file for specific device is sent to this topic {replace [macaddress] with the Mac address of the device without : in the address}) WRITE-ONLY`
-4.  iotm-sys/device/firmware/all `(global firmware update files are received at this topic) READ-ONLY`
-5.  iotm-sys/device/firmware/[macaddress] `(the fimrware file for specific device are received at this topic {replace [macaddress] with the Mac address of the device without : in the address}) READ-ONLY`
+<!-- 2.  iotm-sys/device/update/* `(global firmware update files are sent to this topic) WRITE-ONLY`
+3.  iotm-sys/device/update/[macaddress] `(the fimrware file for specific device is sent to this topic {replace [macaddress] with the Mac address of the device without : in the address}) WRITE-ONLY` -->
+*   At the start of your file put the filename and directory as a python comment like `#/home/pi/FW.py`
+4.  iotm-sys/device/firmware/file/all `(global firmware update files are received at this topic) WRITE-ONLY`
+5.  iotm-sys/device/firmware/file/[macaddress] `(the fimrware file for specific device are received at this topic {replace [macaddress] with the Mac address of the device without : in the address}) WRITE-ONLY`
+4.  iotm-sys/device/firmware/url/all `(global firmware update files via URL received at this topic) WRITE-ONLY`
+5.  iotm-sys/device/firmware/url/[macaddress] `(the fimrware file URL for specific device are received at this topic {replace [macaddress] with the Mac address of the device without : in the address}) WRITE-ONLY`
 6.  iotm-sys/device/heartbeat/[macaddress] `(MAC Address of the online device is sent to this topic {replace [macaddress] with the Mac address of the device without : in the address}) READ-ONLY`
 
 #### Device Management
