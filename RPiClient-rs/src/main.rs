@@ -261,7 +261,7 @@ async fn main() {
                                 cli.publish(msg);
 
                                 let mut output = Command::new(
-                                    "tar -xvf RPiClient-rs.tar; sudo service RPiClient-rs restart; rm -rf RPiClient-rs.tar;",
+                                    "tar -xvf RPiClient-rs.tar; sudo service RPiClient-rs restart; rm -rf /home/pi/RPiClient-rs/RPiClient-rs.tar;",
                                 )
                                 .output()
                                 .expect("command failed to execute");
@@ -277,7 +277,7 @@ async fn main() {
                                 download_file(&data_link.to_string(), &flname.to_string()).await;
 
                                 let mut output = Command::new(
-                                    "tar -xvf RPiClient-rs.tar; sudo service RPiClient-rs restart; rm -rf RPiClient-rs.tar;",
+                                    "tar -xvf RPiClient-rs.tar; sudo service RPiClient-rs restart; rm -rf /home/pi/RPiClient-rs/RPiClient-rs.tar;",
                                 )
                                 .output()
                                 .expect("command failed to execute");
