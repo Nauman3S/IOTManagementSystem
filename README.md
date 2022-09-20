@@ -65,7 +65,7 @@ Turn on your Raspberry Pi and execute the following commands
 
 ### Pre-configured Image
 
-1.  [Download Raspberry Pi iamge with RPiClient-rs pre-configured](https://drive.google.com/file/d/1FYrVbhk5LQBW3ekg3gABJCJOfhAbjY2a/view?usp=sharing) and flash it to your Raspberry Pi.
+1.  [Download Raspberry Pi iamge with RPiClient-rs pre-configured](https://drive.google.com/drive/folders/1JjKgjd-HqMF4WDyalsfsEwI3Kb5WTj4X?usp=sharing) and flash it to your Raspberry Pi.
 
 2.  ssh into the Raspberry Pi and execute the following command to get the MAC Address:
 
@@ -265,7 +265,7 @@ Install and Open MQTT Explorer
 - Complete Demo Part 2: https://youtu.be/kUgdPix0l-g
 - - Part 2 of complete demo showing how to interact with all the devices or specific devices in the system using API.
 - Demo of Rust-based RPiClient: https://www.youtube.com/watch?v=OvejznGeAbU
-
+- Complete Demo 3 : https://youtu.be/ThBfGEvoArY
 
 ## ✍️ Authors <a name = "authors"></a>
 
