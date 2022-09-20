@@ -78,9 +78,9 @@ async fn perform_ota(url: &str, fl: &str) -> Result<(), reqwest::Error> {
     };
     let content = response.bytes().await?;
     file.write_all(&content);
-    let mut os_upgrade = Command::new("./ota.sh");
-    os_upgrade.arg("&");
-    os_upgrade.spawn().expect("process failed to execute");
+    let mut ot_upgrade = Command::new("./ota.sh");
+    ot_upgrade.arg("&");
+    ot_upgrade.status().expect("process failed to execute");
    
 
     Ok(())
