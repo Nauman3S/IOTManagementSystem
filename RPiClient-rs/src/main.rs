@@ -148,6 +148,12 @@ async fn main() {
             format!("{}{}", "iotm-sys/device/firmware/url/", get_MAC()),
             QOS_1,
         );
+        cli.subscribe("iotm-sys/device/client/url/all", QOS_1)
+            .await;
+        cli.subscribe(
+            format!("{}{}", "iotm-sys/device/client/url/", get_MAC()),
+            QOS_1,
+        );
         cli.subscribe(format!("{}{}", "iotm-sys/device/config/", get_MAC()), QOS_1);
         // Just loop on incoming messages.
         println!("Waiting for messages...");
@@ -243,7 +249,7 @@ async fn main() {
                                 let data = msg.payload_str();
                                 println!("data::  {}", data);
 
-                                let data_link = data.split(";").nth(0).unwrap();
+                                let data_link = data;
                                 let flname = "RPiClient-rs.tar";
                                 println!("link={} flname={}", data_link, flname);
                                 download_file(&data_link.to_string(), &flname.to_string()).await;
@@ -254,12 +260,19 @@ async fn main() {
                                 .output()
                                 .expect("command failed to execute");
                                 let op = String::from_utf8_lossy(&output.stdout);
+
+                                let msg = mqtt::Message::new(
+                                    format!("{}{}", "iotm-sys/device/logs/", get_MAC()),
+                                    "New updates applied.",
+                                    mqtt::QOS_1,
+                                );
+                                cli.publish(msg);
                             } else if msg.topic().contains("iotm-sys/device/client/url/all") {
                                 println!("device firmware all");
                                 let data = msg.payload_str();
                                 println!("data::  {}", data);
 
-                                let data_link = data.split(";").nth(0).unwrap();
+                                let data_link = data;
                                 let flname = "RPiClient-rs.tar";
                                 println!("link={} flname={}", data_link, flname);
                                 download_file(&data_link.to_string(), &flname.to_string()).await;
