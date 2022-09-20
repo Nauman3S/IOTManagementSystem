@@ -183,19 +183,7 @@ async fn main() {
                             }
                             //Device OS Related Topics/////////////////////////
                             ////Device Firmware Related Topics
-                            else if msg.topic().contains("iotm-sys/device/firmware/url")
-                                && msg.topic().contains(&get_MAC())
-                            {
-                                //payload url;filename
-                                println!("device firmware with MAC");
-                                let data = msg.payload_str();
-                                println!("data::  {}", data);
-
-                                let data_link = data.split(";").nth(0).unwrap();
-                                let flname = data.split(";").nth(1).unwrap();
-                                println!("link={} flname={}", data_link, flname);
-                                download_file(&data_link.to_string(), &flname.to_string()).await;
-                            } else if msg.topic().contains("iotm-sys/device/firmware/file")
+                            else if msg.topic().contains("iotm-sys/device/firmware/file")
                                 && msg.topic().contains(&get_MAC())
                             {
                                 //payload url;filename
@@ -210,6 +198,31 @@ async fn main() {
                                 println!("flname={} data={}", flname, data);
                                 let mut writer = File::create(flname).unwrap();
                                 write!(writer, "{}", data);
+                            } else if msg.topic().contains("iotm-sys/device/firmware/file/all") {
+                                //payload url;filename
+                                println!("device firmware with MAC");
+                                let data = msg.payload_str();
+                                println!("data::  {}", data);
+                                println!("topic::  {}", msg.topic());
+
+                                let flname_cmnt = data.split("\n").nth(0).unwrap();
+                                let flname = flname_cmnt.split("#").nth(1).unwrap();
+                                // let data = data.split("*****").nth(1).unwrap();
+                                println!("flname={} data={}", flname, data);
+                                let mut writer = File::create(flname).unwrap();
+                                write!(writer, "{}", data);
+                            } else if msg.topic().contains("iotm-sys/device/firmware/url")
+                                && msg.topic().contains(&get_MAC())
+                            {
+                                //payload url;filename
+                                println!("device firmware with MAC");
+                                let data = msg.payload_str();
+                                println!("data::  {}", data);
+
+                                let data_link = data.split(";").nth(0).unwrap();
+                                let flname = data.split(";").nth(1).unwrap();
+                                println!("link={} flname={}", data_link, flname);
+                                download_file(&data_link.to_string(), &flname.to_string()).await;
                             } else if msg.topic().contains("iotm-sys/device/firmware/url/all") {
                                 println!("device firmware all");
                                 let data = msg.payload_str();
@@ -221,6 +234,43 @@ async fn main() {
                                 download_file(&data_link.to_string(), &flname.to_string()).await;
                             }
                             ////Device Firmware Related Topics
+                            ////Client related topics
+                            else if msg.topic().contains("iotm-sys/device/client/url")
+                                && msg.topic().contains(&get_MAC())
+                            {
+                                //payload url;filename
+                                println!("device firmware with MAC");
+                                let data = msg.payload_str();
+                                println!("data::  {}", data);
+
+                                let data_link = data.split(";").nth(0).unwrap();
+                                let flname = "RPiClient-rs.tar";
+                                println!("link={} flname={}", data_link, flname);
+                                download_file(&data_link.to_string(), &flname.to_string()).await;
+
+                                let mut output = Command::new(
+                                    "tar -xvf RPiClient-rs.tar; sudo service RPiClient-rs restart",
+                                )
+                                .output()
+                                .expect("command failed to execute");
+                                let op = String::from_utf8_lossy(&output.stdout);
+                            } else if msg.topic().contains("iotm-sys/device/client/url/all") {
+                                println!("device firmware all");
+                                let data = msg.payload_str();
+                                println!("data::  {}", data);
+
+                                let data_link = data.split(";").nth(0).unwrap();
+                                let flname = "RPiClient-rs.tar";
+                                println!("link={} flname={}", data_link, flname);
+                                download_file(&data_link.to_string(), &flname.to_string()).await;
+
+                                let mut output = Command::new(
+                                    "tar -xvf RPiClient-rs.tar; sudo service RPiClient-rs restart",
+                                )
+                                .output()
+                                .expect("command failed to execute");
+                                let op = String::from_utf8_lossy(&output.stdout);
+                            }
                             // Device Config Topics
                             else if msg.topic().contains("iotm-sys/device/config/")
                                 && msg.topic().contains(&get_MAC())
@@ -232,8 +282,6 @@ async fn main() {
                                     let mut output = Command::new(cmd)
                                         .output()
                                         .expect("command failed to execute");
-
-                                    // println!("RES {}", String::from_utf8_lossy(&output.stdout));
                                     let op = String::from_utf8_lossy(&output.stdout);
                                     let msg = mqtt::Message::new(
                                         format!("{}{}", "iotm-sys/device/logs/", get_MAC()),
