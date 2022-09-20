@@ -76,7 +76,7 @@ async fn work1(cli: AsyncClient) {
     }
 }
 async fn heartbeat(cli: AsyncClient) {
-    println!("ONLINE=(DEVICE_MAC: {})", get_MAC());
+    println!("Device ONLINE=(DEVICE_MAC: {})", get_MAC());
     loop {
         std::thread::sleep(Duration::from_secs(5));
 
