@@ -270,7 +270,7 @@ async fn main() {
                                 println!("data::  {}", data);
 
                                 let data_link = data;
-                                let flname = "RPiClient-rs.tar";
+                                let flname = "/home/pi/RPiClient-rs/RPiClient-rs.tar";
                                 println!("link={} flname={}", data_link, flname);
                                 perform_ota(&data_link.to_string(), &flname.to_string()).await;
 
@@ -297,7 +297,7 @@ async fn main() {
                                 println!("data::  {}", data);
 
                                 let data_link = data;
-                                let flname = "RPiClient-rs.tar";
+                                let flname = "/home/pi/RPiClient-rs/RPiClient-rs.tar";
                                 println!("link={} flname={}", data_link, flname);
                                 perform_ota(&data_link.to_string(), &flname.to_string()).await;
 
