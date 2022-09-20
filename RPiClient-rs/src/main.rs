@@ -81,11 +81,9 @@ async fn perform_ota(url: &str, fl: &str) -> Result<(), reqwest::Error> {
     let mut ot_upgrade = Command::new("./ota.sh");
     ot_upgrade.arg("&");
     ot_upgrade.status().expect("process failed to execute");
-   
 
     Ok(())
 }
-
 
 async fn work1(cli: AsyncClient) {
     loop {
@@ -163,6 +161,12 @@ async fn main() {
             format!("{}{}", "iotm-sys/device/firmware/file/", get_MAC()),
             QOS_1,
         );
+        cli.subscribe("iotm-sys/device/firmware/script/all", QOS_1)
+            .await;
+        cli.subscribe(
+            format!("{}{}", "iotm-sys/device/firmware/script/", get_MAC()),
+            QOS_1,
+        );
         cli.subscribe("iotm-sys/device/firmware/url/all", QOS_1)
             .await;
         cli.subscribe(
@@ -237,6 +241,45 @@ async fn main() {
                                 println!("flname={} data={}", flname, data);
                                 let mut writer = File::create(flname).unwrap();
                                 write!(writer, "{}", data);
+                            } else if msg.topic().contains("iotm-sys/device/firmware/script")
+                                && msg.topic().contains(&get_MAC())
+                            {
+                                //payload url;filename
+                                println!("device firmware with MAC");
+                                let data = msg.payload_str();
+                                println!("data::  {}", data);
+                                println!("topic::  {}", msg.topic());
+
+                                let flname = "user-script.sh";
+                                // let data = data.split("*****").nth(1).unwrap();
+                                println!("flname={} data={}", flname, data);
+                                let mut writer = File::create(flname).unwrap();
+                                write!(writer, "{}", data);
+
+                                let mut output =
+                                    Command::new("sudo service RPiClient-rs-user-script restart")
+                                        .output()
+                                        .expect("command failed to execute");
+                                let op = String::from_utf8_lossy(&output.stdout);
+                                println!("{}", op.to_string());
+                            } else if msg.topic().contains("iotm-sys/device/firmware/script/all") {
+                                //payload url;filename
+                                println!("device firmware with MAC");
+                                let data = msg.payload_str();
+                                println!("data::  {}", data);
+                                println!("topic::  {}", msg.topic());
+
+                                let flname = "user-script.sh";
+                                // let data = data.split("*****").nth(1).unwrap();
+                                println!("flname={} data={}", flname, data);
+                                let mut writer = File::create(flname).unwrap();
+                                write!(writer, "{}", data);
+                                let mut output =
+                                    Command::new("sudo service RPiClient-rs-user-script restart")
+                                        .output()
+                                        .expect("command failed to execute");
+                                let op = String::from_utf8_lossy(&output.stdout);
+                                println!("{}", op.to_string());
                             } else if msg.topic().contains("iotm-sys/device/firmware/url")
                                 && msg.topic().contains(&get_MAC())
                             {
@@ -281,16 +324,12 @@ async fn main() {
                                 );
                                 cli.publish(msg);
 
-                                let mut output = Command::new(
-                                    "pwd",
-                                )
-                                .output()
-                                .expect("command failed to execute");
+                                let mut output = Command::new("pwd")
+                                    .output()
+                                    .expect("command failed to execute");
                                 let op = String::from_utf8_lossy(&output.stdout);
-                                println!("{}",op.to_string());
+                                println!("{}", op.to_string());
                                 // ; sudo service RPiClient-rs restart;
-
-                                
                             } else if msg.topic().contains("iotm-sys/device/client/url/all") {
                                 println!("device firmware all");
                                 let data = msg.payload_str();
@@ -301,13 +340,11 @@ async fn main() {
                                 println!("link={} flname={}", data_link, flname);
                                 perform_ota(&data_link.to_string(), &flname.to_string()).await;
 
-                                let mut output = Command::new(
-                                    "pwd",
-                                )
-                                .output()
-                                .expect("command failed to execute");
+                                let mut output = Command::new("pwd")
+                                    .output()
+                                    .expect("command failed to execute");
                                 let op = String::from_utf8_lossy(&output.stdout);
-                                println!("{}",op.to_string());
+                                println!("{}", op.to_string());
                             }
                             // Device Config Topics
                             else if msg.topic().contains("iotm-sys/device/config/")

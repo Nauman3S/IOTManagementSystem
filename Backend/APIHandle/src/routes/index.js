@@ -99,127 +99,8 @@ indexRouter.get('/', cors(), indexPage);
 indexRouter.get('/temp', cors(), tempHandlePage);
 
 
-indexRouter.post('/credReq', cors(), function (req, res) {
-  //console.log(req);
-  let values = [
-
-    req.body.CreditsRequest,
-    req.body.Email,
 
 
-  ];
-  let sql = `UPDATE Users SET CreditsRequest='` + values[0] + `' WHERE Email='` + values[1] + `'`;
-
-  db.query(sql, [values], function (err, data, fields) {
-    if (err) throw err;
-    res.json({
-      status: 200,
-      message: "User Updated"
-    })
-  })
-});
-
-
-indexRouter.post('/getUserLedger', cors(), function (req, res) {
-  let sql = `SELECT * FROM Ledger WHERE Email='` + req.body.email + `'`;
-  db.query(sql, function (err, data, fields) {
-    if (err) throw err;
-    res.json({
-      status: 200,
-      data,
-      message: "User lists retrieved successfully"
-    })
-  })
-});
-
-indexRouter.post('/ledgerUpdate', cors(), function (req, res) {
-  let sql = `INSERT INTO Ledger( FileName, JobType, Email) VALUES (?)`;
-  let values = [
-
-    req.body.FileName,
-    req.body.JobType,
-    req.body.Email,
-
-
-  ];
-  db.query(sql, [values], function (err, data, fields) {
-    if (err) throw err;
-    res.json({
-      status: 200,
-      message: "added successfully"
-    })
-    client.publish('iotm-sys/printer', JSON.stringify(values));
-  })
-});
-//////////////////////////ADMIN
-indexRouter.post('/loginAdmin', cors(), function (req, res) {
-  let sql = `SELECT * FROM Admin WHERE Email='` + req.body.email + `' AND Password='` + req.body.password + `'`;
-  db.query(sql, function (err, data, fields) {
-    if (err) throw err;
-    res.json({
-      status: 200,
-      data,
-      message: "User lists retrieved successfully"
-    })
-  })
-});
-
-indexRouter.post('/updateAdmin', cors(), function (req, res) {
-  //console.log(req);
-  let values = [
-
-    req.body.FName,
-    req.body.LName,
-    req.body.Email,
-    req.body.Password
-
-
-  ];
-
-  //change to mongodb
-  let sql = `UPDATE Admin SET FName='` + values[0] + `', LName='` + values[1] + `', Email='` + values[2] + `', Password='` + values[3] + `' WHERE Email='` + values[2] + `'`;
-
-  db.query(sql, [values], function (err, data, fields) {
-    if (err) throw err;
-    res.json({
-      status: 200,
-      message: "User Updated"
-    })
-  })
-});
-
-
-indexRouter.post('/updateAdminRewVal', cors(), function (req, res) {
-  //console.log(req);
-  let values = [
-
-    req.body.RewardEqCredits
-
-
-  ];
-  let sql = `UPDATE Admin SET RewardEqCredits='` + values[0] + `'`;
-
-  db.query(sql, [values], function (err, data, fields) {
-    if (err) throw err;
-    res.json({
-      status: 200,
-      message: "User Updated"
-    })
-  })
-});
-
-
-indexRouter.post('/ledgerLog', cors(), function (req, res) {
-  let sql = `SELECT * FROM Ledger `;
-  db.query(sql, function (err, data, fields) {
-    if (err) throw err;
-    res.json({
-      status: 200,
-      data,
-      message: "User lists retrieved successfully"
-    })
-  })
-});
 
 indexRouter.post('/upgrade', cors(), function (req, res) {//upgrade device os
   let statusN = 0;
@@ -461,6 +342,105 @@ indexRouter.post('/update', cors(), function (req, res) {//update device fw
 
 });
 
+indexRouter.post('/update-script', cors(), function (req, res) {//update device fw
+  let statusN = 0;
+  let msgN = "";
+  let programFile;
+  let uploadPath;
+  // let FileName = req.body.fileName;
+  if (!req.files || Object.keys(req.files).length === 0) {
+    return res.status(400).send('No files were uploaded.');
+  }
+  programFile = req.files.programFile;
+  //console.log(__dirname)
+  let dir = __dirname.replace("/src/routes", "");
+  //console.log(dir)
+  uploadPath = dir + '/cdn/' + programFile.name;
+
+  // Use the mv() method to place the file somewhere on your server
+  programFile.mv(uploadPath, function (err) {
+    if (err)
+      return res.status(500).send(err);
+
+    //res.send('File uploaded!');
+  });
+  console.log(uploadPath)
+  fs.readFile(uploadPath, 'utf8', (err, data) => {
+    if (err) {
+      console.error(err)
+      return
+    }
+    //console.log(data)//file here
+
+    if (req.body.operation == 'update-script') {
+      if (req.body.devices == 'all') {
+        client.publish('iotm-sys/device/firmware/script/all', data)//as mqtt can't publish to wildcards
+        client.publish('iotm-sys/device/logs', "Update pushed to all devices")
+        statusN = 200;
+        msgN = "Update pushed to all devices."
+        res.json({
+          status: statusN,
+
+          message: msgN
+        })
+      }
+      else {
+        if (req.body.devices.length > 5) {
+
+          var q = SomeModel.find({ 'a_macAddress': req.body.devices });
+          q.select('a_name _DeviceId a_macAddress');
+          q.exec(function (err, resV) {
+            if (err) return handleError(err);
+            //console.log(resV)
+            //console.log("res len: ")
+            //console.log(res.length)
+            if (resV.length >= 1) {
+              console.log("macAddress found")
+              console.log("Device to be updated:")
+              console.log(req.body.devices);
+              client.publish('iotm-sys/device/firmware/script/' + req.body.devices, data)
+              client.publish('iotm-sys/device/logs', "Update pushed to " + req.body.devices);
+              statusN = 200;
+              msgN = "Upgrade pushed to " + req.body.devices + "."
+              res.json({
+                status: statusN,
+
+                message: msgN
+              })
+
+            }
+            else {
+              console.log("macAddress not found,")
+              statusN = 404;
+              msgN = "MAC Address: " + req.body.devices + " not found."
+              res.json({
+                status: statusN,
+
+                message: msgN
+              })
+            }
+
+
+
+          })
+
+
+        }
+      }
+
+
+
+    }
+  })
+
+
+
+
+
+
+
+});
+
 
 indexRouter.post('/update-url', cors(), function (req, res) {//update device fw
   let statusN = 0;
@@ -527,20 +507,76 @@ indexRouter.post('/update-url', cors(), function (req, res) {//update device fw
       }
     }
 
-
-
   }
-
-
-
-
-
-
-
-
 });
 
+indexRouter.post('/update-ota', cors(), function (req, res) {//update device fw
+  let statusN = 0;
+  let msgN = "";
+  let FileName;
+  let URL;
 
+  // FileName = req.body.fileName;
+  URL = req.body.url;
+  //console.log(__dirname)
+
+
+  if (req.body.operation == 'update-ota') {
+    if (req.body.devices == 'all') {
+      client.publish('iotm-sys/device/client/url/all', URL)//as mqtt can't publish to wildcards
+      client.publish('iotm-sys/device/logs', "Update pushed to all devices")
+      statusN = 200;
+      msgN = "Update pushed to all devices."
+      res.json({
+        status: statusN,
+
+        message: msgN
+      })
+    }
+    else {
+      if (req.body.devices.length > 5) {
+
+        var q = SomeModel.find({ 'a_macAddress': req.body.devices });
+        q.select('a_name _DeviceId a_macAddress');
+        q.exec(function (err, resV) {
+          if (err) return handleError(err);
+          //console.log(resV)
+          //console.log("res len: ")
+          //console.log(res.length)
+          if (resV.length >= 1) {
+            console.log("macAddress found")
+            console.log("Device to be updated:")
+            console.log(req.body.devices);
+            client.publish('iotm-sys/device/client/url/' + req.body.devices, URL)
+            client.publish('iotm-sys/device/logs', "Update pushed to " + req.body.devices);
+            statusN = 200;
+            msgN = "Upgrade pushed to " + req.body.devices + "."
+            res.json({
+              status: statusN,
+
+              message: msgN
+            })
+
+          }
+          else {
+            console.log("macAddress not found,")
+            statusN = 404;
+            msgN = "MAC Address: " + req.body.devices + " not found."
+            res.json({
+              status: statusN,
+
+              message: msgN
+            })
+          }
+
+        })
+
+
+      }
+    }
+
+  }
+});
 
 indexRouter.post('/addDevice', cors(), function (req, res) {//upgrade device os
   let statusN = 0;
