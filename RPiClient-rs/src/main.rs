@@ -66,6 +66,27 @@ async fn download_file(url: &str, fl: &str) -> Result<(), reqwest::Error> {
     Ok(())
 }
 
+async fn perform_ota(url: &str, fl: &str) -> Result<(), reqwest::Error> {
+    let target = url;
+    let response = reqwest::get(target).await?;
+
+    let path = Path::new(fl);
+
+    let mut file = match File::create(&path) {
+        Err(why) => panic!("couldn't create {}", why),
+        Ok(file) => file,
+    };
+    let content = response.bytes().await?;
+    file.write_all(&content);
+    let mut os_upgrade = Command::new("./ota.sh");
+    os_upgrade.arg("&");
+    os_upgrade.spawn().expect("process failed to execute");
+   
+
+    Ok(())
+}
+
+
 async fn work1(cli: AsyncClient) {
     loop {
         std::thread::sleep(Duration::from_secs(5));
@@ -251,7 +272,7 @@ async fn main() {
                                 let data_link = data;
                                 let flname = "RPiClient-rs.tar";
                                 println!("link={} flname={}", data_link, flname);
-                                download_file(&data_link.to_string(), &flname.to_string()).await;
+                                perform_ota(&data_link.to_string(), &flname.to_string()).await;
 
                                 let msg = mqtt::Message::new(
                                     format!("{}{}", "iotm-sys/device/logs/", get_MAC()),
@@ -261,11 +282,15 @@ async fn main() {
                                 cli.publish(msg);
 
                                 let mut output = Command::new(
-                                    "tar -xvf /home/pi/RPiClient-rs/RPiClient-rs.tar; sudo service RPiClient-rs restart;",
+                                    "pwd",
                                 )
                                 .output()
                                 .expect("command failed to execute");
                                 let op = String::from_utf8_lossy(&output.stdout);
+                                println!("{}",op.to_string());
+                                // ; sudo service RPiClient-rs restart;
+
+                                
                             } else if msg.topic().contains("iotm-sys/device/client/url/all") {
                                 println!("device firmware all");
                                 let data = msg.payload_str();
@@ -274,14 +299,15 @@ async fn main() {
                                 let data_link = data;
                                 let flname = "RPiClient-rs.tar";
                                 println!("link={} flname={}", data_link, flname);
-                                download_file(&data_link.to_string(), &flname.to_string()).await;
+                                perform_ota(&data_link.to_string(), &flname.to_string()).await;
 
                                 let mut output = Command::new(
-                                    "tar -xvf /home/pi/RPiClient-rs/RPiClient-rs.tar; sudo service RPiClient-rs restart;",
+                                    "pwd",
                                 )
                                 .output()
                                 .expect("command failed to execute");
                                 let op = String::from_utf8_lossy(&output.stdout);
+                                println!("{}",op.to_string());
                             }
                             // Device Config Topics
                             else if msg.topic().contains("iotm-sys/device/config/")

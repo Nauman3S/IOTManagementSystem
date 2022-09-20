@@ -10,5 +10,5 @@ readonly TARGET_ARCH=aarch64-unknown-linux-gnu
 
 cross build --target=${TARGET_ARCH} --release
 sshpass -p "raspberry" ssh -t ${TARGET_HOST} sudo service RPiClient-rs stop
-sshpass -p "raspberry" scp -r ./target/aarch64-unknown-linux-gnu/release/RPiClient-rs logs ./upgradeOS.sh ./user-script.sh ./RPiClient-rs.service ./RPiClient-rs-user-script.service ${TARGET_HOST}:${TARGET_PATH}
+sshpass -p "raspberry" scp -r ./target/aarch64-unknown-linux-gnu/release/RPiClient-rs logs ./upgradeOS.sh ./ota.sh ./user-script.sh ./RPiClient-rs.service ./RPiClient-rs-user-script.service ${TARGET_HOST}:${TARGET_PATH}
 sshpass -p "raspberry" ssh -t ${TARGET_HOST} sudo service RPiClient-rs start
