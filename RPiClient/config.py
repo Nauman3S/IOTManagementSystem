@@ -1,4 +1,0 @@
-#configs here
-FIRMWARE_VERSION=0.0
-LAST_UPDATED=""
-LAST_UPGRADED=""
