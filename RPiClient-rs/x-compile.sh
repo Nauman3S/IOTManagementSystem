@@ -14,3 +14,5 @@ cross build --target=${TARGET_ARCH} --release
 sshpass -p ${PASS} ssh -t ${TARGET_HOST} sudo service RPiClient-rs stop
 sshpass -p ${PASS} scp -r ./target/aarch64-unknown-linux-gnu/release/RPiClient-rs logs ./upgradeOS.sh ./update-services.sh ./ota.sh ./user-script.sh ./RPiClient-rs.service ./RPiClient-rs-user-script.service ${TARGET_HOST}:${TARGET_PATH}
 sshpass -p ${PASS} ssh -t ${TARGET_HOST} sudo service RPiClient-rs start
+
+# sshpass -p "PER\$P3CTIV3TEST" ssh pi@192.168.178.79
