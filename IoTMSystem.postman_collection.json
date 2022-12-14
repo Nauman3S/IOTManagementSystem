@@ -1,0 +1,551 @@
+{
+	"info": {
+		"_postman_id": "65e47125-3011-4034-b5fa-096fcbea3fe8",
+		"name": "IoTMSystem",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "http://44.195.192.158:3000/v1/update-script",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "multipart/form-data",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "operation",
+							"value": "update-script",
+							"type": "default"
+						},
+						{
+							"key": "devices",
+							"value": "B827EB407E5A",
+							"type": "default"
+						},
+						{
+							"key": "programFile",
+							"type": "file",
+							"src": "/C:/Users/nauma/Documents/data/W2/Windows/Per/IOTP56_cont_IOTP55/IOTMSys/RPiClient-rs/user-script.sh"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://44.195.192.158:3000/v1/update-script",
+					"protocol": "http",
+					"host": [
+						"44",
+						"195",
+						"192",
+						"158"
+					],
+					"port": "3000",
+					"path": [
+						"v1",
+						"update-script"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://44.195.192.158:3000/v1/update ALL",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "multipart/form-data",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "operation",
+							"value": "update",
+							"type": "default"
+						},
+						{
+							"key": "devices",
+							"value": "all",
+							"type": "default"
+						},
+						{
+							"key": "fileName",
+							"value": "/home/pi/firm.py",
+							"description": "file name and location",
+							"type": "default"
+						},
+						{
+							"key": "programFile",
+							"type": "file",
+							"src": "/C:/Users/nauma/Documents/data/W2/Windows/Per/IOTP56_cont_IOTP55/IOTMSys/RPiClient/fw.py"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://44.195.192.158:3000/v1/update",
+					"protocol": "http",
+					"host": [
+						"44",
+						"195",
+						"192",
+						"158"
+					],
+					"port": "3000",
+					"path": [
+						"v1",
+						"update"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://44.195.192.158:3000/v1/update-url",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "operation",
+							"value": "update-url",
+							"type": "default"
+						},
+						{
+							"key": "devices",
+							"value": "B827EB407E5A",
+							"type": "default"
+						},
+						{
+							"key": "fileName",
+							"value": "/home/pi/hw.py",
+							"type": "text"
+						},
+						{
+							"key": "url",
+							"value": "https://raw.githubusercontent.com/dbarnett/python-helloworld/master/helloworld/main.py",
+							"type": "default"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://44.195.192.158:3000/v1/update-url",
+					"protocol": "http",
+					"host": [
+						"44",
+						"195",
+						"192",
+						"158"
+					],
+					"port": "3000",
+					"path": [
+						"v1",
+						"update-url"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://44.195.192.158:3000/v1/update-url ALL",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "operation",
+							"value": "update-url",
+							"type": "default"
+						},
+						{
+							"key": "devices",
+							"value": "all",
+							"type": "default"
+						},
+						{
+							"key": "fileName",
+							"value": "/home/pi/hwall.py",
+							"type": "text"
+						},
+						{
+							"key": "url",
+							"value": "https://raw.githubusercontent.com/dbarnett/python-helloworld/master/helloworld/main.py",
+							"type": "default"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://44.195.192.158:3000/v1/update-url",
+					"protocol": "http",
+					"host": [
+						"44",
+						"195",
+						"192",
+						"158"
+					],
+					"port": "3000",
+					"path": [
+						"v1",
+						"update-url"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://44.195.192.158:3000/v1/update-ota ALL",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "operation",
+							"value": "update-ota",
+							"type": "default"
+						},
+						{
+							"key": "devices",
+							"value": "all",
+							"type": "default"
+						},
+						{
+							"key": "url",
+							"value": "https://github.com/Nauman3S/IOTManagementSystem/raw/rust-based-client/RPiClient-rs/RPiClient-rs.tar",
+							"type": "default"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://44.195.192.158:3000/v1/update-ota",
+					"protocol": "http",
+					"host": [
+						"44",
+						"195",
+						"192",
+						"158"
+					],
+					"port": "3000",
+					"path": [
+						"v1",
+						"update-ota"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://44.195.192.158:3000/v1/update-ota",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "operation",
+							"value": "update-ota",
+							"type": "default"
+						},
+						{
+							"key": "devices",
+							"value": "B827EB407E5A",
+							"type": "default"
+						},
+						{
+							"key": "url",
+							"value": "https://github.com/Nauman3S/IOTManagementSystem/raw/rust-based-client/RPiClient-rs/RPiClient-rs.tar",
+							"type": "default"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://44.195.192.158:3000/v1/update-ota",
+					"protocol": "http",
+					"host": [
+						"44",
+						"195",
+						"192",
+						"158"
+					],
+					"port": "3000",
+					"path": [
+						"v1",
+						"update-ota"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://44.195.192.158:3000/v1/addDevice",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "operation",
+							"value": "add",
+							"type": "default"
+						},
+						{
+							"key": "name",
+							"value": "TEST_DEV",
+							"type": "default"
+						},
+						{
+							"key": "macAddress",
+							"value": "B827EB407E5A",
+							"type": "default"
+						},
+						{
+							"key": "updatedAt",
+							"value": "00:00:00",
+							"type": "default"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://44.195.192.158:3000/v1/addDevice",
+					"protocol": "http",
+					"host": [
+						"44",
+						"195",
+						"192",
+						"158"
+					],
+					"port": "3000",
+					"path": [
+						"v1",
+						"addDevice"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://44.195.192.158:3000/v1/upgrade",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "operation",
+							"value": "upgrade",
+							"type": "default"
+						},
+						{
+							"key": "devices",
+							"value": "B827EB407E5A",
+							"type": "default"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://44.195.192.158:3000/v1/upgrade",
+					"protocol": "http",
+					"host": [
+						"44",
+						"195",
+						"192",
+						"158"
+					],
+					"port": "3000",
+					"path": [
+						"v1",
+						"upgrade"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://44.195.192.158:3000/v1/listAll",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://44.195.192.158:3000/v1/listAll",
+					"protocol": "http",
+					"host": [
+						"44",
+						"195",
+						"192",
+						"158"
+					],
+					"port": "3000",
+					"path": [
+						"v1",
+						"listAll"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://44.195.192.158:3000/v1/config",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "operation",
+							"value": "remote-command",
+							"type": "default"
+						},
+						{
+							"key": "command",
+							"value": "ls",
+							"type": "default"
+						},
+						{
+							"key": "devices",
+							"value": "B827EB407E5A",
+							"type": "default"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://44.195.192.158:3000/v1/config",
+					"protocol": "http",
+					"host": [
+						"44",
+						"195",
+						"192",
+						"158"
+					],
+					"port": "3000",
+					"path": [
+						"v1",
+						"config"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://44.195.192.158:3000/v1/update",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "multipart/form-data",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "operation",
+							"value": "update",
+							"type": "default"
+						},
+						{
+							"key": "devices",
+							"value": "B827EB407E5A",
+							"type": "default"
+						},
+						{
+							"key": "fileName",
+							"value": "/home/pi/firm.py",
+							"description": "file name and location",
+							"type": "default"
+						},
+						{
+							"key": "programFile",
+							"type": "file",
+							"src": "/C:/Users/nauma/Documents/data/W2/Windows/Per/IOTP56_cont_IOTP55/IOTMSys/RPiClient/fw.py"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://44.195.192.158:3000/v1/update",
+					"protocol": "http",
+					"host": [
+						"44",
+						"195",
+						"192",
+						"158"
+					],
+					"port": "3000",
+					"path": [
+						"v1",
+						"update"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://44.195.192.158:3000/v1/update-script ALL",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "multipart/form-data",
+						"type": "default"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "operation",
+							"value": "update-script",
+							"type": "default"
+						},
+						{
+							"key": "devices",
+							"value": "all",
+							"type": "default"
+						},
+						{
+							"key": "programFile",
+							"type": "file",
+							"src": "/C:/Users/nauma/Documents/data/W2/Windows/Per/IOTP56_cont_IOTP55/IOTMSys/RPiClient-rs/user-script.sh"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://44.195.192.158:3000/v1/update-script",
+					"protocol": "http",
+					"host": [
+						"44",
+						"195",
+						"192",
+						"158"
+					],
+					"port": "3000",
+					"path": [
+						"v1",
+						"update-script"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

@@ -1,0 +1,17 @@
+[Unit]
+Description=RPiClient-rs IoT Management System User Script
+# After=multi-user.target network-online.target
+# Wants=network-online.target
+
+[Service]
+WorkingDirectory=/home/pi/RPiClient-rs
+ExecStart=/home/pi/RPiClient-rs/user-script.sh
+StandardOutput=file:/home/pi/RPiClient-rs/logs/stdout-uscript.log
+StandardError=file:/home/pi/RPiClient-rs/logs/stderr-uscript.log
+User=root
+Group=root
+Restart=always
+RestartSec=10s
+
+[Install]
+WantedBy=multi-user.target
