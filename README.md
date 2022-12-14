@@ -99,12 +99,17 @@ Turn on your Raspberry Pi and execute the following commands
 
 - MQTT Broker Link: 50.19.43.139:1883
 - Dashboard Link: [https://smart-iot-management-system.prod.dev-pci.com/](https://smart-iot-management-system.prod.dev-pci.com/)
+
       -     Dashbaord Username: test@smartiotms.com
       -     Dashboard Password: 12345678
 
 ### Backend
 
-- Backend is based on NodeJS and it is being managed by PM2. It starts automatically on server start.
+- Backend is based on NodeJS and it is being managed by CapRover. It starts automatically on server start.
+
+### Server Monitoring
+
+The server parameters can be monitored using NetDataMonitor dashboard. [https://captain.prod.dev-pci.com/net-data-monitor/](https://captain.prod.dev-pci.com/net-data-monitor/)
 
 ## MQTT Topic Details <a name = "mqtt"></a>
 ### Topics List

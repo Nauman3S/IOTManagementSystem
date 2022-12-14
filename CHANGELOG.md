@@ -14,7 +14,7 @@ The new client can be downloaded from here: https://github.com/Nauman3S/IOTManag
 -   -   [50.19.43.139:1883](50.19.43.139:1883)
 -   -   Username/Password: device/device
 -   Installed and Configured NetDataMonitor for comprehensive server monitoring.
--   -   [https://captain.prod.dev-pci.com/net-data-monitor/][https://captain.prod.dev-pci.com/net-data-monitor/]
+-   -   [https://captain.prod.dev-pci.com/net-data-monitor/](https://captain.prod.dev-pci.com/net-data-monitor/)
 - Added a new backend and frontend for devices management.(Ref: Milestone 3)
 - Added `compile` script for compiling, releasing and pushing the Client.
 
