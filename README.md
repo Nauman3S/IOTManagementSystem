@@ -77,10 +77,10 @@ Turn on your Raspberry Pi and execute the following commands
 
 ## Server Details <a name = "server"></a>
 
-### Monitoring
+### Server Monitoring
 
-- pm2 list
-- pm2 monit
+The server parameters can be monitored using NetDataMonitor dashboard. [https://captain.prod.dev-pci.com/net-data-monitor/](https://captain.prod.dev-pci.com/net-data-monitor/)
+
 
 ### List of Packages installed on server
 
@@ -107,9 +107,17 @@ Turn on your Raspberry Pi and execute the following commands
 
 - Backend is based on NodeJS and it is being managed by CapRover. It starts automatically on server start.
 
-### Server Monitoring
+### Docker Containers Management
 
-The server parameters can be monitored using NetDataMonitor dashboard. [https://captain.prod.dev-pci.com/net-data-monitor/](https://captain.prod.dev-pci.com/net-data-monitor/)
+For containers management and deployment, CapRover is used.
+
+[https://captain.prod.dev-pci.com/](https://captain.prod.dev-pci.com/)
+
+For Docker Containers detailed management, portainer is deployed on the server
+
+[https://portainer.prod.dev-pci.com/](https://portainer.prod.dev-pci.com/)
+
+Portainer username/password: admin/portainer@321
 
 ## MQTT Topic Details <a name = "mqtt"></a>
 ### Topics List
