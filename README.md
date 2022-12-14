@@ -97,8 +97,10 @@ Turn on your Raspberry Pi and execute the following commands
 
 ### Server Links <a name = "srv"></a>
 
-- MQTT Broker Link: 44.195.192.158:1883
-- Backend Link: 44.195.192.158:3000
+- MQTT Broker Link: 50.19.43.139:1883
+- Dashboard Link: [https://smart-iot-management-system.prod.dev-pci.com/](https://smart-iot-management-system.prod.dev-pci.com/)
+      -     Dashbaord Username: test@smartiotms.com
+      -     Dashboard Password: 12345678
 
 ### Backend
 

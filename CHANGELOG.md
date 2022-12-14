@@ -3,14 +3,25 @@
 All notable changes to this project will be documented in this file.
 
 ## Related Links
-The new client can be downloaded from here: https://github.com/Nauman3S/IOTManagementSystem/tree/rust-based-client
-
-Pre-configured .img file: https://drive.google.com/drive/folders/1JjKgjd-HqMF4WDyalsfsEwI3Kb5WTj4X?usp=sharing
+The new client can be downloaded from here: https://github.com/Nauman3S/IOTManagementSystem
 
 
+## Updates Summary - 2022-12-14
+
+- Installed and configured CapRover on the Server.(Ref: Milestone 1)
+-   -   [https://captain.prod.dev-pci.com/](https://captain.prod.dev-pci.com/)
+-   Configured MQTT Broker on the new server
+-   -   [50.19.43.139:1883](50.19.43.139:1883)
+-   -   Username/Password: device/device
+-   Installed and Configured NetDataMonitor for comprehensive server monitoring.
+-   -   [https://captain.prod.dev-pci.com/net-data-monitor/][https://captain.prod.dev-pci.com/net-data-monitor/]
+- Added a new backend and frontend for devices management.(Ref: Milestone 3)
+- Added `compile` script for compiling, releasing and pushing the Client.
 
 
 ## Updates Summary - 2022-09-20
+
+Pre-configured .img file: https://drive.google.com/drive/folders/1JjKgjd-HqMF4WDyalsfsEwI3Kb5WTj4X?usp=sharing
 
 *Demo video of the implemented changes: https://youtu.be/ThBfGEvoArY*
 

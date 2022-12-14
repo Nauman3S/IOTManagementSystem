@@ -116,7 +116,7 @@ async fn main() {
 
     let host = env::args()
         .nth(1)
-        .unwrap_or_else(|| "tcp://44.195.192.158:1883".to_string());
+        .unwrap_or_else(|| "tcp://50.19.43.139:1883".to_string());
 
     // Create the client. Use an ID for a persistent session.
     // A real system should try harder to use a unique ID.
@@ -143,6 +143,8 @@ async fn main() {
             .mqtt_version(mqtt::MQTT_VERSION_3_1_1)
             .clean_session(false)
             .will_message(lwt)
+            .user_name("device")
+            .password("device")
             .finalize();
 
         // Make the connection to the broker
