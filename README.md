@@ -65,7 +65,7 @@ Turn on your Raspberry Pi and execute the following commands
 
 ### Pre-configured Image
 
-1.  [Download Raspberry Pi iamge with RPiClient-rs pre-configured](https://drive.google.com/drive/folders/1JjKgjd-HqMF4WDyalsfsEwI3Kb5WTj4X?usp=sharing) and flash it to your Raspberry Pi.
+1.  [Download Raspberry Pi iamge with RPiClient-rs pre-configured]() and flash it to your Raspberry Pi.
 
 2.  ssh into the Raspberry Pi and execute the following command to get the MAC Address:
 
@@ -74,6 +74,22 @@ Turn on your Raspberry Pi and execute the following commands
       ```
 
 ![Logs](artwork/logs.png)
+
+### Manual Installation
+
+1.    ssh into your Raspberry Pi and execue the following commands
+
+*     cd ~; git clone https://github.com/Nauman3S/IOTManagementSystem
+*     mv -r IOTManagementSystem/RPiClient-rs ~/
+*     cd ~
+*     sudo cp RPiClient-rs.service /lib/systemd/system/
+*     sudo cp RPiClient-rs-user-script.service /lib/systemd/system/
+*     systemctl daemon-reload
+*     sudo systemctl enable RPiClient-rs
+*     sudo systemctl enable RPiClient-rs-user-script
+*     sudo service RPiClient-rs start; sudo service RPiClient-rs-user-script start
+*     sudo reboot
+
 
 ## Server Details <a name = "server"></a>
 
