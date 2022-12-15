@@ -82,6 +82,7 @@ Turn on your Raspberry Pi and execute the following commands
 *     cd ~; git clone https://github.com/Nauman3S/IOTManagementSystem
 *     mv -r IOTManagementSystem/RPiClient-rs ~/
 *     cd ~
+*     mv RPiClient/RPi-release/RPi-Client-rs RPiClient/
 *     sudo cp RPiClient-rs.service /lib/systemd/system/
 *     sudo cp RPiClient-rs-user-script.service /lib/systemd/system/
 *     systemctl daemon-reload
