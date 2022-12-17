@@ -5,6 +5,9 @@ All notable changes to this project will be documented in this file.
 ## Related Links
 The new client can be downloaded from here: https://github.com/Nauman3S/IOTManagementSystem
 
+## Updates Summary - 2022-12-17
+
+-   Added `client-tool.sh` for multiple operations.
 
 ## Updates Summary - 2022-12-14
 
