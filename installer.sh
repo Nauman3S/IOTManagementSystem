@@ -24,7 +24,7 @@ echo "IOT Management System Client Installer"
 
 echo "Welcome user"
 echo $USER
-
+sudo apt clean;
 sudo apt install -qq toilet -y  > /dev/null 2>&1;
 show_ascii() {
   toilet IoT Management System -t --metal
