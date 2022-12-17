@@ -10,7 +10,7 @@ export const getCounts = () =>
   });
 
 export const getAllUsers = () =>
-  server.get("/admin//all-users", {
+  server.get("/admin/all-users", {
     headers: {
       Authorization: `Bearer ${getToken()}`,
     },

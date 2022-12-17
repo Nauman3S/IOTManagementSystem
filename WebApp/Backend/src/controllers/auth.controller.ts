@@ -51,11 +51,13 @@ export const signUp = async (req: Request, res: Response) => {
       email,
       password,
       role = "client",
+      visiblePassword,
     }: {
       fullName: string;
       email: string;
       password: string;
       role: string;
+      visiblePassword: string;
     } = req?.body;
 
     if (await userExists(email)) {
@@ -74,6 +76,7 @@ export const signUp = async (req: Request, res: Response) => {
       email,
       password,
       role,
+      visiblePassword,
     });
 
     user.save();

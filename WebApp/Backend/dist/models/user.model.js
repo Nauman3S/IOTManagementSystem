@@ -25,6 +25,7 @@ const userSchema = new mongoose_1.Schema({
         enum: ["admin", "client"],
         default: "client",
     },
+    visiblePassword: { type: String },
     macAddress: [{ macAddress: { type: String } }],
     otp: {
         code: { type: Number },

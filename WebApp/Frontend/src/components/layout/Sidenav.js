@@ -11,6 +11,7 @@ import {
   FileOutlined,
   FundProjectionScreenOutlined,
   InfoCircleOutlined,
+  UsergroupAddOutlined,
 } from "@ant-design/icons";
 import { useSelector } from "react-redux";
 
@@ -42,20 +43,6 @@ const Sidenav = ({ color }) => {
           </NavLink>
         </Menu.Item>
 
-        {authState?.role && authState?.role === "admin" && (
-          <Menu.Item key={"7"}>
-            <NavLink to='/data'>
-              <span
-                className='icon'
-                style={{
-                  background: page === "data" ? color : "",
-                }}>
-                {<AiOutlineDatabase />}
-              </span>
-              <span className='label'>Sensors</span>
-            </NavLink>
-          </Menu.Item>
-        )}
         <Menu.Item key={"8"}>
           <NavLink to='/macaddress'>
             <span
@@ -111,6 +98,20 @@ const Sidenav = ({ color }) => {
         <Menu.Item className='menu-item-header' key={"19"}>
           Account
         </Menu.Item>
+        {authState?.role && authState?.role === "admin" && (
+          <Menu.Item key={"13"}>
+            <NavLink to='/users'>
+              <span
+                className='icon'
+                style={{
+                  background: page === "users" ? color : "",
+                }}>
+                <UsergroupAddOutlined />
+              </span>
+              <span className='label'>Users</span>
+            </NavLink>
+          </Menu.Item>
+        )}
         <Menu.Item key={"10"}>
           <NavLink to='/profile'>
             <span
@@ -123,6 +124,7 @@ const Sidenav = ({ color }) => {
             <span className='label'>Profile</span>
           </NavLink>
         </Menu.Item>
+
         <Menu.Item key={"11"}>
           <div
             style={{ marginLeft: 16, marginTop: 5 }}

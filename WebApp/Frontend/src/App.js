@@ -38,39 +38,22 @@ function LoggedIn({ children, redirectTo }) {
 const App = () => {
   const authState = useSelector((state) => state.auth);
 
-  const LazyHome =
-    authState?.role &&
-    authState?.role === "admin" &&
-    lazy(() => import("./pages/Home"));
   const LazyClientHome = lazy(() => import("./pages/ClientHome"));
 
   const LazySignIn = lazy(() => import("./pages/SignIn"));
-  const LazySignUp = lazy(() => import("./pages/SignUp"));
   const LazyProfile = lazy(() => import("./pages/Profile"));
 
   const LazyMacAddress = lazy(() => import("./pages/MacAddress"));
   const LazyFiles = lazy(() => import("./pages/Files"));
   const LazyScripts = lazy(() => import("./pages/Script"));
   const LazyDeviceInfo = lazy(() => import("./pages/DeviceInfo"));
-
-  const LazyData =
-    authState?.role &&
-    authState?.role === "admin" &&
-    lazy(() => import("./pages/Data"));
+  const LazyAllUsers = lazy(() => import("./pages/AllUsers"));
 
   return (
     <Suspense fallback={<Loading />}>
       <div className='App'>
         <AnimatePresence exitBeforeEnter>
           <Routes>
-            <Route
-              path='/sign-up'
-              element={
-                <LoggedIn redirectTo='/'>
-                  <LazySignUp />
-                </LoggedIn>
-              }
-            />
             <Route
               path='/sign-in'
               element={
@@ -90,26 +73,17 @@ const App = () => {
                 index
                 element={
                   <RequireAuth redirectTo='/sign-in'>
-                    {authState?.role && authState?.role === "admin" ? (
-                      <LazyHome />
-                    ) : authState?.role && authState?.role === "client" ? (
-                      <LazyClientHome socket={socket} />
-                    ) : (
-                      <div
-                        style={{ display: "flex", justifyContent: "center" }}>
-                        <Loading />
-                      </div>
-                    )}
+                    <LazyClientHome socket={socket} />
                   </RequireAuth>
                 }
               />
 
               {authState?.role && authState?.role === "admin" && (
                 <Route
-                  path='/data'
+                  path='/users'
                   element={
-                    <RequireAuth redirectTo='/sign-in'>
-                      <LazyData />
+                    <RequireAuth redirectTo='/users'>
+                      <LazyAllUsers />
                     </RequireAuth>
                   }
                 />

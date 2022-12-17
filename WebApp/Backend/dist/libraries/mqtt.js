@@ -8,13 +8,16 @@ const mqtt_1 = __importDefault(require("mqtt"));
 const colors_1 = require("colors");
 const topic1 = "iotm-sys/device/logs/#";
 const topic2 = "iotm-sys/device/heartbeat/#";
-const host = "broker.hivemq.com";
+const host = "50.19.43.139";
 const port = "1883";
 // const clientId = `mqtt_${Math.random().toString(16).slice(3)}`;
 const connectUrl = `mqtt://${host}:${port}`;
 const connect = () => {
     try {
-        let client = mqtt_1.default.connect(connectUrl);
+        let client = mqtt_1.default.connect(connectUrl, {
+            username: "device",
+            password: "device",
+        });
         client.on("connect", () => {
             // if (!err) {
             console.log((0, colors_1.bold)((0, colors_1.yellow)("MQTT Connected")));

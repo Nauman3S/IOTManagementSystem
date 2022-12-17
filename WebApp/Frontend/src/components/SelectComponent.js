@@ -12,27 +12,41 @@ const SelectComponent = ({ setSelectedMacaddress, page }) => {
 
   const authState = useSelector((state) => state.auth);
   const { data, loading } = useQuery(
-    authState.role === "client"
+    authState?.role === "client"
       ? "getAllMacAddress"
       : "getAdminUserAllMacAddress",
-    authState.role === "client" ? getAllMacAddress : getAdminUserAllMacAddress
+    authState?.role === "client" ? getAllMacAddress : getAdminUserAllMacAddress
   );
-
   useEffect(() => {
     if (!loading) {
-      setMacList(data?.data?.macAddressess?.macAddress);
+      if (authState?.role === "admin") {
+        setMacList(data?.data?.macAddressess);
+      }
+      if (authState?.role === "client") {
+        setMacList(data?.data?.macAddressess?.macAddress);
+      }
     }
-  }, [loading, data?.data?.macAddressess]);
+  }, [loading, data?.data?.macAddressess, authState?.role]);
 
   const { Option } = Select;
 
-  const selectOptions = macList?.map((data, index) => {
-    return (
-      <Option key={`${data._id + index}`} value={data.macAddress}>
-        {data.macAddress}
-      </Option>
-    );
-  });
+  const selectOptions =
+    !loading &&
+    macList?.map((data, index) => {
+      return (
+        <Option
+          key={`${index}`}
+          value={
+            authState.role === "admin"
+              ? data.macAddress.macAddress
+              : data.macAddress
+          }>
+          {authState.role === "admin"
+            ? data.macAddress.macAddress
+            : data.macAddress}
+        </Option>
+      );
+    });
 
   selectOptions?.unshift(
     <Option key={`all`} value={"All"}>
@@ -51,7 +65,7 @@ const SelectComponent = ({ setSelectedMacaddress, page }) => {
       onChange={(value) => {
         setSelectedMacaddress(value);
       }}>
-      {authState.role === "client" && !loading && selectOptions}
+      {!loading && selectOptions}
     </Select>
   );
 };

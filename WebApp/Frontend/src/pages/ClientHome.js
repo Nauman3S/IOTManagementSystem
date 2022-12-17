@@ -6,6 +6,7 @@ import { Card, Col, Row, Typography } from "antd";
 import {
   clientDashboardCount,
   getDataByMacAddress,
+  getAllMacAddress,
 } from "../Axios/apiFunctions";
 import { ReadFilled } from "@ant-design/icons";
 import TableComponent from "../components/TableComponent";
@@ -15,6 +16,7 @@ import MqttComponent from "../components/MqttComponent";
 const Home = ({ socket }) => {
   const [selectedMacaddress, setSelectedMacaddress] = useState("");
   const { Title } = Typography;
+  const authState = useSelector((state) => state.auth);
 
   const { data: counts } = useQuery(
     "clientDashboardCount",
@@ -26,7 +28,10 @@ const Home = ({ socket }) => {
     () => getDataByMacAddress()
   );
 
-  const authState = useSelector((state) => state.auth);
+  const { data: macAddress, loading } = useQuery(
+    authState?.role && authState?.role === "client" && "getAllMacAddress",
+    authState?.role && authState?.role === "client" && getAllMacAddress
+  );
 
   const count = [
     {
@@ -83,6 +88,8 @@ const Home = ({ socket }) => {
           setSelectedMacaddress={setSelectedMacaddress}
           mqttData={mqttData}
           mqttLoading={mqttLoading}
+          macAddress={macAddress}
+          role={authState?.role}
         />
       </div>
       <MqttComponent socket={socket} selectedMacaddress={selectedMacaddress} />
