@@ -114,6 +114,12 @@ struct HeartBeat {
     status: String,
 }
 
+#[derive(Serialize, Deserialize)]
+struct Logger {
+    macAddress: String,
+    logs: String,
+}
+
 async fn heartbeat(cli: AsyncClient) {
     println!("Device ONLINE=(DEVICE_MAC: {})", get_MAC());
     let hb_data = HeartBeat {
@@ -265,6 +271,16 @@ async fn main() {
                                     let mut writer = FromBase64Writer::new(test_data);
                                     writer.write_all(data_pl.as_bytes()).unwrap();
                                     writer.flush().unwrap();
+                                    let logger_data = Logger {
+                                        macAddress: get_MAC().to_owned(),
+                                        logs: "Firmware File(s) Received by the client.".to_owned(),
+                                    };
+                                    let msg = mqtt::Message::new(
+                                        format!("{}{}", "iotm-sys/device/logs/", get_MAC()),
+                                        serde_json::to_string(&logger_data).unwrap(),
+                                        mqtt::QOS_1
+                                    );
+                                    cli.publish(msg);
                                 } else if msg.topic().contains("iotm-sys/device/firmware/file/all") {
                                     //payload url;filename
                                     println!("device firmware with MAC");
@@ -299,6 +315,16 @@ async fn main() {
                                     let mut writer = FromBase64Writer::new(test_data);
                                     writer.write_all(data_pl.as_bytes()).unwrap();
                                     writer.flush().unwrap();
+                                    let logger_data = Logger {
+                                        macAddress: get_MAC().to_owned(),
+                                        logs: "Firmware File(s) Received by the client.".to_owned(),
+                                    };
+                                    let msg = mqtt::Message::new(
+                                        format!("{}{}", "iotm-sys/device/logs/", get_MAC()),
+                                        serde_json::to_string(&logger_data).unwrap(),
+                                        mqtt::QOS_1
+                                    );
+                                    cli.publish(msg);
                                 } else if
                                     msg.topic().contains("iotm-sys/device/firmware/script") &&
                                     msg.topic().contains(&get_MAC())
@@ -358,6 +384,16 @@ async fn main() {
                                     println!("link={} flname={}", data, flname);
                                     let full_path = format!("data/{}", flname.to_owned());
                                     download_file(&data.to_string(), &full_path.to_string()).await;
+                                    let logger_data = Logger {
+                                        macAddress: get_MAC().to_owned(),
+                                        logs: "Firmware File(s) Downloaded by the client.".to_owned(),
+                                    };
+                                    let msg = mqtt::Message::new(
+                                        format!("{}{}", "iotm-sys/device/logs/", get_MAC()),
+                                        serde_json::to_string(&logger_data).unwrap(),
+                                        mqtt::QOS_1
+                                    );
+                                    cli.publish(msg);
                                 } else if msg.topic().contains("iotm-sys/device/firmware/url/all") {
                                     println!("device firmware all");
                                     let data = msg.payload_str();
@@ -369,6 +405,16 @@ async fn main() {
                                     println!("link={} flname={}", data, flname);
                                     let full_path = format!("data/{}", flname.to_owned());
                                     download_file(&data.to_string(), &full_path.to_string()).await;
+                                    let logger_data = Logger {
+                                        macAddress: get_MAC().to_owned(),
+                                        logs: "Firmware File(s) Downloaded by the client.".to_owned(),
+                                    };
+                                    let msg = mqtt::Message::new(
+                                        format!("{}{}", "iotm-sys/device/logs/", get_MAC()),
+                                        serde_json::to_string(&logger_data).unwrap(),
+                                        mqtt::QOS_1
+                                    );
+                                    cli.publish(msg);
                                 } else if
                                     ////Device Firmware Related Topics
                                     ////Client related topics
