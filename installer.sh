@@ -25,13 +25,12 @@ echo "IOT Management System Client Installer"
 echo "Welcome user"
 echo $USER
 
-sudo apt install -qq toilet -y --force-yes;
+sudo apt install -qq toilet -y --force-yes  > /dev/null 2>&1;
 show_ascii() {
   toilet IoT Management System -t --metal
 }
 show_ascii
 
-sudo apt install neofetch -y --force-yes;
 printf "${Green} Installing RPiClient-rs ${NC}\n"
 if [ -d "$HOME/RPiClient" ]
 then
