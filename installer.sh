@@ -36,6 +36,7 @@ err_handler() {
     sudo rm -rf /lib/systemd/system/RPiClient-rs-user-script.service;
     echo "Reloading systemctl deamon"
     sudo systemctl daemon-reload;
+    sudo rm -rf $HOME/IoTManagementSystem
 }
 trap 'err_handler' ERR
 
