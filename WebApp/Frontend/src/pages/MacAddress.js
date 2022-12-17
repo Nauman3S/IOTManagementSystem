@@ -140,14 +140,14 @@ const MacAddress = () => {
               title={"MacAddress"}
               extra={
                 <>
-                  {!(authState.role === "admin") && (
+                  {
                     <Button
                       type='primary'
                       className='tag-primary'
                       onClick={() => setVisible(true)}>
-                      {authState.role === "client" && "Add New MacAddress"}
+                      Add New MacAddress
                     </Button>
-                  )}
+                  }
                 </>
               }>
               <div className='table-responsive'>
