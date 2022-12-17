@@ -25,15 +25,12 @@ Help()
    echo
 }
 BuildForRPi(){
-    TARGET_PATH=/home/pi/RPiClient-rs/
-    TARGET_ARCH=aarch64-unknown-linux-gnu
     cross build --target=${TARGET_ARCH} --release
     mkdir RPi-release
     cp -r ./target/aarch64-unknown-linux-gnu/release/RPiClient-rs RPi-release
 }
 BuildForRPiandPush(){
-    readonly TARGET_PATH=/home/pi/RPiClient-rs/
-    readonly TARGET_ARCH=aarch64-unknown-linux-gnu
+    
     cross build --target=${TARGET_ARCH} --release
     mkdir RPi-release
     cp -r ./target/aarch64-unknown-linux-gnu/release/RPiClient-rs RPi-release
