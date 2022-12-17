@@ -56,9 +56,16 @@ else
     rm -rf RPi-release
     rm -rf release
     rm -rf .cargo Cargo*
+    rm -rf src
     printf "${Green} Installing systemd deamon for RPiClient-rs and RPiClient-rs-user-script ${NC}\n"
     sudo cp RPiClient-rs.service /lib/systemd/system/
     sudo cp RPiClient-rs-user-script.service /lib/systemd/system/
+    sudo chmod a+rx RPiClient-rs
+    sudo chmod a+rx updatedFW.sh
+    sudo chmod a+rx user-script.sh
+    sudo chmod a+rx update-services.sh
+    sudo chmod a+rx upgradeOS.sh
+    sudo chmod a+rx ota.sh
     # sudo systemctl daemon-reload
     sudo systemctl enable RPiClient-rs
     sudo systemctl enable RPiClient-rs-user-script
@@ -69,8 +76,8 @@ then
     
     printf "${White} Directory RPiClient-rs/logs already exists. ${NC}\n"
 else
-    printf "${Red} Error: Directory RPiClient/logs does not exists. Creating one. ${NC}\n"
-    mkdir ~/RPiClient-rs/logs
+    printf "${Red} Error: Directory RPiClient-rs/logs does not exists. Creating one. ${NC}\n"
+    mkdir ${HOME}/RPiClient-rs/logs
 fi
 
 
