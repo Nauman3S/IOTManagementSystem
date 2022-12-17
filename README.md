@@ -75,21 +75,13 @@ Turn on your Raspberry Pi and execute the following commands
 
 ![Logs](artwork/logs.png)
 
-### Manual Installation
+### One-click Installation
 
-1.    ssh into your Raspberry Pi and execue the following commands
+1.    ssh into your Raspberry Pi and execue the following command
 
-*     cd ~; git clone https://github.com/Nauman3S/IOTManagementSystem
-*     mv -r IOTManagementSystem/RPiClient-rs ~/
-*     cd ~
-*     mv RPiClient/RPi-release/RPi-Client-rs RPiClient/
-*     sudo cp RPiClient-rs.service /lib/systemd/system/
-*     sudo cp RPiClient-rs-user-script.service /lib/systemd/system/
-*     systemctl daemon-reload
-*     sudo systemctl enable RPiClient-rs
-*     sudo systemctl enable RPiClient-rs-user-script
-*     sudo service RPiClient-rs start; sudo service RPiClient-rs-user-script start
-*     sudo reboot
+```bash
+curl -sSL https://raw.githubusercontent.com/Nauman3S/IOTManagementSystem/main/installer.sh | bash
+```
 
 
 ## Server Details <a name = "server"></a>
