@@ -40,8 +40,7 @@ err_handler() {
 }
 trap 'err_handler' ERR
 
-echo "Welcome user"
-echo $USER
+echo "Welcome user" $USER
 sudo apt clean
 sudo apt install -qq toilet -y >/dev/null 2>&1
 show_ascii() {
