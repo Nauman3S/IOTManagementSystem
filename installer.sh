@@ -1,6 +1,7 @@
 #-e option instructs bash to immediately exit if any command [1] has a non-zero exit status
 # We do not want users to end up with a partially working install, so we exit the script
 # instead of continuing the installation with something broken
+#curl -sSL https://raw.githubusercontent.com/Nauman3S/IOTManagementSystem/main/installer.sh | bash
 set -e
 # Regular Colors
 Black='\033[0;30m'        # Black
@@ -24,22 +25,11 @@ echo "IOT Management System Client Installer"
 echo "Welcome user"
 echo $USER
 
-show_ascii_berry() {
-    echo -e "
-
-_________________________   _______    _______         _______
-\__   __(  ___  \__   __/  (       )  (  ____ |\     /(  ____ \
-   ) (  | (   ) |  ) (     | () () |  | (    \( \   / | (    \/
-   | |  | |   | |  | |     | || || |  | (_____ \ (_) /| (_____
-   | |  | |   | |  | |     | |(_)| |  (_____  ) \   / (_____  )
-   | |  | |   | |  | |     | |   | |        ) |  ) (        ) |
-___) (__| (___) |  | |     | )   ( |  /\____) |  | |  /\____) |
-\_______(_______)  )_(     |/     \|  \_______)  \_/  \_______)
-
-
-    "
+sudo apt install -qq toilet -y --force-yes;
+show_ascii() {
+  toilet IoT Management System -t --metal
 }
-show_ascii_berry
+show_ascii
 
 sudo apt install neofetch -y --force-yes;
 printf "${Green} Installing RPiClient-rs ${NC}\n"
