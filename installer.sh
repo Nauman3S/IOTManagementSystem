@@ -53,6 +53,10 @@ else
     cd ..
     rm -rf IOTManagementSystem
     cd RPiClient-rs
+    mv RPi-release/RPiClient-rs .
+    rm -rf RPi-release
+    rm -rf release
+    rm -rf .cargo Cargo*
     printf "${Green} Installing systemd deamon for RPiClient-rs and RPiClient-rs-user-script ${NC}\n"
     sudo cp RPiClient-rs.service /lib/systemd/system/
     sudo cp RPiClient-rs-user-script.service /lib/systemd/system/
