@@ -83,9 +83,19 @@ Turn on your Raspberry Pi and execute the following commands
 curl -sSL https://raw.githubusercontent.com/Nauman3S/IOTManagementSystem/main/installer.sh | bash
 ```
 
-2. After the installation is complete, you will be presented with the `MAC Address` of your device which you can use in the webapp.
+2. After the installation is complete, you will be presented with the `MAC Address` of your device which you can use in the webapp. 
 
 ![installer](artwork/installer.png)
+
+###   One-Click Uninstall
+
+1.    ssh into your Raspberry Pi and execue the following command
+
+```bash
+curl -sSL https://raw.githubusercontent.com/Nauman3S/IOTManagementSystem/main/uninstall.sh | bash
+```
+
+![uninstaller](artwork/uninstall.png)
 
 ## Server Details <a name = "server"></a>
 

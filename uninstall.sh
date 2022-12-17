@@ -1,5 +1,5 @@
 
-#curl -sSL https://raw.githubusercontent.com/Nauman3S/IOTManagementSystem/main/installer.sh | bash
+#curl -sSL https://raw.githubusercontent.com/Nauman3S/IOTManagementSystem/main/uninstall.sh | bash
 
 Black='\033[0;30m'  # Black
 Red='\033[0;31m'    # Red
