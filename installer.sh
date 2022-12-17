@@ -61,7 +61,7 @@ else
     sudo cp RPiClient-rs.service /lib/systemd/system/
     sudo cp RPiClient-rs-user-script.service /lib/systemd/system/
     sudo chmod a+rx RPiClient-rs
-    sudo chmod a+rx updatedFW.sh
+    sudo chmod a+rx updateFW.sh
     sudo chmod a+rx user-script.sh
     sudo chmod a+rx update-services.sh
     sudo chmod a+rx upgradeOS.sh
