@@ -50,7 +50,7 @@ show_ascii() {
 show_ascii
 
 printf "${Green} Installing RPiClient-rs ${NC}\n"
-if [ -d "$HOME/RPiClient" ]; then
+if [ -d "$HOME/RPiClient-rs" ]; then
     printf "${White} Directory RPiClient-rs already exists. ${NC}\n"
 else
 
@@ -97,6 +97,6 @@ else
     mkdir ${HOME}/RPiClient-rs/logs
 fi
 
-MAC=$(ip link show wlan0 | grep link/ether | awk '{print $2}' | sed 's/://g')
+MAC=$(ip link show eth0 | grep link/ether | awk '{print $2}' | sed 's/://g')
 
-printf "${Green} Installtion Completed. Add a new device to IOTMSys with Mac Address $MAC and restart your Raspberry Pi${NC}\n"
+printf "${Green} Installtion Completed. Add a new device to IOTMSys with Mac Address ${MAC^^} and restart your Raspberry Pi${NC}\n"
