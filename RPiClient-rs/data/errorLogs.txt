@@ -1,0 +1,56 @@
+18:37:59.193 -> DEBUG:        Connect to new host: "http://34.227.110.117:8000/test-adhan.ogg"
+18:38:03.213 -> DEBUG:        Song stopped incorrectly!
+18:38:03.213 -> DEBUG:        after song stopped incorrectly
+18:38:03.213 -> DEBUG:        REG            dec      bin               hex
+18:38:03.259 -> DEBUG:        -----------  -------  ----------------  -------
+18:38:03.259 -> DEBUG:        MODE          65535   1111111111111111   0000
+18:38:03.259 -> DEBUG:        STATUS        65535   1111111111111111   FFFF
+18:38:03.259 -> DEBUG:        BASS          65535   1111111111111111   FFFF
+18:38:03.259 -> DEBUG:        CLOCKF        65535   1111111111111111   FFFF
+18:38:03.259 -> DEBUG:        DECODE_TIME   65535   1111111111111111   FFFF
+18:38:03.259 -> DEBUG:        AUDATA        65535   1111111111111111   FFFF
+18:38:03.259 -> DEBUG:        WRAM          65535   1111111111111111   FFFF
+18:38:03.259 -> DEBUG:        WRAMADDR      65535   1111111111111111   FFFF
+18:38:03.306 -> DEBUG:        HDAT0         65535   1111111111111111   FFFF
+18:38:03.306 -> DEBUG:        HDAT1         65535   1111111111111111   FFFF
+18:38:03.306 -> DEBUG:        AIADDR        65535   1111111111111111   FFFF
+18:38:03.306 -> DEBUG:        VOL           65535   1111111111111111   FFFF
+18:38:03.306 -> DEBUG:        AICTRL0       65535   1111111111111111   FFFF
+18:38:03.306 -> DEBUG:        AICTRL1       65535   1111111111111111   FFFF
+18:38:03.306 -> DEBUG:        AICTRL2       65535   1111111111111111   FFFF
+18:38:03.306 -> DEBUG:        AICTRL3       65535   1111111111111111   FFFF
+18:38:03.306 -> DEBUG:        PSRAM not found, inputBufferSize: 11903 bytes
+18:38:03.353 -> [  5165][V][ssl_client.cpp:324] stop_ssl_socket(): Cleaning SSL connection.
+18:38:03.539 -> DEBUG:        Connection has been established in 198 ms, free Heap: 153008 bytes
+18:38:03.539 -> 240AC4AFDBDB9C
+18:38:03.539 -> Attempting MQTT broker:18.213.166.207
+18:38:03.586 -> File Content:
+18:38:03.586 -> {
+18:38:03.586 ->   "username": "device",
+18:38:03.586 ->   "password": "device"
+18:38:03.586 -> }
+18:38:03.586 -> 
+18:38:04.147 -> Established:ouJvMG2z
+18:38:04.147 -> STREAMTITLE:  HTTP/1.0 404 File Not Found
+18:38:04.147 -> STATION:      
+18:38:04.147 -> Homepage:     
+18:38:08.166 -> DEBUG:        Song stopped incorrectly!
+18:38:08.166 -> DEBUG:        after song stopped incorrectly
+18:38:08.166 -> DEBUG:        REG            dec      bin               hex
+18:38:08.166 -> DEBUG:        -----------  -------  ----------------  -------
+18:38:08.166 -> DEBUG:        MODE          65535   1111111111111111   0000
+18:38:08.166 -> DEBUG:        STATUS        65535   1111111111111111   FFFF
+18:38:08.213 -> DEBUG:        BASS          65535   1111111111111111   FFFF
+18:38:08.213 -> DEBUG:        CLOCKF        65535   1111111111111111   FFFF
+18:38:08.213 -> DEBUG:        DECODE_TIME   65535   1111111111111111   FFFF
+18:38:08.213 -> DEBUG:        AUDATA        65535   1111111111111111   FFFF
+18:38:08.213 -> DEBUG:        WRAM          65535   1111111111111111   FFFF
+18:38:08.213 -> DEBUG:        WRAMADDR      65535   1111111111111111   FFFF
+18:38:08.213 -> DEBUG:        HDAT0         65535   1111111111111111   FFFF
+18:38:08.213 -> DEBUG:        HDAT1         65535   1111111111111111   FFFF
+18:38:08.260 -> DEBUG:        AIADDR        65535   1111111111111111   FFFF
+18:38:08.260 -> DEBUG:        VOL           65535   1111111111111111   FFFF
+18:38:08.260 -> DEBUG:        AICTRL0       65535   1111111111111111   FFFF
+18:38:08.260 -> DEBUG:        AICTRL1       65535   1111111111111111   FFFF
+18:38:08.260 -> DEBUG:        AICTRL2       65535   1111111111111111   FFFF
+18:38:08.260 -> DEBUG:        AICTRL3       65535   1111111111111111   FFFF
