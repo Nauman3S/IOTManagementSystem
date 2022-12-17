@@ -59,7 +59,7 @@ else
     printf "${Green} Installing systemd deamon for RPiClient-rs and RPiClient-rs-user-script ${NC}\n"
     sudo cp RPiClient-rs.service /lib/systemd/system/
     sudo cp RPiClient-rs-user-script.service /lib/systemd/system/
-    sudo systemctl daemon-reload
+    # sudo systemctl daemon-reload
     sudo systemctl enable RPiClient-rs
     sudo systemctl enable RPiClient-rs-user-script
     sudo service RPiClient-rs start; sudo service RPiClient-rs-user-script start
