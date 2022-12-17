@@ -7,6 +7,6 @@ import { NextFunction, Request, Response } from "express";
  * @param {NextFunction} next - Next Function
  */
 export const isAdmin = (req: Request, res: Response, next: NextFunction) =>
-  req?.user?.role === "admin" || req?.user?.role === "superAdmin"
+  req?.user?.role === "admin"
     ? next()
     : res.status(400).json({ message: "Not admin" });

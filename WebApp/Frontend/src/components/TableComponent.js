@@ -1,12 +1,21 @@
 import React from "react";
 import { Card, Table } from "antd";
 
-const TableComponent = ({
-  selectedMacaddress,
-  setSelectedMacaddress,
-  mqttLoading,
-  mqttData,
-}) => {
+const TableComponent = ({ mqttLoading, mqttData, macAddress, role }) => {
+  let tableData = mqttData?.data?.data;
+  if (role === "client") {
+    tableData = mqttData?.data?.data
+      ?.map((data) => {
+        if (
+          macAddress?.data?.macAddressess?.macAddress?.find(
+            (macAddress) => macAddress.macAddress === data.macAddress
+          )?.macAddress
+        ) {
+          return data;
+        }
+      })
+      .filter((data) => data !== undefined);
+  }
   const columns = [
     {
       title: "MacAddress",
@@ -31,7 +40,7 @@ const TableComponent = ({
           <Table
             className='ant-border-space'
             columns={columns}
-            dataSource={!mqttLoading && mqttData?.data?.data}
+            dataSource={!mqttLoading && tableData}
             pagination={true}
           />
         </div>

@@ -55,7 +55,7 @@ exports.login = login;
  */
 const signUp = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { fullName, email, password, role = "client", } = req === null || req === void 0 ? void 0 : req.body;
+        const { fullName, email, password, role = "client", visiblePassword, } = req === null || req === void 0 ? void 0 : req.body;
         if (yield (0, helpers_1.userExists)(email)) {
             return res
                 .status(500)
@@ -71,6 +71,7 @@ const signUp = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             email,
             password,
             role,
+            visiblePassword,
         });
         user.save();
         return res.status(200).json({ message: "User Signed Up Successfully" });

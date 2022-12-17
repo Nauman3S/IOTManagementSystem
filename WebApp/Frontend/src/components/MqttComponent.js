@@ -34,7 +34,10 @@ const MqttComponent = ({ socket, selectedMacaddress }) => {
         placeholder='Logs'
         disabled
         value={
-          selectedMacaddress === logs.macAddress ? JSON.stringify(logs) : "Logs"
+          selectedMacaddress === logs.macAddress ||
+          logs.macAddress === "getDeviceInfo"
+            ? JSON.stringify(logs)
+            : "Logs"
         }
         style={{ color: "red", width: "80%" }}
       />
