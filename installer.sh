@@ -64,13 +64,13 @@ else
     sudo systemctl enable RPiClient-rs-user-script
     sudo service RPiClient-rs start; sudo service RPiClient-rs-user-script start
 fi
-if [ -d "$HOME/RPiClient/logs" ]
+if [ -d "$HOME/RPiClient-rs/logs" ]
 then
     
     printf "${White} Directory RPiClient-rs/logs already exists. ${NC}\n"
 else
     printf "${Red} Error: Directory RPiClient/logs does not exists. Creating one. ${NC}\n"
-    mkdir ~/RPiClient/logs
+    mkdir ~/RPiClient-rs/logs
 fi
 
 
