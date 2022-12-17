@@ -83,6 +83,9 @@ Turn on your Raspberry Pi and execute the following commands
 curl -sSL https://raw.githubusercontent.com/Nauman3S/IOTManagementSystem/main/installer.sh | bash
 ```
 
+2. After the installation is complete, you will be presented with the `MAC Address` of your device which you can use in the webapp.
+
+![installer](artwork/installer.png)
 
 ## Server Details <a name = "server"></a>
 
