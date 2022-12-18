@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.resetPassword = exports.verifyOTP = exports.forgotPassword = exports.myProfile = exports.signUp = exports.login = void 0;
+exports.updateUser = exports.resetPassword = exports.verifyOTP = exports.forgotPassword = exports.myProfile = exports.signUp = exports.login = void 0;
 const helpers_1 = require("../helpers");
 const models_1 = require("../models");
 const nodemailer_1 = require("../libraries/nodemailer");
@@ -186,3 +186,24 @@ const resetPassword = (req, res) => __awaiter(void 0, void 0, void 0, function* 
     }
 });
 exports.resetPassword = resetPassword;
+const updateUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _c;
+    try {
+        const { email, password, fullName, } = req === null || req === void 0 ? void 0 : req.body;
+        const hashedPassword = yield (0, bcryptjs_1.hash)(password, 10);
+        yield models_1.User.findOneAndUpdate({ _id: (_c = req.user) === null || _c === void 0 ? void 0 : _c._id }, {
+            email,
+            fullName,
+            password: hashedPassword,
+            visiblePassword: password,
+        });
+        return res.status(200).json({ message: "Profile Updated Successfully" });
+    }
+    catch (error) {
+        return res.status(500).json({
+            message: "INTERNAL SERVER ERROR",
+            error: error.message,
+        });
+    }
+});
+exports.updateUser = updateUser;

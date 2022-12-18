@@ -3,7 +3,6 @@ import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import logo from "../../assets/images/smartoee.png";
 import { useDispatch } from "react-redux";
 import { signOut } from "../../Redux/actions/auth.actions";
-import { AiOutlineDatabase } from "react-icons/ai";
 import { LogoutSvg, DashboardSvg, ProfileSideNavSvg } from "../../assets/Icons";
 
 import {
@@ -12,6 +11,7 @@ import {
   FundProjectionScreenOutlined,
   InfoCircleOutlined,
   UsergroupAddOutlined,
+  FileSearchOutlined,
 } from "@ant-design/icons";
 import { useSelector } from "react-redux";
 
@@ -66,6 +66,30 @@ const Sidenav = ({ color }) => {
               {<FileOutlined />}
             </span>
             <span className='label'>Files</span>
+          </NavLink>
+        </Menu.Item>
+        <Menu.Item key={"14"}>
+          <NavLink to='/remote-files'>
+            <span
+              className='icon'
+              style={{
+                background: page === "remote-files" ? color : "",
+              }}>
+              {<FileSearchOutlined />}
+            </span>
+            <span className='label'>Remote Files</span>
+          </NavLink>
+        </Menu.Item>
+        <Menu.Item key={"15"}>
+          <NavLink to='/client-firmware'>
+            <span
+              className='icon'
+              style={{
+                background: page === "client-firmware" ? color : "",
+              }}>
+              {<FileSearchOutlined />}
+            </span>
+            <span className='label'>Client Firmware</span>
           </NavLink>
         </Menu.Item>
 

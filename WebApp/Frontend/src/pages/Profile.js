@@ -1,12 +1,52 @@
-import React from "react";
-import { Row, Col, Card, Descriptions, Avatar } from "antd";
-import { useSelector } from "react-redux";
+import React, { useState } from "react";
+import {
+  Row,
+  Col,
+  Card,
+  Descriptions,
+  Avatar,
+  Button,
+  Modal,
+  Form,
+  Input,
+  message,
+} from "antd";
+import { EditOutlined } from "@ant-design/icons";
 
 import BgProfile from "../assets/images/bg-profile.jpg";
 import profilavatar from "../assets/images/user.png";
+import { updateUser } from "../Axios/apiFunctions";
+import { getToken } from "../Redux/localStorage";
+import { useDispatch, useSelector } from "react-redux";
+import { loadProfile } from "../Redux/actions/auth.actions";
 
 const Profile = () => {
   const authState = useSelector((state) => state.auth);
+  const [visible, setVisible] = useState(false);
+  const [confirmLoading, setConfirmLoading] = useState(false);
+  const [passwordVisible, setPasswordVisible] = useState(false);
+  const dispatch = useDispatch();
+  const token = getToken();
+
+  const handleAddUpdateProfile = async (value) => {
+    setConfirmLoading(true);
+
+    try {
+      const res = await updateUser(value);
+      if (res.status === 200) {
+        setConfirmLoading(false);
+        setVisible(false);
+        dispatch(loadProfile(token));
+        message.success("Profile updated successfully!");
+      }
+    } catch (error) {
+      setConfirmLoading(false);
+      setVisible(false);
+      message.error(
+        "Something went wrong, please check your internet connection"
+      );
+    }
+  };
 
   return (
     <>
@@ -37,7 +77,20 @@ const Profile = () => {
             bordered={false}
             title={<h6 className='font-semibold m-0'>Profile Information</h6>}
             className='header-solid h-full card-profile-information'
-            bodyStyle={{ paddingTop: 0, paddingBottom: 0 }}>
+            bodyStyle={{ paddingTop: 0, paddingBottom: 0 }}
+            extra={
+              <>
+                {
+                  <Button
+                    type='primary'
+                    className='tag-primary'
+                    icon={<EditOutlined />}
+                    onClick={() => setVisible(true)}>
+                    Edit
+                  </Button>
+                }
+              </>
+            }>
             <hr />
             <Descriptions>
               <Descriptions.Item label='Full Name' span={3}>
@@ -54,6 +107,68 @@ const Profile = () => {
           </Card>
         </Col>
       </Row>
+      <Modal
+        title='Edit Profile'
+        destroyOnClose={true}
+        open={visible}
+        footer={null}
+        onCancel={() => setVisible(false)}
+        confirmLoading={confirmLoading}>
+        <Form
+          name='control-ref'
+          onFinish={handleAddUpdateProfile}
+          labelCol={{
+            span: 8,
+          }}>
+          <Form.Item
+            name='fullName'
+            label='Full Name'
+            initialValue={authState.fullName}
+            rules={[
+              {
+                required: true,
+              },
+            ]}>
+            <Input placeholder='Full Name' />
+          </Form.Item>
+
+          <Form.Item
+            name='email'
+            label='Email'
+            initialValue={authState.email}
+            rules={[
+              {
+                required: true,
+              },
+            ]}>
+            <Input placeholder='Email' />
+          </Form.Item>
+          <Form.Item
+            name='password'
+            label='New Password'
+            initialValue={authState.visiblePassword}
+            rules={[
+              {
+                required: true,
+              },
+            ]}>
+            <Input.Password
+              placeholder='New Password'
+              visibilityToggle={{
+                visible: passwordVisible,
+                onVisibleChange: setPasswordVisible,
+              }}
+              style={{ borderRadius: "8px" }}
+            />
+          </Form.Item>
+
+          <Form.Item>
+            <Button type='primary' htmlType='submit' loading={confirmLoading}>
+              Update
+            </Button>
+          </Form.Item>
+        </Form>
+      </Modal>
     </>
   );
 };

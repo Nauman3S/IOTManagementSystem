@@ -48,6 +48,8 @@ const App = () => {
   const LazyScripts = lazy(() => import("./pages/Script"));
   const LazyDeviceInfo = lazy(() => import("./pages/DeviceInfo"));
   const LazyAllUsers = lazy(() => import("./pages/AllUsers"));
+  const LazyClientFirmware = lazy(() => import("./pages/ClientFirmware"));
+  const LazyRemoteFiles = lazy(() => import("./pages/RemoteFiles"));
 
   return (
     <Suspense fallback={<Loading />}>
@@ -100,7 +102,23 @@ const App = () => {
                 path='/files'
                 element={
                   <RequireAuth redirectTo='/sign-in'>
-                    <LazyFiles />
+                    <LazyFiles socket={socket} />
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path='/remote-files'
+                element={
+                  <RequireAuth redirectTo='/sign-in'>
+                    <LazyRemoteFiles socket={socket} />
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path='/client-firmware'
+                element={
+                  <RequireAuth redirectTo='/sign-in'>
+                    <LazyClientFirmware socket={socket} />
                   </RequireAuth>
                 }
               />
@@ -109,7 +127,7 @@ const App = () => {
                 path='/scripts'
                 element={
                   <RequireAuth redirectTo='/sign-in'>
-                    <LazyScripts />
+                    <LazyScripts socket={socket} />
                   </RequireAuth>
                 }
               />

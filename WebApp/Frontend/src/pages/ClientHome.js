@@ -11,7 +11,6 @@ import {
 import { ReadFilled } from "@ant-design/icons";
 import TableComponent from "../components/TableComponent";
 import ProfileSvg from "../assets/Icons/ProfileSvg";
-import MqttComponent from "../components/MqttComponent";
 
 const Home = ({ socket }) => {
   const [selectedMacaddress, setSelectedMacaddress] = useState("");
@@ -28,7 +27,7 @@ const Home = ({ socket }) => {
     () => getDataByMacAddress()
   );
 
-  const { data: macAddress, loading } = useQuery(
+  const { data: macAddress } = useQuery(
     authState?.role && authState?.role === "client" && "getAllMacAddress",
     authState?.role && authState?.role === "client" && getAllMacAddress
   );
@@ -90,9 +89,9 @@ const Home = ({ socket }) => {
           mqttLoading={mqttLoading}
           macAddress={macAddress}
           role={authState?.role}
+          socket={socket}
         />
       </div>
-      <MqttComponent socket={socket} selectedMacaddress={selectedMacaddress} />
     </>
   );
 };

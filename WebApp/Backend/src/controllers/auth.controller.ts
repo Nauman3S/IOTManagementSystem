@@ -76,6 +76,7 @@ export const signUp = async (req: Request, res: Response) => {
       email,
       password,
       role,
+
       visiblePassword,
     });
 
@@ -196,6 +197,35 @@ export const resetPassword = async (req: Request, res: Response) => {
       message:
         "Password Updated Successfully! Please login with the new password",
     });
+  } catch (error) {
+    return res.status(500).json({
+      message: "INTERNAL SERVER ERROR",
+      error: (error as Error).message,
+    });
+  }
+};
+
+export const updateUser = async (req: Request, res: Response) => {
+  try {
+    const {
+      email,
+      password,
+      fullName,
+    }: { email: string; password: string; fullName: string } = req?.body;
+
+    const hashedPassword = await hash(password, 10);
+
+    await User.findOneAndUpdate(
+      { _id: req.user?._id },
+      {
+        email,
+        fullName,
+        password: hashedPassword,
+        visiblePassword: password,
+      }
+    );
+
+    return res.status(200).json({ message: "Profile Updated Successfully" });
   } catch (error) {
     return res.status(500).json({
       message: "INTERNAL SERVER ERROR",

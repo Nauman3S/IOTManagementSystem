@@ -22,6 +22,10 @@ export const postToMqtt = async (socket) => {
         return;
       }
 
+      if (topic.includes("/heartbeat")) {
+        socket.emit("heartbeat", payload.toString());
+      }
+
       await Mqtt.findOneAndUpdate(
         { macAddress: message.macAddress },
         { macAddress: message.macAddress, status: message.status },
@@ -100,6 +104,7 @@ export const uploadFileToS3 = async (req: Request, res: Response) => {
       fileURL: result.Location,
       fileName: file?.originalname,
       macAddress: req?.body?.macAddress,
+      type: req?.body?.type,
       key: result.Key,
     });
     ota.save();
@@ -143,6 +148,7 @@ export const deleteFileFromS3 = async (req: Request, res: Response) => {
  */
 export const getAllFiles = async (req: Request, res: Response) => {
   try {
+    console.log(req?.body?.query);
     const files = await File.find(req?.body?.query);
     return res.status(200).json({ files });
   } catch (error) {

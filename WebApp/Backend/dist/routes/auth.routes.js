@@ -34,4 +34,8 @@ router.post("/verify", auth_controller_1.verifyOTP);
  * Reset Password
  */
 router.post("/reset", auth_controller_1.resetPassword);
+/**
+ * Update User
+ */
+router.patch("/update-user", auth_middleware_1.isAuthenticated, auth_controller_1.updateUser);
 exports.default = router;

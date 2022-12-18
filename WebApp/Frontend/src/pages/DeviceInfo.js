@@ -1,6 +1,15 @@
 import { useState } from "react";
 
-import { Row, Col, Card, Button, Descriptions, message, Select } from "antd";
+import {
+  Row,
+  Col,
+  Card,
+  Button,
+  Descriptions,
+  message,
+  Select,
+  Input,
+} from "antd";
 import SelectComponent from "../components/SelectComponent";
 import MqttComponent from "../components/MqttComponent";
 
@@ -11,8 +20,9 @@ const Control = ({ socket }) => {
 
   const [selectedMacaddress, setSelectedMacaddress] = useState();
   const [selectedConfig, setSelectedConfig] = useState();
+  const [config, setConfig] = useState();
 
-  const config = [
+  const configs = [
     "command;[bash command]",
     "logs=stdout",
     "logs=stdout-user-script",
@@ -30,12 +40,19 @@ const Control = ({ socket }) => {
       message.error("Please Select a Config to Publish!");
       return;
     }
+    if (selectedConfig === configs[0] && !config) {
+      message.error("Please Enter Config!");
+      return;
+    }
     try {
       const configEndPoint = `config/${
         selectedMacaddress === "All" ? "all" : selectedMacaddress
       }`;
       const formData = new FormData();
-      formData.append("message", selectedConfig);
+      formData.append(
+        "message",
+        selectedConfig === configs[0] ? `command;${config}` : selectedConfig
+      );
       formData.append("endPoint", configEndPoint);
       const res = await publishToMqtt(formData);
 
@@ -99,16 +116,28 @@ const Control = ({ socket }) => {
                   style={{
                     width: "24%",
                   }}
+                  dropdownStyle={{ borderRadius: "20px" }}
                   onChange={(value) => {
                     setSelectedConfig(value);
                   }}>
-                  {config?.map((val) => (
+                  {configs?.map((val) => (
                     <Option key={val} value={val}>
                       {val}
                     </Option>
                   ))}
                 </Select>
               </Descriptions.Item>
+              {selectedConfig === configs[0] && (
+                <Descriptions.Item>
+                  <Input
+                    onChange={(e) => {
+                      setConfig(e.target.value);
+                    }}
+                    placeholder={"Enter Config"}
+                    style={{ width: "50%", color: "black" }}
+                  />
+                </Descriptions.Item>
+              )}
               <Descriptions.Item
                 label='Publish Config'
                 labelStyle={{

@@ -18,8 +18,9 @@ import {
 } from "../Axios/apiFunctions";
 import { useQuery, useMutation, useQueryClient } from "react-query";
 import useGetBase64 from "../hooks/useGetBase64";
+import MqttComponent from "../components/MqttComponent";
 
-const Files = () => {
+const Files = ({ socket }) => {
   const [selectedMacaddress, setSelectedMacaddress] = useState();
   const [uploading, setUploading] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -34,8 +35,8 @@ const Files = () => {
       selectedMacaddress &&
       getAllFiles(
         selectedMacaddress === "All"
-          ? { query: {} }
-          : { query: { macAddress: selectedMacaddress } }
+          ? { query: { type: "file" } }
+          : { query: { macAddress: selectedMacaddress, type: "file" } }
       )
   );
 
@@ -109,6 +110,7 @@ const Files = () => {
     setFile(null);
     formData.append("file", file);
     formData.append("macAddress", selectedMacaddress);
+    formData.append("type", "file");
     try {
       const res = await uploadFile(formData);
 
@@ -123,15 +125,6 @@ const Files = () => {
         formData.append("message", fileBinary.toString());
 
         await publishToMqtt(formData);
-
-        const urlFileEndPoint = `firmware/url/${
-          selectedMacaddress === "All" ? "all" : selectedMacaddress
-        }`;
-        const formDataUrl = new FormData();
-        formDataUrl.append("message", res.data.data.fileURL);
-        formDataUrl.append("endPoint", urlFileEndPoint);
-
-        await publishToMqtt(formDataUrl);
 
         notification["success"]({
           message: "File Uploaded Successfully!",
@@ -241,6 +234,7 @@ const Files = () => {
           </Button>
         </div>
       </Modal>
+      <MqttComponent socket={socket} selectedMacaddress={selectedMacaddress} />
     </>
   );
 };

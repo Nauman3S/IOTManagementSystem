@@ -58,6 +58,12 @@ export interface IScripts extends Document, ITimestamps {
   script: string;
 }
 
+export interface IUrls extends Document, ITimestamps {
+  userId: Types.ObjectId;
+  url: string;
+  macAddress: string;
+}
+
 export interface IButtons extends Document, ITimestamps {
   userId: Types.ObjectId;
   buttons: Object[];

@@ -2,6 +2,13 @@ import server from "./index";
 
 import { getToken } from "../Redux/localStorage";
 
+export const updateUser = (values) =>
+  server.patch("/auth/update-user", values, {
+    headers: {
+      Authorization: `Bearer ${getToken()}`,
+    },
+  });
+
 export const getCounts = () =>
   server.get("/admin/count", {
     headers: {
@@ -156,6 +163,46 @@ export const editProgram = (data, id) =>
   server.patch(
     `/program/edit`,
     { id: id, programName: data.programName, command: data.command },
+    {
+      headers: {
+        Authorization: `Bearer ${getToken()}`,
+      },
+    }
+  );
+
+export const allUrls = (macAddress) =>
+  server.post(
+    "/url/all",
+    { macAddress },
+    {
+      headers: {
+        Authorization: `Bearer ${getToken()}`,
+      },
+    }
+  );
+
+export const addUrl = (values) =>
+  server.post("/url/post", values, {
+    headers: {
+      Authorization: `Bearer ${getToken()}`,
+    },
+  });
+
+export const deleteUrl = (id) =>
+  server.patch(
+    `/url/delete`,
+    { id },
+    {
+      headers: {
+        Authorization: `Bearer ${getToken()}`,
+      },
+    }
+  );
+
+export const editUrl = (data, id) =>
+  server.patch(
+    `/url/edit`,
+    { id: id, url: data.url },
     {
       headers: {
         Authorization: `Bearer ${getToken()}`,

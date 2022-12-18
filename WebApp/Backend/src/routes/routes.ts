@@ -6,6 +6,7 @@ import {
   adminRoutes,
   countRoutes,
   scriptRoutes,
+  urlRoutes,
 } from ".";
 import { isAuthenticated } from "../middlewares/auth.middleware";
 import { isAdmin } from "../middlewares/validator.middleware";
@@ -29,5 +30,8 @@ router.use("/count", isAuthenticated, countRoutes);
 
 //All Script Routes
 router.use("/program", isAuthenticated, scriptRoutes);
+
+//All Url Routes
+router.use("/url", isAuthenticated, urlRoutes);
 
 export default router;

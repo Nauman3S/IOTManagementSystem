@@ -17,4 +17,6 @@ router.use("/admin", auth_middleware_1.isAuthenticated, validator_middleware_1.i
 router.use("/count", auth_middleware_1.isAuthenticated, _1.countRoutes);
 //All Script Routes
 router.use("/program", auth_middleware_1.isAuthenticated, _1.scriptRoutes);
+//All Url Routes
+router.use("/url", auth_middleware_1.isAuthenticated, _1.urlRoutes);
 exports.default = router;

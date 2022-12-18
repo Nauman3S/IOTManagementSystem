@@ -1,8 +1,34 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Card, Table } from "antd";
 
-const TableComponent = ({ mqttLoading, mqttData, macAddress, role }) => {
+const TableComponent = ({
+  mqttLoading,
+  mqttData,
+  macAddress,
+  role,
+  socket,
+}) => {
   let tableData = mqttData?.data?.data;
+
+  const [status, setStatus] = useState();
+  const [didMount, setDidMount] = useState(false);
+
+  socket.on("heartbeat", (data) => {
+    const device = JSON.parse(data);
+    if (device) {
+      setStatus(device);
+    }
+  });
+
+  useEffect(() => {
+    setDidMount(true);
+
+    return () => {
+      setDidMount(false);
+      socket.off("send_message");
+    };
+  }, [socket]);
+
   if (role === "client") {
     tableData = mqttData?.data?.data
       ?.map((data) => {
@@ -27,9 +53,27 @@ const TableComponent = ({ mqttLoading, mqttData, macAddress, role }) => {
       title: "Status",
       dataIndex: "status",
       key: "status",
+      render: (data, record) => {
+        if (record?.macAddress === status?.macAddress) {
+          return (
+            <p
+              style={
+                status?.status === "online"
+                  ? { color: "green", fontWeight: "900" }
+                  : { color: "red", fontWeight: "900" }
+              }>
+              {status?.status}
+            </p>
+          );
+        } else {
+          return <p style={{ color: "red", fontWeight: "900" }}>{data}</p>;
+        }
+      },
     },
   ];
-
+  if (!didMount) {
+    return null;
+  }
   return (
     <>
       <Card
