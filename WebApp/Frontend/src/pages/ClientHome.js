@@ -7,6 +7,7 @@ import {
   clientDashboardCount,
   getDataByMacAddress,
   getAllMacAddress,
+  getCounts,
 } from "../Axios/apiFunctions";
 import { ReadFilled } from "@ant-design/icons";
 import TableComponent from "../components/TableComponent";
@@ -22,6 +23,8 @@ const Home = ({ socket }) => {
     clientDashboardCount
   );
 
+  const { data: adminCounts } = useQuery("getAdminCounts", getCounts);
+
   const { data: mqttData, loading: mqttLoading } = useQuery(
     ["getDataByMacAddress", selectedMacaddress],
     () => getDataByMacAddress()
@@ -35,7 +38,10 @@ const Home = ({ socket }) => {
   const count = [
     {
       today: "Total Macaddress",
-      title: counts?.data?.macAddressCount?.macAddress,
+      title:
+        authState?.role && authState?.role === "admin"
+          ? adminCounts?.data?.totalMacAddress
+          : counts?.data?.macAddressCount?.macAddress,
       icon: <ReadFilled />,
       bnb: "bnb2",
     },
