@@ -6,6 +6,7 @@ import {
   forgotPassword,
   verifyOTP,
   resetPassword,
+  updateUser,
 } from "../controllers/auth.controller";
 import { isAuthenticated } from "../middlewares/auth.middleware";
 
@@ -46,5 +47,10 @@ router.post("/verify", verifyOTP);
  * Reset Password
  */
 router.post("/reset", resetPassword);
+
+/**
+ * Update User
+ */
+router.patch("/update-user", isAuthenticated, updateUser);
 
 export default router;

@@ -19,12 +19,11 @@ import {
   deleteProgram,
   editProgram,
 } from "../Axios/apiFunctions";
-import { useSelector } from "react-redux";
 import { useQuery, useMutation, useQueryClient } from "react-query";
 import SelectComponent from "../components/SelectComponent";
+import MqttComponent from "../components/MqttComponent";
 
-const Program = () => {
-  const authState = useSelector((state) => state.auth);
+const Script = ({ socket }) => {
   const [visible, setVisible] = useState({
     visible: false,
     type: "add",
@@ -213,15 +212,12 @@ const Program = () => {
               }
               extra={
                 <>
-                  {authState.role !== "admin" &&
-                    authState.role !== "superAdmin" && (
-                      <Button
-                        type='primary'
-                        className='tag-primary'
-                        onClick={onClickAddScript}>
-                        Add Script
-                      </Button>
-                    )}
+                  <Button
+                    type='primary'
+                    className='tag-primary'
+                    onClick={onClickAddScript}>
+                    Add Script
+                  </Button>
                 </>
               }>
               <div className='table-responsive'>
@@ -278,8 +274,9 @@ const Program = () => {
           </Form.Item>
         </Form>
       </Modal>
+      <MqttComponent socket={socket} selectedMacaddress={selectedMacaddress} />
     </>
   );
 };
 
-export default Program;
+export default Script;

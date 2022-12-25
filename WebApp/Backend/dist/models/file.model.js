@@ -7,6 +7,7 @@ const fileSchema = new mongoose_1.Schema({
     fileName: { type: String },
     key: { type: String },
     macAddress: { type: String },
+    type: { type: String, enum: ["file", "url"] },
 }, { timestamps: true });
 const File = (0, mongoose_1.model)("File", fileSchema);
 exports.default = File;

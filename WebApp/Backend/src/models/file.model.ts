@@ -8,6 +8,7 @@ const fileSchema = new Schema<IFile>(
     fileName: { type: String },
     key: { type: String },
     macAddress: { type: String },
+    type: { type: String, enum: ["file", "url"] },
   },
   { timestamps: true }
 );

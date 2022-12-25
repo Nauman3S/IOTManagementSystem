@@ -32,6 +32,9 @@ const postToMqtt = (socket) => __awaiter(void 0, void 0, void 0, function* () {
                 socket.emit("send_message", payload.toString());
                 return;
             }
+            if (topic.includes("/heartbeat")) {
+                socket.emit("heartbeat", payload.toString());
+            }
             yield models_1.Mqtt.findOneAndUpdate({ macAddress: message.macAddress }, { macAddress: message.macAddress, status: message.status }, { upsert: true });
         }));
         console.log("Data Saved");
@@ -88,7 +91,7 @@ exports.getDataByMacAddress = getDataByMacAddress;
  * @param {Request} req
  */
 const uploadFileToS3 = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _b, _c;
+    var _b, _c, _d;
     try {
         const unlinkFile = (0, util_1.promisify)(fs_1.default.unlink);
         const file = req === null || req === void 0 ? void 0 : req.file;
@@ -99,6 +102,7 @@ const uploadFileToS3 = (req, res) => __awaiter(void 0, void 0, void 0, function*
             fileURL: result.Location,
             fileName: file === null || file === void 0 ? void 0 : file.originalname,
             macAddress: (_c = req === null || req === void 0 ? void 0 : req.body) === null || _c === void 0 ? void 0 : _c.macAddress,
+            type: (_d = req === null || req === void 0 ? void 0 : req.body) === null || _d === void 0 ? void 0 : _d.type,
             key: result.Key,
         });
         ota.save();
@@ -138,9 +142,10 @@ exports.deleteFileFromS3 = deleteFileFromS3;
  * @param {Request} req
  */
 const getAllFiles = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _d;
+    var _e, _f;
     try {
-        const files = yield models_1.File.find((_d = req === null || req === void 0 ? void 0 : req.body) === null || _d === void 0 ? void 0 : _d.query);
+        console.log((_e = req === null || req === void 0 ? void 0 : req.body) === null || _e === void 0 ? void 0 : _e.query);
+        const files = yield models_1.File.find((_f = req === null || req === void 0 ? void 0 : req.body) === null || _f === void 0 ? void 0 : _f.query);
         return res.status(200).json({ files });
     }
     catch (error) {

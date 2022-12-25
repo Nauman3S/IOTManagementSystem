@@ -40,6 +40,12 @@ export const addMacAddress = async (req: Request, res: Response) => {
       { upsert: true }
     );
 
+    await Mqtt.findOneAndUpdate(
+      { macAddress: req?.body?.macAddress },
+      { macAddress: req?.body?.macAddress, status: "offline" },
+      { upsert: true }
+    );
+
     return res.status(200).json({ message: "MacAddress Added Successfully!" });
   } catch (error) {
     return res

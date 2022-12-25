@@ -4,6 +4,7 @@ import { blue, bold, yellow } from "colors";
 const topic1 = "iotm-sys/device/logs/#";
 const topic2 = "iotm-sys/device/heartbeat/#";
 const host = "50.19.43.139";
+// const host = "broker.hivemq.com";
 const port = "1883";
 // const clientId = `mqtt_${Math.random().toString(16).slice(3)}`;
 const connectUrl = `mqtt://${host}:${port}`;

@@ -6,6 +6,7 @@ const INITIAL_STATE = {
   fullName: "",
   email: "",
   role: "",
+  visiblePassword: "",
 };
 
 const authReducer = (state = INITIAL_STATE, action) => {
@@ -13,7 +14,7 @@ const authReducer = (state = INITIAL_STATE, action) => {
     case SIGN_UP:
       return { ...state };
     case SIGN_IN:
-      const { fullName, email, role, _id } = action.payload;
+      const { fullName, email, role, _id, visiblePassword } = action.payload;
       return {
         ...state,
         isSignedIn: true,
@@ -21,6 +22,7 @@ const authReducer = (state = INITIAL_STATE, action) => {
         email: email,
         role: role,
         userId: _id,
+        visiblePassword: visiblePassword,
       };
     case LOAD_PROF:
       return {
@@ -30,6 +32,7 @@ const authReducer = (state = INITIAL_STATE, action) => {
         email: action.payload.email,
         role: action.payload.role,
         userId: action.payload.userId,
+        visiblePassword: action.payload.visiblePassword,
       };
 
     case SIGN_OUT:

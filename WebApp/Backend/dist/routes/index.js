@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.scriptRoutes = exports.countRoutes = exports.adminRoutes = exports.mqttRoutes = exports.macAddressRoutes = exports.authRoutes = void 0;
+exports.urlRoutes = exports.scriptRoutes = exports.countRoutes = exports.adminRoutes = exports.mqttRoutes = exports.macAddressRoutes = exports.authRoutes = void 0;
 var auth_routes_1 = require("./auth.routes");
 Object.defineProperty(exports, "authRoutes", { enumerable: true, get: function () { return __importDefault(auth_routes_1).default; } });
 var macAddress_routes_1 = require("./macAddress.routes");
@@ -16,3 +16,5 @@ var count_routes_1 = require("./count.routes");
 Object.defineProperty(exports, "countRoutes", { enumerable: true, get: function () { return __importDefault(count_routes_1).default; } });
 var script_routes_1 = require("./script.routes");
 Object.defineProperty(exports, "scriptRoutes", { enumerable: true, get: function () { return __importDefault(script_routes_1).default; } });
+var url_routes_1 = require("./url.routes");
+Object.defineProperty(exports, "urlRoutes", { enumerable: true, get: function () { return __importDefault(url_routes_1).default; } });

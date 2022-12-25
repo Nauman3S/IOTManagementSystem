@@ -7,11 +7,11 @@ import {
   clientDashboardCount,
   getDataByMacAddress,
   getAllMacAddress,
+  getCounts,
 } from "../Axios/apiFunctions";
 import { ReadFilled } from "@ant-design/icons";
 import TableComponent from "../components/TableComponent";
 import ProfileSvg from "../assets/Icons/ProfileSvg";
-import MqttComponent from "../components/MqttComponent";
 
 const Home = ({ socket }) => {
   const [selectedMacaddress, setSelectedMacaddress] = useState("");
@@ -23,12 +23,14 @@ const Home = ({ socket }) => {
     clientDashboardCount
   );
 
+  const { data: adminCounts } = useQuery("getAdminCounts", getCounts);
+
   const { data: mqttData, loading: mqttLoading } = useQuery(
     ["getDataByMacAddress", selectedMacaddress],
     () => getDataByMacAddress()
   );
 
-  const { data: macAddress, loading } = useQuery(
+  const { data: macAddress } = useQuery(
     authState?.role && authState?.role === "client" && "getAllMacAddress",
     authState?.role && authState?.role === "client" && getAllMacAddress
   );
@@ -36,7 +38,10 @@ const Home = ({ socket }) => {
   const count = [
     {
       today: "Total Macaddress",
-      title: counts?.data?.macAddressCount?.macAddress,
+      title:
+        authState?.role && authState?.role === "admin"
+          ? adminCounts?.data?.totalMacAddress
+          : counts?.data?.macAddressCount?.macAddress,
       icon: <ReadFilled />,
       bnb: "bnb2",
     },
@@ -90,9 +95,9 @@ const Home = ({ socket }) => {
           mqttLoading={mqttLoading}
           macAddress={macAddress}
           role={authState?.role}
+          socket={socket}
         />
       </div>
-      <MqttComponent socket={socket} selectedMacaddress={selectedMacaddress} />
     </>
   );
 };

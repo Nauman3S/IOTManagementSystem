@@ -37,13 +37,14 @@ exports.getAllMacAddress = getAllMacAddress;
  * @param {Request} req
  */
 const addMacAddress = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _b, _c;
+    var _b, _c, _d, _e;
     try {
         yield models_1.User.findOneAndUpdate({ _id: (_b = req === null || req === void 0 ? void 0 : req.user) === null || _b === void 0 ? void 0 : _b._id }, {
             $push: {
                 macAddress: { macAddress: (_c = req === null || req === void 0 ? void 0 : req.body) === null || _c === void 0 ? void 0 : _c.macAddress },
             },
         }, { upsert: true });
+        yield models_1.Mqtt.findOneAndUpdate({ macAddress: (_d = req === null || req === void 0 ? void 0 : req.body) === null || _d === void 0 ? void 0 : _d.macAddress }, { macAddress: (_e = req === null || req === void 0 ? void 0 : req.body) === null || _e === void 0 ? void 0 : _e.macAddress, status: "offline" }, { upsert: true });
         return res.status(200).json({ message: "MacAddress Added Successfully!" });
     }
     catch (error) {
@@ -59,16 +60,16 @@ exports.addMacAddress = addMacAddress;
  * @param {Request} req
  */
 const removeMacAddress = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    var _d, _e, _f, _g;
+    var _f, _g, _h, _j;
     try {
         let { userId } = req === null || req === void 0 ? void 0 : req.body;
-        userId = ((_d = req === null || req === void 0 ? void 0 : req.user) === null || _d === void 0 ? void 0 : _d.role) === "admin" ? userId : (_e = req === null || req === void 0 ? void 0 : req.user) === null || _e === void 0 ? void 0 : _e._id;
+        userId = ((_f = req === null || req === void 0 ? void 0 : req.user) === null || _f === void 0 ? void 0 : _f.role) === "admin" ? userId : (_g = req === null || req === void 0 ? void 0 : req.user) === null || _g === void 0 ? void 0 : _g._id;
         yield models_1.User.findOneAndUpdate({ _id: userId }, {
             $pull: {
-                macAddress: { macAddress: (_f = req === null || req === void 0 ? void 0 : req.body) === null || _f === void 0 ? void 0 : _f.macAddress },
+                macAddress: { macAddress: (_h = req === null || req === void 0 ? void 0 : req.body) === null || _h === void 0 ? void 0 : _h.macAddress },
             },
         });
-        yield models_1.Mqtt.deleteMany({ macAddress: (_g = req === null || req === void 0 ? void 0 : req.body) === null || _g === void 0 ? void 0 : _g.macAddress });
+        yield models_1.Mqtt.deleteMany({ macAddress: (_j = req === null || req === void 0 ? void 0 : req.body) === null || _j === void 0 ? void 0 : _j.macAddress });
         return res.status(200).json({ message: "MacAddress Deleted!" });
     }
     catch (error) {
