@@ -17,12 +17,12 @@ NC='\033[0m'        # No Color
 echo "IOT Management System Client Installer"
 
 ######## VARIABLES #########
-
+MAC=$(ip link show eth0 | grep link/ether | awk '{print $2}' | sed 's/://g')
 # Location for final installation log storage
 #installLogLoc=/etc/pihole/install.log
 err_handler() {
     printf "${Red} Error Occurred. Removing applied changes.${NC}"
-    printf "${RED}Uninstalling RPiClient from ${NC}  ${TARGET_HOST}"
+    printf "${RED}Uninstalling RPiClient from ${NC} ${MAC}"
     printf "\n\n"
     echo "Stopping RPiClient"
     sudo service RPiClient-rs stop;

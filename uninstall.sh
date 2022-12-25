@@ -14,10 +14,10 @@ NC='\033[0m'        # No Color
 echo "IOT Management System Client Uninstaller"
 
 ######## VARIABLES #########
-
+MAC=$(ip link show eth0 | grep link/ether | awk '{print $2}' | sed 's/://g')
 uninstall() {
     printf "${Red} Uninstalling IoTManagementSystem RPiClient.${NC}"
-    printf "Uninstalling RPiClient from  ${Purple} ${TARGET_HOST} ${NC}"
+    printf "Uninstalling RPiClient from  ${Purple} ${MAC} ${NC}"
     printf "\n\n"
     echo "Stopping RPiClient"
     sudo service RPiClient-rs stop;
