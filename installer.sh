@@ -72,6 +72,7 @@ else
     rm -rf RPi-release
     rm -rf release
     rm -rf .cargo Cargo*
+    rm -rf Dockerfile
     rm -rf src
     printf "${Green} Installing systemd deamon for RPiClient-rs and RPiClient-rs-user-script ${NC}\n"
     sudo cp RPiClient-rs.service /lib/systemd/system/
