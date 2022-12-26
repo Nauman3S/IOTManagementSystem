@@ -3,7 +3,7 @@ readonly TARGET_HOST=pi@PCITEST002.local
 readonly TARGET_PATH=/home/pi/RPiClient-rs/
 readonly TARGET_ARCH=aarch64-unknown-linux-gnu
 readonly PASS="PER\$P3CTIV3TEST"
-
+#PER$P3CTIV3TEST
 RED='\033[0;31m'
 NC='\033[0m' # No Color
 
@@ -26,8 +26,18 @@ Help()
 }
 BuildForRPi(){
     cross build --target=${TARGET_ARCH} --release
-    mkdir RPi-release
-    cp -r ./target/aarch64-unknown-linux-gnu/release/RPiClient-rs RPi-release
+    mkdir -p RPi-release
+    rm -rf ./RPi-release/RPiClient-rs.tar
+    cp ./target/aarch64-unknown-linux-gnu/release/RPiClient-rs ./RPi-release/
+    cp ./*sh ./RPi-release/
+    cp -r ./data ./RPi-release
+    cp ./*service ./RPi-release
+    mkdir ./RPi-release/logs
+    cd RPi-release
+    tar -cvf RPiClient-rs.tar . && cd ..
+    
+
+
 }
 BuildForRPiandPush(){
     
