@@ -19,7 +19,6 @@ const models_1 = require("../../models");
 const dashboardCounts = (_req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const users = yield models_1.User.countDocuments({ role: "client" });
-        // const adminId =
         let macAddressCount = yield models_1.User.find().select("macAddress");
         let totalMacAddress = 0;
         //@ts-ignore

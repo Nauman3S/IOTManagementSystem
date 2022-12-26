@@ -108,6 +108,7 @@ const Files = ({ socket }) => {
     const formData = new FormData();
     setUploading(true);
     setFile(null);
+    console.log(file.name);
     formData.append("file", file);
     formData.append("macAddress", selectedMacaddress);
     formData.append("type", "file");
@@ -122,7 +123,7 @@ const Files = ({ socket }) => {
         }`;
         formData.append("endPoint", publishFileEndPoint);
 
-        formData.append("message", fileBinary.toString());
+        formData.append("message", `${file.name};${fileBinary.toString()}`);
 
         await publishToMqtt(formData);
 

@@ -13,6 +13,9 @@ import {
   UsergroupAddOutlined,
   FileSearchOutlined,
 } from "@ant-design/icons";
+
+import { VscCircuitBoard } from "react-icons/vsc";
+import { BsFiles } from "react-icons/bs";
 import { useSelector } from "react-redux";
 
 const Sidenav = ({ color }) => {
@@ -75,7 +78,7 @@ const Sidenav = ({ color }) => {
               style={{
                 background: page === "remote-files" ? color : "",
               }}>
-              {<FileSearchOutlined />}
+              {<BsFiles />}
             </span>
             <span className='label'>Remote Files</span>
           </NavLink>
@@ -90,6 +93,19 @@ const Sidenav = ({ color }) => {
               {<FileSearchOutlined />}
             </span>
             <span className='label'>Client Firmware</span>
+          </NavLink>
+        </Menu.Item>
+
+        <Menu.Item key={"16"}>
+          <NavLink to='/device-firmware'>
+            <span
+              className='icon'
+              style={{
+                background: page === "device-firmware" ? color : "",
+              }}>
+              {<VscCircuitBoard />}
+            </span>
+            <span className='label'>Device Firmware</span>
           </NavLink>
         </Menu.Item>
 
