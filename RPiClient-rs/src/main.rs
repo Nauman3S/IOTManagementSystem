@@ -1,20 +1,3 @@
-// paho-mqtt/examples/async_subscribe.rs
-// This is a Paho MQTT Rust client, sample application.
-//
-//! This application is an MQTT subscriber using the asynchronous client
-//! interface of the Paho Rust client library.
-//! It also monitors for disconnects and performs manual re-connections.
-//!
-//! The sample demonstrates:
-//!   - An async/await subscriber
-//!   - Connecting to an MQTT server/broker.
-//!   - Subscribing to a topic
-//!   - Receiving messages from an async stream.
-//!   - Handling disconnects and attempting manual reconnects.
-//!   - Using a "persistent" (non-clean) session so the broker keeps
-//!     subscriptions and messages through reconnects.
-//!   - Last will and testament
-//!
 #![allow(unused)]
 use futures::{ channel::mpsc::Receiver, executor::block_on, stream::StreamExt };
 use mqtt::{ AsyncClient, Message, QOS_1 };
@@ -108,7 +91,7 @@ async fn work1(cli: AsyncClient) {
         std::thread::sleep(Duration::from_secs(5));
         // println!("HI1");
         // println!("Publishing a message on the topic 'test'");
-        let msg = mqtt::Message::new("iotm/data", "Hello Rust MQTT world!", mqtt::QOS_1);
+        let msg = mqtt::Message::new("iotm/data", "Hello Rust MQTT worldOTA!", mqtt::QOS_1);
         cli.publish(msg);
     }
 }
