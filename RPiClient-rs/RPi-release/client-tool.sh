@@ -35,8 +35,7 @@ BuildForRPi(){
     mkdir ./RPi-release/logs
     cd RPi-release
     tar -cvf RPiClient-rs.tar . && cd ..
-    
-
+    echo "Build Complete"
 
 }
 BuildForRPiandPush(){

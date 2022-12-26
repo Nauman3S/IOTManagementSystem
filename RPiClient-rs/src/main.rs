@@ -91,7 +91,7 @@ async fn work1(cli: AsyncClient) {
         std::thread::sleep(Duration::from_secs(5));
         // println!("HI1");
         // println!("Publishing a message on the topic 'test'");
-        let msg = mqtt::Message::new("iotm/data", "Hello IOTMSys", mqtt::QOS_1);
+        let msg = mqtt::Message::new("iotm/data", "Hello IOTMSys-V1", mqtt::QOS_1);
         cli.publish(msg);
     }
 }
