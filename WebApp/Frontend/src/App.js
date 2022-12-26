@@ -49,6 +49,7 @@ const App = () => {
   const LazyDeviceInfo = lazy(() => import("./pages/DeviceInfo"));
   const LazyAllUsers = lazy(() => import("./pages/AllUsers"));
   const LazyClientFirmware = lazy(() => import("./pages/ClientFirmware"));
+  const LazyDeviceFirmware = lazy(() => import("./pages/DeviceFirmware"));
   const LazyRemoteFiles = lazy(() => import("./pages/RemoteFiles"));
 
   return (
@@ -118,7 +119,16 @@ const App = () => {
                 path='/client-firmware'
                 element={
                   <RequireAuth redirectTo='/sign-in'>
-                    <LazyClientFirmware socket={socket} />
+                    <LazyClientFirmware type={"client"} socket={socket} />
+                  </RequireAuth>
+                }
+              />
+
+              <Route
+                path='/device-firmware'
+                element={
+                  <RequireAuth redirectTo='/sign-in'>
+                    <LazyDeviceFirmware type={"firmware"} socket={socket} />
                   </RequireAuth>
                 }
               />

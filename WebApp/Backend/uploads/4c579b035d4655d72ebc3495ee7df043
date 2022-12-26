@@ -1,0 +1,169 @@
+ERROR  : 07:18:23: Error: Error connecting to the server: connection to server on socket "/var/run/postgresql/.s.PGSQL.5432" failed: FATAL:  Peer authentication failed for user "postgres"
+
+ERROR  : 07:18:41: Error: Error connecting to the server: connection to server on socket "/var/run/postgresql/.s.PGSQL.5434" failed: No such file or directory
+	Is the server running locally and accepting connections on that socket?
+
+ERROR  : 07:18:51: Error: Error connecting to the server: connection to server on socket "/var/run/postgresql/.s.PGSQL.3500" failed: No such file or directory
+	Is the server running locally and accepting connections on that socket?
+
+ERROR  : 07:27:23: Error: Error connecting to the server: connection to server on socket "/var/run/postgresql/.s.PGSQL.5432" failed: FATAL:  Peer authentication failed for user "postgres"
+
+ERROR  : 07:29:49: Error: Error connecting to the server: connection to server on socket "/var/run/postgresql/.s.PGSQL.5432" failed: FATAL:  Peer authentication failed for user "postgres"
+
+ERROR  : 06:43:02: Error: Error connecting to the server: connection to server at "192.168.10.11", port 5432 failed: Connection refused
+	Is the server running on that host and accepting TCP/IP connections?
+
+ERROR  : 06:43:41: Error: Error connecting to the server: definition of service "postgres" not found
+
+ERROR  : 00:02:44: Error: ERROR:  column "proisagg" does not exist
+LINE 9:  WHERE proisagg = FALSE AND pronamespace = 2200::oid
+               ^
+HINT:  Perhaps you meant to reference the column "pr.prolang".
+ERROR  : 00:02:46: Error: ERROR:  column rel.relhasoids does not exist
+LINE 1: ...t_userbyid(rel.relowner) AS relowner, rel.relacl, rel.relhas...
+                                                             ^
+ERROR  : 00:02:47: Error: ERROR:  column "proisagg" does not exist
+LINE 9:  WHERE proisagg = FALSE AND pronamespace = 2200::oid
+               ^
+HINT:  Perhaps you meant to reference the column "pr.prolang".
+ERROR  : 00:04:07: Error: ERROR:  column rel.relhasoids does not exist
+LINE 1: ...t_userbyid(rel.relowner) AS relowner, rel.relacl, rel.relhas...
+                                                             ^
+ERROR  : 00:04:14: Error: ERROR:  column "min_value" does not exist
+LINE 1: SELECT last_value, min_value, max_value, cache_value, is_cyc...
+                           ^
+ERROR  : 00:04:15: Error: Column not found in pgSet: last_value
+ERROR  : 00:04:19: Error: Column not found in pgSet: min_value
+ERROR  : 00:04:23: Error: Column not found in pgSet: max_value
+ERROR  : 00:05:04: Error: ERROR:  column "proisagg" does not exist
+LINE 9:  WHERE proisagg = FALSE AND pronamespace = 2200::oid
+               ^
+HINT:  Perhaps you meant to reference the column "pr.prolang".
+ERROR  : 00:05:09: Error: ERROR:  column rel.relhasoids does not exist
+LINE 1: ...t_userbyid(rel.relowner) AS relowner, rel.relacl, rel.relhas...
+                                                             ^
+ERROR  : 00:05:10: Error: ERROR:  column "proisagg" does not exist
+LINE 9:  WHERE proisagg = FALSE AND pronamespace = 2200::oid
+               ^
+HINT:  Perhaps you meant to reference the column "pr.prolang".
+ERROR  : 00:05:17: Error: ERROR:  column "min_value" does not exist
+LINE 1: SELECT last_value, min_value, max_value, cache_value, is_cyc...
+                           ^
+ERROR  : 00:05:18: Error: Column not found in pgSet: last_value
+ERROR  : 00:05:20: Error: Column not found in pgSet: min_value
+ERROR  : 00:14:12: Error: ERROR:  column "proisagg" does not exist
+LINE 9:  WHERE proisagg = FALSE AND pronamespace = 2200::oid
+               ^
+HINT:  Perhaps you meant to reference the column "pr.prolang".
+ERROR  : 00:14:14: Error: ERROR:  column rel.relhasoids does not exist
+LINE 1: ...t_userbyid(rel.relowner) AS relowner, rel.relacl, rel.relhas...
+                                                             ^
+ERROR  : 00:14:15: Error: ERROR:  column "proisagg" does not exist
+LINE 9:  WHERE proisagg = FALSE AND pronamespace = 2200::oid
+               ^
+HINT:  Perhaps you meant to reference the column "pr.prolang".
+ERROR  : 00:14:19: Error: ERROR:  column "min_value" does not exist
+LINE 1: SELECT last_value, min_value, max_value, cache_value, is_cyc...
+                           ^
+ERROR  : 00:14:20: Error: Column not found in pgSet: last_value
+ERROR  : 00:15:30: Error: ERROR:  column "proisagg" does not exist
+LINE 9:  WHERE proisagg = FALSE AND pronamespace = 2200::oid
+               ^
+HINT:  Perhaps you meant to reference the column "pr.prolang".
+ERROR  : 00:15:35: Error: ERROR:  column rel.relhasoids does not exist
+LINE 1: ...t_userbyid(rel.relowner) AS relowner, rel.relacl, rel.relhas...
+                                                             ^
+ERROR  : 00:15:36: Error: ERROR:  column "proisagg" does not exist
+LINE 9:  WHERE proisagg = FALSE AND pronamespace = 2200::oid
+               ^
+HINT:  Perhaps you meant to reference the column "pr.prolang".
+ERROR  : 00:15:41: Error: ERROR:  column rel.relhasoids does not exist
+LINE 1: ...t_userbyid(rel.relowner) AS relowner, rel.relacl, rel.relhas...
+                                                             ^
+ERROR  : 00:15:46: Error: ERROR:  column "min_value" does not exist
+LINE 1: SELECT last_value, min_value, max_value, cache_value, is_cyc...
+                           ^
+ERROR  : 00:15:50: Error: Column not found in pgSet: last_value
+ERROR  : 00:15:54: Error: Column not found in pgSet: min_value
+ERROR  : 00:26:11: Error: ERROR:  extension "adminpack" already exists
+ERROR  : 00:26:21: Error: ERROR:  column "proisagg" does not exist
+LINE 9:  WHERE proisagg = FALSE AND pronamespace = 2200::oid
+               ^
+HINT:  Perhaps you meant to reference the column "pr.prolang".
+ERROR  : 00:26:23: Error: ERROR:  column rel.relhasoids does not exist
+LINE 1: ...t_userbyid(rel.relowner) AS relowner, rel.relacl, rel.relhas...
+                                                             ^
+ERROR  : 00:26:24: Error: ERROR:  column "proisagg" does not exist
+LINE 9:  WHERE proisagg = FALSE AND pronamespace = 2200::oid
+               ^
+HINT:  Perhaps you meant to reference the column "pr.prolang".
+ERROR  : 00:26:39: Error: ERROR:  column ad.adsrc does not exist
+LINE 1: ...ep.deptype, dep.refclassid, cl.relkind, ad.adbin, ad.adsrc, 
+                                                             ^
+ERROR  : 06:49:31: Error: ERROR:  column "proisagg" does not exist
+LINE 9:  WHERE proisagg = FALSE AND pronamespace = 2200::oid
+               ^
+HINT:  Perhaps you meant to reference the column "pr.prolang".
+ERROR  : 06:49:32: Error: ERROR:  column rel.relhasoids does not exist
+LINE 1: ...t_userbyid(rel.relowner) AS relowner, rel.relacl, rel.relhas...
+                                                             ^
+ERROR  : 06:49:33: Error: ERROR:  column "proisagg" does not exist
+LINE 9:  WHERE proisagg = FALSE AND pronamespace = 2200::oid
+               ^
+HINT:  Perhaps you meant to reference the column "pr.prolang".
+ERROR  : 06:49:37: Error: ERROR:  column rel.relhasoids does not exist
+LINE 1: ...t_userbyid(rel.relowner) AS relowner, rel.relacl, rel.relhas...
+                                                             ^
+ERROR  : 06:49:46: Error: ERROR:  column "min_value" does not exist
+LINE 1: SELECT last_value, min_value, max_value, cache_value, is_cyc...
+                           ^
+ERROR  : 06:49:47: Error: Column not found in pgSet: last_value
+ERROR  : 06:49:49: Error: Column not found in pgSet: min_value
+ERROR  : 18:18:16: Error: ERROR:  column "proisagg" does not exist
+LINE 9:  WHERE proisagg = FALSE AND pronamespace = 2200::oid
+               ^
+HINT:  Perhaps you meant to reference the column "pr.prolang".
+ERROR  : 18:18:18: Error: ERROR:  column rel.relhasoids does not exist
+LINE 1: ...t_userbyid(rel.relowner) AS relowner, rel.relacl, rel.relhas...
+                                                             ^
+ERROR  : 18:18:18: Error: ERROR:  column "proisagg" does not exist
+LINE 9:  WHERE proisagg = FALSE AND pronamespace = 2200::oid
+               ^
+HINT:  Perhaps you meant to reference the column "pr.prolang".
+ERROR  : 18:18:22: Error: ERROR:  column ad.adsrc does not exist
+LINE 1: ...ep.deptype, dep.refclassid, cl.relkind, ad.adbin, ad.adsrc, 
+                                                             ^
+ERROR  : 18:18:25: Error: ERROR:  column ad.adsrc does not exist
+LINE 1: ...T dep.deptype, dep.classid, cl.relkind, ad.adbin, ad.adsrc, 
+                                                             ^
+ERROR  : 18:18:43: Error: ERROR:  column "proisagg" does not exist
+LINE 9:  WHERE proisagg = FALSE AND pronamespace = 2200::oid
+               ^
+HINT:  Perhaps you meant to reference the column "pr.prolang".
+ERROR  : 18:18:44: Error: ERROR:  column rel.relhasoids does not exist
+LINE 1: ...t_userbyid(rel.relowner) AS relowner, rel.relacl, rel.relhas...
+                                                             ^
+ERROR  : 18:18:45: Error: ERROR:  column "proisagg" does not exist
+LINE 9:  WHERE proisagg = FALSE AND pronamespace = 2200::oid
+               ^
+HINT:  Perhaps you meant to reference the column "pr.prolang".
+ERROR  : 18:19:04: Error: ERROR:  column "proisagg" does not exist
+LINE 9:  WHERE proisagg = FALSE AND pronamespace = 2200::oid
+               ^
+HINT:  Perhaps you meant to reference the column "pr.prolang".
+ERROR  : 18:19:05: Error: ERROR:  column rel.relhasoids does not exist
+LINE 1: ...t_userbyid(rel.relowner) AS relowner, rel.relacl, rel.relhas...
+                                                             ^
+ERROR  : 18:19:06: Error: ERROR:  column "proisagg" does not exist
+LINE 9:  WHERE proisagg = FALSE AND pronamespace = 2200::oid
+               ^
+HINT:  Perhaps you meant to reference the column "pr.prolang".
+ERROR  : 18:19:11: Error: ERROR:  column ad.adsrc does not exist
+LINE 1: ...ep.deptype, dep.refclassid, cl.relkind, ad.adbin, ad.adsrc, 
+                                                             ^
+ERROR  : 18:19:13: Error: ERROR:  column ad.adsrc does not exist
+LINE 1: ...T dep.deptype, dep.classid, cl.relkind, ad.adbin, ad.adsrc, 
+                                                             ^
+ERROR  : 18:19:21: Error: ERROR:  column ad.adsrc does not exist
+LINE 1: ...T dep.deptype, dep.classid, cl.relkind, ad.adbin, ad.adsrc, 
+                                                             ^

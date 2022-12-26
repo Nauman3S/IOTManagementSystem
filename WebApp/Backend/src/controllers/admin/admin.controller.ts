@@ -13,7 +13,6 @@ export const dashboardCounts = async (
   try {
     const users = await User.countDocuments({ role: "client" });
 
-    // const adminId =
     let macAddressCount = await User.find().select("macAddress");
     let totalMacAddress: number = 0;
     //@ts-ignore

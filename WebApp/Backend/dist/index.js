@@ -17,8 +17,8 @@ const PORT = parseInt(config_1.default.PORT, 10);
 const server = http_1.default.createServer(app);
 const io = new socket_io_1.Server(server, {
     cors: {
-        // origin: "http://localhost:3000",
-        origin: "https://smart-iot-management-system.prod.dev-pci.com",
+        origin: "http://localhost:3000",
+        // origin: "https://smart-iot-management-system.prod.dev-pci.com",
         methods: ["GET", "POST"],
     },
 });

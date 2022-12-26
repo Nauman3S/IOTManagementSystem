@@ -23,7 +23,7 @@ import { useQuery, useMutation, useQueryClient } from "react-query";
 import SelectComponent from "../components/SelectComponent";
 import MqttComponent from "../components/MqttComponent";
 
-const ClientFirmware = ({ socket }) => {
+const ClientFirmware = ({ socket, type }) => {
   const [visible, setVisible] = useState({
     visible: false,
     type: "add",
@@ -129,7 +129,7 @@ const ClientFirmware = ({ socket }) => {
 
   const hanldeRunProgram = async (data) => {
     try {
-      const urlFileEndPoint = `firmware/url/${
+      const urlFileEndPoint = `${type}/url/${
         selectedMacaddress === "All" ? "all" : selectedMacaddress
       }`;
       const formDataUrl = new FormData();
@@ -199,7 +199,12 @@ const ClientFirmware = ({ socket }) => {
               className='criclebox tablespace mb-24'
               title={
                 <>
-                  <h4>URLs Table</h4>
+                  <h4>
+                    {type === "client"
+                      ? type?.[0]?.toUpperCase() + type?.slice(1)
+                      : "Device"}{" "}
+                    Firmware Table
+                  </h4>
                   <SelectComponent
                     setSelectedMacaddress={setSelectedMacaddress}
                   />
