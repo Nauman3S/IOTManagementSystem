@@ -28,12 +28,12 @@ const Sidenav = ({ color }) => {
   return (
     <>
       <div className='brand'>
-        <img src={logo} alt='' />
+        <img src={logo} alt='logo' />
         <span> Smart IoT Management System</span>
       </div>
       <hr />
       <Menu theme='light' mode='inline'>
-        <Menu.Item key={"1"}>
+        <Menu.Item key={"1"} item>
           <NavLink to='/' end>
             <span
               className='icon'
@@ -83,7 +83,7 @@ const Sidenav = ({ color }) => {
             <span className='label'>Remote Files</span>
           </NavLink>
         </Menu.Item>
-        <Menu.Item key={"15"}>
+        <Menu.Item key={"26"}>
           <NavLink to='/client-firmware'>
             <span
               className='icon'

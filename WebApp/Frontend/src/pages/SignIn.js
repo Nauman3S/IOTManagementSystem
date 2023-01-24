@@ -220,7 +220,7 @@ const SignIn = () => {
       <Modal
         title='Enter Email'
         destroyOnClose={true}
-        visible={emailModalVisible}
+        open={emailModalVisible}
         footer={null}
         onCancel={() => setEmailModalVisible(false)}
         confirmLoading={confirmLoading}>
