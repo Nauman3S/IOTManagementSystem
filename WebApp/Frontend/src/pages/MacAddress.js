@@ -100,17 +100,12 @@ const MacAddress = () => {
       },
     }
   );
-  const getMacAddressMutation = useMutation(getAllMacAddress, {
-    onSuccess: (data) => {
-      queryClient.invalidateQueries("getAllMacAddress");
-    },
-  });
 
   const handleAddMacAddress = async (values) => {
     setConfirmLoading(true);
     const res = await addMacAddress(values.macAddress);
     if (res.status === 200) {
-      getMacAddressMutation.mutate();
+      getDataMutation.mutate();
       message.success("MacAddress added successfully!");
       setVisible(false);
       setConfirmLoading(false);

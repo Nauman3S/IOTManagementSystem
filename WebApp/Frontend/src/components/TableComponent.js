@@ -39,6 +39,7 @@ const TableComponent = ({
         ) {
           return data;
         }
+        return null;
       })
       .filter((data) => data !== undefined);
   }
