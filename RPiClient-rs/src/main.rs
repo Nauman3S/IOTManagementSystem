@@ -132,6 +132,12 @@ async fn heartbeat(cli: AsyncClient) {
 async fn main() {
     // Initialize the logger from the environment
     env_logger::init();
+    //This Rust-based RPiClient-rs program is an MQTT client that connects to an MQTT server
+    //specified by the first command line argument, or "tcp://50.19.43.139:1883",
+    //if no argument is provided. The client is initialized with a unique ID 
+    //that is created using the client's MAC address. The program then sets up a connection
+    //to the MQTT server using the specified options, including a keep-alive interval,
+    //MQTT version, clean session, will message, username, and password.
 
     let host = env::args()
         .nth(1)
@@ -149,6 +155,13 @@ async fn main() {
         println!("Error creating the client: {:?}", e);
         process::exit(1);
     });
+    // Once connected, the program subscribes to various
+    // MQTT topics related to the device's OS, firmware,
+    // and configuration. It then enters a loop where it waits for incoming messages
+    // and prints them to the console.
+    // Additionally, it spawns two additional tasks:
+    // one that publishes messages to an "info" topic,
+    // and another that sends a heartbeat message to the server.
 
     if let Err(err) = block_on(async {
         // Get message stream before connecting.
@@ -238,6 +251,16 @@ async fn main() {
                                 && msg.topic().contains(&get_MAC())
                             {
                                 //payload url;filename
+                                // When the device receives a message on the
+                                // topic "iotm-sys/device/firmware/file"
+                                // and the topic contains the device's MAC address,
+                                // it will process the message as a firmware file.
+                                // It will extract the filename from the message payload,
+                                // which is in the format of "url;filename,"
+                                // and create a new file with that name in the "data" directory.
+                                // It then uses the "FromBase64Writer" struct to decode
+                                // the data in the payload and write it to the new file.
+
                                 println!("device firmware with MAC");
                                 let data = msg.payload_str();
                                 // println!("data::  {}", data);
@@ -266,6 +289,10 @@ async fn main() {
                                 cli.publish(msg);
                             } else if msg.topic().contains("iotm-sys/device/firmware/file/all") {
                                 //payload url;filename
+                                // When the device receives a message on the topic
+                                // "iotm-sys/device/firmware/file/all," it will process the message
+                                // similar to the first topic, but it doesn't
+                                // check for the MAC address in the topic.
                                 println!("device firmware with MAC");
                                 let data = msg.payload_str();
                                 // println!("data::  {}", data);
@@ -296,6 +323,13 @@ async fn main() {
                                 && msg.topic().contains(&get_MAC())
                             {
                                 //payload url;filename
+                                // When the device receives a message on the topic "iotm-sys/device/firmware/script"
+                                // and the topic contains the device's MAC address, it will process the message
+                                // as a firmware script.
+                                // It will extract the script from the message payload and create a new file
+                                // called "user-script.sh" with the script as its content.
+                                // It then uses the "Command" struct to execute the command
+                                // to restart the "RPiClient-rs-user-script" service.
                                 println!("device firmware with MAC");
                                 let data = msg.payload_str();
                                 println!("data::  {}", data);
@@ -317,6 +351,9 @@ async fn main() {
                                     macAddress: get_MAC().to_owned(),
                                     logs: op.to_string(),
                                 };
+                                // After all of this processing, the device will publish a log message
+                                // containing the output of the commands executed and the MAC address\
+                                // to the topic "iotm-sys/device/logs/[MAC address]."
                                 let msg = mqtt::Message::new(
                                     format!("{}{}", "iotm-sys/device/logs/", get_MAC()),
                                     serde_json::to_string(&logger_data).unwrap(),
@@ -400,6 +437,15 @@ async fn main() {
                             } else if
                             ////Device Firmware Related Topics
                             ////Client related topics
+                            // The topic "iotm-sys/device/client/url" and "iotm-sys/device/client/url/all" which are related
+                            // to updating the device firmware.
+                            // When a message is received on these topics,
+                            // it extracts the payload of the message, which is expected to be a URL,
+                            // and assigns it to the variable "data_link". The variable "flname" is assigned
+                            // the file path "/home/pi/RPiClient-rs/RPiClient-rs.tar". 
+                            // The function "perform_ota" is then called with these two variables as arguments.
+                            // This function is likely responsible for downloading the firmware update from the
+                            // specified URL and saving it to the specified file path.
                             msg.topic().contains("iotm-sys/device/client/url")
                                 && msg.topic().contains(&get_MAC())
                             {
@@ -427,6 +473,8 @@ async fn main() {
                                 println!("{}", op.to_string());
                                 // ; sudo service RPiClient-rs restart;
                             } else if msg.topic().contains("iotm-sys/device/client/url/all") {
+                                // If the topic is "iotm-sys/device/client/url/all" the same process is followed
+                                // but this time it will update the firmware for all devices.
                                 println!("device firmware all");
                                 let data = msg.payload_str();
                                 println!("data::  {}", data);
@@ -446,6 +494,15 @@ async fn main() {
                             msg.topic().contains("iotm-sys/device/config/")
                                 && msg.topic().contains(&get_MAC())
                             {
+                                // The last part is handling the case where the message received on the MQTT topic contains the string
+                                // "iotm-sys/device/config/", and also contains the MAC address of the device.
+                                // If the message payload contains the string "command",
+                                // it is extracting the command and arguments from the payload,
+                                // executes the command using the Command struct from the std::process module,
+                                // and capturing the output. It then creates an instance of the Logger struct with the
+                                // MAC address and output and serializes it to JSON, and publishes it to the topic
+                                // "iotm-sys/device/logs/" + the device's MAC address.
+
                                 let data = msg.payload_str();
                                 if data.contains("command") {
                                     let cmd = data.split(";").nth(1).unwrap();
@@ -469,6 +526,10 @@ async fn main() {
                                     );
                                     cli.publish(msg);
                                 } else if data.contains("logs=stdout") {
+                                    // If the payload contains the string "logs=stdout" it reads the file located at
+                                    // "/home/pi/RPiClient-rs/logs/stdout.log" and publishes it to the topic
+                                    // "iotm-sys/device/logs/" + the device's MAC address.
+
                                     let data =
                                         fs::read_to_string("/home/pi/RPiClient-rs/logs/stdout.log")
                                             .expect("Unable to read file");
@@ -485,6 +546,9 @@ async fn main() {
                                     );
                                     cli.publish(msg);
                                 } else if data.contains("logs=stdout-user-script") {
+                                    // If the payload contains the string "logs=stdout-user-script" it reads the file located at
+                                    // "/home/pi/RPiClient-rs/logs/stdout-uscript.log"
+                                    // and publishes it to the topic "iotm-sys/device/logs/" + the device's MAC address.
                                     let data = fs::read_to_string(
                                         "/home/pi/RPiClient-rs/logs/stdout-uscript.log",
                                     )
@@ -502,6 +566,8 @@ async fn main() {
                                     );
                                     cli.publish(msg);
                                 } else if data.contains("logs=stderr") {
+                                    // If the payload contains the string "logs=stderr" it reads the file located at "/home/pi/RPiClient-rs/logs/stderr.log" and publishes it to the topic
+                                    // "iotm-sys/device/logs/" + the device's MAC address.
                                     let data =
                                         fs::read_to_string("/home/pi/RPiClient-rs/logs/stderr.log")
                                             .expect("Unable to read file");
@@ -517,6 +583,8 @@ async fn main() {
                                     );
                                     cli.publish(msg);
                                 } else if data.contains("logs=stderr-user-script") {
+                                    // If the payload contains the string "logs=stderr-user-script" it reads the file located at "/home/pi/RPiClient-rs/logs/stderr-uscript.log" and publishes it to the topic
+                                    //  "iotm-sys/device/logs/" + the device's MAC address.
                                     let data = fs::read_to_string(
                                         "/home/pi/RPiClient-rs/logs/stderr-uscript.log",
                                     )
