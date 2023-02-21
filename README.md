@@ -140,6 +140,7 @@ The server parameters can be monitored using NetDataMonitor dashboard. [https://
 
 ### Docker Containers Management
 
+#### Production Server
 For containers management and deployment, CapRover is used.
 
 [https://captain.prod.dev-pci.com/](https://captain.prod.dev-pci.com/)
@@ -148,7 +149,16 @@ For Docker Containers detailed management, portainer is deployed on the server
 
 [https://portainer.prod.dev-pci.com/](https://portainer.prod.dev-pci.com/)
 
-Portainer username/password: admin/portainer@321
+
+#### Development Server
+For containers management and deployment, CapRover is used.
+
+[https://captain.dev.dev-pci.com/](https://captain.prod.dev-pci.com/)
+
+For Docker Containers detailed management, portainer is deployed on the server
+
+[https://portainer.dev.dev-pci.com/](https://portainer.prod.dev-pci.com/)
+
 
 ## MQTT Topic Details <a name = "mqtt"></a>
 ### Topics List
