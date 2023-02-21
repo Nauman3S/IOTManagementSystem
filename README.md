@@ -119,12 +119,21 @@ The server parameters can be monitored using NetDataMonitor dashboard. [https://
 
 ### Server Links <a name = "srv"></a>
 
+#### Production
+
 - MQTT Broker Link: 50.19.43.139:1883
 - Dashboard Link: [https://smart-iot-management-system.prod.dev-pci.com/](https://smart-iot-management-system.prod.dev-pci.com/)
 
       -     Dashbaord Username: test@smartiotms.com
       -     Dashboard Password: 12345678
 
+#### Development
+
+- MQTT Broker Link: 34.224.149.8:1883
+- Dashboard Link: [https://smart-iot-management-system.dev.dev-pci.com/](https://smart-iot-management-system.dev.dev-pci.com/)
+
+      -     Dashbaord Username: test@smartiotms.com
+      -     Dashboard Password: 12345678
 ### Backend
 
 - Backend is based on NodeJS and it is being managed by CapRover. It starts automatically on server start.
