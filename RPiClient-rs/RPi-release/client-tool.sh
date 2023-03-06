@@ -13,10 +13,11 @@ Help()
    # Display Help
    echo "Add description of the script functions here."
    echo
-   echo "Syntax: Arguments [-r|b|p|e|g|h|u]"
+   echo "Syntax: Arguments [-r|b|p|e|g|d|h|u]"
    echo "options:"
    echo "r  Cross-compile and release for Raspberry Pi and copy the release file to RPi-release folder."
    echo "b Cross-compile and release for Raspberry Pi and push the files to the Raspberry Pi and copy the release file to RPi-release folder."
+   echo "d Cross-compile for dev and release for Raspberry Pi and copy the release file to RPi-release folder."
    echo "p     Compile and release for the current system and copy the release file to release folder."
    echo "e     Compile and run on this system."
    echo "s     SSH into Raspberry Pi."
@@ -29,6 +30,21 @@ BuildForRPi(){
     mkdir -p RPi-release
     rm -rf ./RPi-release/RPiClient-rs.tar
     cp ./target/aarch64-unknown-linux-gnu/release/RPiClient-rs ./RPi-release/
+    cp ./*sh ./RPi-release/
+    cp -r ./data ./RPi-release
+    cp ./*service ./RPi-release
+    mkdir ./RPi-release/logs
+    cd RPi-release
+    tar -cvf RPiClient-rs.tar . && cd ..
+    echo "Build Complete"
+
+}
+BuildForRPiDev(){
+    cross build --target=${TARGET_ARCH} --release
+    mkdir -p RPi-release
+    rm -rf ./RPi-release/RPiClient-rs.tar
+    cp ./target/aarch64-unknown-linux-gnu/release/RPiClient-rs ./RPi-release/
+    mv ./RPi-release/RPiClient-rs ./RPi-release/RPiClient-rs-dev
     cp ./*sh ./RPi-release/
     cp -r ./data ./RPi-release
     cp ./*service ./RPi-release
@@ -88,6 +104,7 @@ for arg in "$@"; do
   case "$arg" in
     '--help')   set -- "$@" '-h'   ;;
     '--x-compile') set -- "$@" '-r'   ;;
+    '--x-compiledev') set -- "$@" '-d'   ;;
     '--x-compile-push')   set -- "$@" '-b'   ;;
     '--compile')     set -- "$@" '-p'   ;;
     '--compile-run')     set -- "$@" '-e'   ;;
@@ -102,11 +119,12 @@ number=0; rest=false; ws=false
 
 # Parse short options
 OPTIND=1
-while getopts ":hnrbpesu" opt
+while getopts ":hnrdbpesu" opt
 do
   case "$opt" in
     'h') Help; exit 0 ;;
     'r') BuildForRPi ;;
+    'd') BuildForRPiDev ;;
     'b') BuildForRPiandPush ;;
     'p') BuildNormal ;;
     'e') Run ;;

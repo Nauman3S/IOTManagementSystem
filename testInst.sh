@@ -94,70 +94,11 @@ done
 shift $(expr $OPTIND - 1) # remove options from positional parameters
 
 # echo "br: "$branch
-sudo apt clean
-sudo apt install -qq toilet -y >/dev/null 2>&1
-show_ascii() {
-    toilet IoT Management System -t --metal
-}
-show_ascii
 
-printf "${Green} Installing RPiClient-rs ${NC}\n"
-if [ -d "$HOME/RPiClient-rs" ]; then
-    printf "${White} Directory RPiClient-rs already exists. ${NC}\n"
-else
-
-    printf "${Red} Error: Directory RPiClient does not exists. Creating one. ${NC}\n"
-    printf "${Purple} Cloning IoTManagementSystem Repository ${NC}\n"
-    cd $HOME
-    # mkdir ~/RPiClient
-    git clone \
-        --depth 1 \
-        --filter=blob:none \
-        --sparse \
-        https://github.com/Nauman3S/IOTManagementSystem
-    cd IOTManagementSystem
-    git sparse-checkout set RPiClient-rs
-    mv RPiClient-rs ../
-    cd ..
-    rm -rf IOTManagementSystem
-    cd RPiClient-rs
-    mv RPi-release/RPiClient-rs .
-    rm -rf RPi-release
-    rm -rf release
-    rm -rf .cargo Cargo*
-    rm -rf Dockerfile
-    rm -rf src
-    printf "${Green} Installing systemd deamon for RPiClient-rs and RPiClient-rs-user-script ${NC}\n"
-    sudo cp RPiClient-rs.service /lib/systemd/system/
-    sudo cp RPiClient-rs-user-script.service /lib/systemd/system/
-    sudo chmod a+rx RPiClient-rs
-    sudo chmod a+rx RPiClient-rs-dev
+tt(){
     if [ $branch = "dev" ]; then
-        rm -rf RPiClient-rs
-        mv RPiClient-rs-dev RPiClient-rs
+        echo "br: "$branch
         DevBranch
-    else
-        MainBranch
     fi
-    sudo chmod a+rx updateFW.sh
-    sudo chmod a+rx user-script.sh
-    sudo chmod a+rx update-services.sh
-    sudo chmod a+rx upgradeOS.sh
-    sudo chmod a+rx ota.sh
-    # sudo systemctl daemon-reload
-    sudo systemctl enable RPiClient-rs
-    sudo systemctl enable RPiClient-rs-user-script
-    sudo service RPiClient-rs start
-    sudo service RPiClient-rs-user-script start
-fi
-if [ -d "$HOME/RPiClient-rs/logs" ]; then
-
-    printf "${White} Directory RPiClient-rs/logs already exists. ${NC}\n"
-else
-    printf "${Red} Error: Directory RPiClient-rs/logs does not exists. Creating one. ${NC}\n"
-    mkdir ${HOME}/RPiClient-rs/logs
-fi
-
-MAC=$(ip link show eth0 | grep link/ether | awk '{print $2}' | sed 's/://g')
-
-printf "${Green} Installtion Completed. Add a new device to IOTMSys with Mac Address ${MAC^^} and restart your Raspberry Pi${NC}\n"
+}
+tt
