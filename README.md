@@ -83,6 +83,17 @@ Turn on your Raspberry Pi and execute the following commands
 curl -sSL https://raw.githubusercontent.com/Nauman3S/IOTManagementSystem/main/installer.sh | bash
 ```
 
+#### One-click Installation DEV
+
+For `dev` RPiClient-rs:
+
+1.    ssh into your Raspberry Pi and execue the following command
+
+```bash
+curl -sSL https://raw.githubusercontent.com/Nauman3S/IOTManagementSystem/dev/installer.sh | bash -s -- --dev
+```
+
+
 2. After the installation is complete, you will be presented with the `MAC Address` of your device which you can use in the webapp. 
 
 ![installer](artwork/installer.png)
