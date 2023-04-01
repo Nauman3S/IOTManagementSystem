@@ -116,7 +116,7 @@ async fn heartbeat(cli: AsyncClient) {
     };
 
     loop {
-        std::thread::sleep(Duration::from_secs(5));
+        std::thread::sleep(Duration::from_secs(7));
 
         let msg = mqtt::Message::new(
             format!("{}{}", "iotm-sys/device/heartbeat/", get_MAC()),
@@ -141,7 +141,7 @@ async fn main() {
 
     let host = env::args()
         .nth(1)
-        .unwrap_or_else(|| "tcp://50.19.43.139:1883".to_string());
+        .unwrap_or_else(|| "tcp://34.224.149.8:1883".to_string());
 
     // Create the client. Use an ID for a persistent session.
     // A real system should try harder to use a unique ID.
