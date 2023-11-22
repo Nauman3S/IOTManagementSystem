@@ -14,7 +14,7 @@ Cyan='\033[0;36m'   # Cyan
 White='\033[0;37m'  # White
 NC='\033[0m'        # No Color
 
-echo "IOT Management System Client Installer"
+echo "IOT Management System Client Installer Dev"
 
 ######## VARIABLES #########
 MAC=$(ip link show eth0 | grep link/ether | awk '{print $2}' | sed 's/://g')
