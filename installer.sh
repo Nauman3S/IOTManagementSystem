@@ -131,7 +131,13 @@ else
     sudo cp RPiClient-rs.service /lib/systemd/system/
     sudo cp RPiClient-rs-user-script.service /lib/systemd/system/
     sudo chmod a+rx RPiClient-rs
-    sudo chmod a+rx RPiClient-rs-dev
+    if [ -f "RPiClient-rs-dev" ] || [ -d "RPiClient-rs-dev" ]; then
+        sudo chmod a+rx RPiClient-rs-dev
+    else
+        echo "RPiClient-rs-dev does not exist, copying RPiClient-rs to RPiClient-rs-dev"
+        cp RPiClient-rs RPiClient-rs-dev
+        sudo chmod a+rx RPiClient-rs-dev
+    fi
     if [ $branch = "dev" ]; then
         rm -rf RPiClient-rs
         mv RPiClient-rs-dev RPiClient-rs
